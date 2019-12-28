@@ -1,5 +1,5 @@
-const config = require('../config/config.json');
-const modeconfig = require('../config/env_mode.json')
+const config = require("../config/config.json");
+const modeconfig = require("../config/env_mode.json");
 const ENV_MODE = modeconfig.ENVMODE;
 const host = config[ENV_MODE]["host"];
 const user = config[ENV_MODE]["user"];
@@ -12,6 +12,7 @@ module.exports = {
   user: user,
   password: password,
   database: database,
+  port: 3306,
   connectionTimeout: 300000,
   requestTimeout: 300000,
   options: {

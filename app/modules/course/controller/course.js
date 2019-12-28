@@ -662,7 +662,7 @@ exports.getStage = async function (req, res, next) {
 
     if (id != "" && Coach_id != "") {
         // var query = "select * from course_stage where Coach_Id = " + Coach_id + " AND id = " + id + "";
-        var query = "select course_stage.*,users.* from course_stage JOIN users ON  course_stage.Coach_Id = users.id where Coach_Id = " + Coach_id + " AND id = " + id + "";
+        var query = "select course_stage.*,users.* from course_stage JOIN users ON  course_stage.Coach_Id = users.id where course_stage.Coach_Id = " + Coach_id + " AND course_stage.id = " + id + "";
         await db_library
             .execute(query).then(async (value) => {
                 var result = value;
