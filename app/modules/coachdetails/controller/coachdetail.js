@@ -1,0 +1,613 @@
+const output = require("../../_models/output");
+const db_library = require("../../_helpers/db_library");
+const mail_template = require("../../MailTemplate/mailTemplate");
+const appConfig = require("../../../../config/appConfig");
+const moment = require("moment");
+
+function formatDate(date) {
+  var formate_date = moment(date).format("YYYY-MM-DD");
+  return formate_date;
+}
+
+exports.bookCourse = async function(req, res, next) {
+  var _output = new output();
+  const Coach_id = req.body.Coach_id;
+  const user_Id = req.body.user_Id;
+  const status = req.body.status;
+  const booking_date = req.body.booking_date;
+  const course = req.body.course;
+  const amount = req.body.amount;
+  const bookingEnd = req.body.bookingEnd;
+  const reserve = req.body.reserve;
+
+  if (
+    user_Id != "" &&
+    Coach_id != "" &&
+    status != "" &&
+    booking_date != "" &&
+    bookingEnd != "" &&
+    course != ""
+  ) {
+    if (amount == "" || amount == undefined) {
+      var insert_qry =
+        "INSERT INTO `booking_dbs`(`Coach_ID`, `user_Id`, `status`, `bookingDate`, `bookingEnd`, `bookingCourse`, `amount`) " +
+        "VALUES (" +
+        Coach_id +
+        "," +
+        user_Id +
+        ",'" +
+        status +
+        "','" +
+        formatDate(booking_date) +
+        "','" +
+        formatDate(bookingEnd) +
+        "','" +
+        course +
+        "',0)";
+    } else {
+      var insert_qry =
+        "INSERT INTO `booking_dbs`(`Coach_ID`, `user_Id`, `status`, `bookingDate`, `bookingEnd`, `bookingCourse`, `amount`) " +
+        "VALUES (" +
+        Coach_id +
+        "," +
+        user_Id +
+        ",'" +
+        status +
+        "','" +
+        formatDate(booking_date) +
+        "','" +
+        formatDate(bookingEnd) +
+        "','" +
+        course +
+        "'," +
+        amount +
+        ")";
+    }
+
+    var sel_qry = "SELECT * FROM `users` where `id` = " + Coach_id;
+
+    if (course == "Stage") {
+      await db_library
+        .execute(insert_qry)
+        .then(async value => {
+          if (value.affectedRows > 0) {
+            await db_library
+              .execute(sel_qry)
+              .then(async val => {
+                if (val.length > 0) {
+                  var mailTemplate = await mail_template.getMailTemplate(
+                    appConfig.MailTemplate.CoachAcceoptance
+                  );
+                  const mailOption = require("../../_mailer/mailOptions");
+                  let _mailOption = new mailOption();
+                  _mailOption.to = val[0].email;
+                  _mailOption.subject = "Booking Request";
+                  _mailOption.html = mailTemplate[0].template
+                    .replace(
+                      "{{username}}",
+                      val[0].firstName + " " + val[0].lastName
+                    )
+                    .replace("{{date}}", formatDate(booking_date))
+                    .replace("{{course}}", course);
+                  var _mailer = require("../../_mailer/mailer");
+                  _mailer.sendMail(_mailOption);
+                  _output.data = {};
+                  _output.isSuccess = true;
+                  _output.message = "Booking Successfully Inserted";
+                }
+              })
+              .catch(err => {
+                console.log(err);
+                _output.data = {};
+                _output.isSuccess = false;
+                _output.message = "Mail Not Sent";
+              });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          _output.data = {};
+          _output.isSuccess = false;
+          _output.message = "Booking Inserted Failed";
+        });
+    } else {
+      await db_library
+        .execute(insert_qry)
+        .then(async value => {
+          if (value.affectedRows > 0) {
+            var comapny = "";
+            var address = "";
+            if (course != "Stage") {
+              const {
+                Coach_Id,
+                User_Id,
+                Course,
+                Name_of_company,
+                Email,
+                Mobile,
+                Date,
+                Address,
+                Postalcode,
+                Level,
+                Number_of_person
+              } = reserve[0];
+              comapny = Name_of_company;
+              address = Address;
+              if (Course !== "Tournament") {
+                var reserve_qry =
+                  "INSERT INTO `reserved_course`(`Coach_Id`, `User_Id`, `booking_Id`, `Course`, `Name_of_company`, `Email`, `Mobile`, `Date`, `Address`, `Postalcode`, `Level`, `Number_of_person`)" +
+                  " VALUES (" +
+                  Coach_Id +
+                  "," +
+                  User_Id +
+                  "," +
+                  value.insertId +
+                  ",'" +
+                  Course +
+                  "',?,'" +
+                  Email +
+                  "','" +
+                  Mobile +
+                  "','" +
+                  formatDate(Date) +
+                  "',?," +
+                  Postalcode +
+                  ",'" +
+                  Level +
+                  "'," +
+                  Number_of_person +
+                  ")";
+              } else {
+                var reserve_qry =
+                  "INSERT INTO `reserved_course`(`Coach_Id`, `User_Id`, `booking_Id`, `Course`, `Name_of_company`, `Email`, `Mobile`, `Date`,`Level`, `Number_of_person`)" +
+                  " VALUES (" +
+                  Coach_Id +
+                  "," +
+                  User_Id +
+                  "," +
+                  value.insertId +
+                  ",'" +
+                  Course +
+                  "',?,'" +
+                  Email +
+                  "','" +
+                  Mobile +
+                  "','" +
+                  formatDate(Date) +
+                  "','" +
+                  Level +
+                  "'," +
+                  Number_of_person +
+                  ")";
+              }
+            }
+            await db_library
+              .parameterexecute(reserve_qry, [comapny, address])
+              .then(async values => {
+                if (values.affectedRows > 0) {
+                  await db_library
+                    .execute(sel_qry)
+                    .then(async val => {
+                      if (val.length > 0) {
+                        var mailTemplate = await mail_template.getMailTemplate(
+                          appConfig.MailTemplate.CoachAcceoptance
+                        );
+                        const mailOption = require("../../_mailer/mailOptions");
+                        let _mailOption = new mailOption();
+                        _mailOption.to = val[0].email;
+                        _mailOption.subject = "Booking Request";
+                        _mailOption.html = mailTemplate[0].template
+                          .replace(
+                            "{{username}}",
+                            val[0].firstName + " " + val[0].lastName
+                          )
+                          .replace("{{date}}", booking_date)
+                          .replace("{{course}}", course);
+                        var _mailer = require("../../_mailer/mailer");
+                        _mailer.sendMail(_mailOption);
+                        _output.data = {};
+                        _output.isSuccess = true;
+                        _output.message = "Booking Successfully Inserted";
+                      }
+                    })
+                    .catch(err => {
+                      console.log(err);
+                      _output.data = {};
+                      _output.isSuccess = false;
+                      _output.message = "Mail Sent Failed";
+                    });
+                }
+              })
+              .catch(err => {
+                console.log(err);
+                _output.data = {};
+                _output.isSuccess = false;
+                _output.message = "Booking Inserted Failed";
+              });
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          _output.data = {};
+          _output.isSuccess = false;
+          _output.message = "Booking Inserted Failed";
+        });
+    }
+  } else {
+    _output.data = "Required Field are missing";
+    _output.isSuccess = false;
+    _output.message = "Booking Inserted Failed";
+  }
+
+  res.send(_output);
+};
+
+exports.getCourseReservation = async function(req, res, next) {
+  var _output = new output();
+  const booking_id = req.query.booking_id;
+
+  if (booking_id != "") {
+    var query =
+      "SELECT * FROM `reserved_course` Where `booking_Id` = '" +
+      booking_id +
+      "'";
+    await db_library
+      .execute(query)
+      .then(value => {
+        var obj = {
+          booking: value
+        };
+        var result = obj;
+        _output.data = result;
+        _output.isSuccess = true;
+        _output.message = "Booking Get Successfull";
+      })
+      .catch(err => {
+        _output.data = err.message;
+        _output.isSuccess = false;
+        _output.message = "Booking Get Failed";
+      });
+  } else {
+    _output.data = "Required Field are missing";
+    _output.isSuccess = false;
+    _output.message = "Get Failed";
+  }
+  res.send(_output);
+};
+
+exports.search_for_event = async function(req, res, next) {
+  const P_postalcode = req.query.P_postalcode;
+  const P_date = req.query.P_date;
+  const P_course = req.query.P_course;
+
+  var _output = new output();
+  // if (ville != "" && date != "") {
+  if (P_course == "Stage") {
+    var query =
+      "SELECT * FROM `course_stage` WHERE (('" +
+      P_date +
+      "' BETWEEN `from_date` AND `to_date`) or '" +
+      P_date +
+      "' = '0000-00-00'or '" +
+      P_date +
+      "' = '' or '" +
+      P_date +
+      "' is null) AND (`Postalcode` = '" +
+      P_postalcode +
+      "' OR '" +
+      P_postalcode +
+      "' ='') and from_date >= '" +
+      formatDate(new Date()) +
+      "'";
+  } else if (P_course == "Tournament") {
+    var query =
+      "SELECT * FROM `tournament` WHERE (('" +
+      P_date +
+      "' BETWEEN `from_date` AND `to_date`) or '" +
+      P_date +
+      "' = '0000-00-00'or '" +
+      P_date +
+      "' = '' or '" +
+      P_date +
+      "' is null) AND (`Postalcode` = '" +
+      P_postalcode +
+      "' OR '" +
+      P_postalcode +
+      "' ='') and from_date >= '" +
+      formatDate(new Date()) +
+      "'";
+  } else if (P_course == "TeamBuilding") {
+    var query =
+      "SELECT t.* FROM `team_building` t inner JOIN users u ON t.Coach_Id =  u.id  WHERE `postalCode` = '" +
+      P_postalcode +
+      "' OR '" +
+      P_postalcode +
+      "' =''";
+  } else {
+    var query =
+      "SELECT * FROM `animations` WHERE `Postalcode` = '" +
+      P_postalcode +
+      "' OR '" +
+      P_postalcode +
+      "' =''";
+  }
+  console.log(query);
+  await db_library
+    .execute(query)
+    .then(value => {
+      if (value.length > 0) {
+        var obj = {
+          event_list: value
+        };
+        _output.data = obj;
+        _output.isSuccess = true;
+        _output.message = "Event Get Successfull";
+      } else {
+        var obj = {
+          event_list: []
+        };
+        _output.data = obj;
+        _output.isSuccess = true;
+        _output.message = " No Event Found";
+      }
+    })
+    .catch(err => {
+      _output.data = err.message;
+      _output.isSuccess = false;
+      _output.message = "Event Get Failed";
+    });
+  console.log(_output);
+  res.send(_output);
+};
+
+exports.search_for_event_top_3 = async function(req, res, next) {
+  const P_postalcode = req.query.P_postalcode;
+  const P_date = req.query.P_date;
+  const P_course = req.query.P_course;
+
+  var _output = new output();
+  // if (ville != "" && date != "") {
+  if (P_course == "Stage") {
+    var query =
+      "SELECT * FROM `course_stage` WHERE (('" +
+      P_date +
+      "' BETWEEN `from_date` AND `to_date`) or '" +
+      P_date +
+      "' = '0000-00-00'or '" +
+      P_date +
+      "' = '' or '" +
+      P_date +
+      "' is null) AND (`Postalcode` = '" +
+      P_postalcode +
+      "' OR '" +
+      P_postalcode +
+      "' ='') and from_date >= '" +
+      formatDate(new Date()) +
+      "' Limit 3";
+  } else if (P_course == "Tournament") {
+    var query =
+      "SELECT * FROM `tournament` WHERE (('" +
+      P_date +
+      "' BETWEEN `from_date` AND `to_date`) or '" +
+      P_date +
+      "' = '0000-00-00'or '" +
+      P_date +
+      "' = '' or '" +
+      P_date +
+      "' is null) AND (`Postalcode` = '" +
+      P_postalcode +
+      "' OR '" +
+      P_postalcode +
+      "' ='') and from_date >= '" +
+      formatDate(new Date()) +
+      "'";
+  } else if (P_course == "TeamBuilding") {
+    var query =
+      "SELECT t.* FROM `team_building` t inner JOIN users u ON t.Coach_Id =  u.id  WHERE `postalCode` = '" +
+      P_postalcode +
+      "' OR '" +
+      P_postalcode +
+      "' =''";
+  } else {
+    var query =
+      "SELECT * FROM `animations` WHERE `Postalcode` = '" +
+      P_postalcode +
+      "' OR '" +
+      P_postalcode +
+      "' =''";
+  }
+  console.log(query);
+  await db_library
+    .execute(query)
+    .then(value => {
+      if (value.length > 0) {
+        var obj = {
+          event_list: value
+        };
+        _output.data = obj;
+        _output.isSuccess = true;
+        _output.message = "Event Get Successfull";
+      } else {
+        var obj = {
+          event_list: []
+        };
+        _output.data = obj;
+        _output.isSuccess = true;
+        _output.message = " No Event Found";
+      }
+    })
+    .catch(err => {
+      _output.data = err.message;
+      _output.isSuccess = false;
+      _output.message = "Event Get Failed";
+    });
+  console.log(_output);
+  res.send(_output);
+};
+
+exports.getall_course = async function(req, res, next) {
+  var _output = new output();
+  const P_course = req.query.P_course;
+  var query;
+  if (P_course == "Stage") {
+    query =
+      "SELECT * FROM `course_stage` where from_date >= '" +
+      formatDate(new Date()) +
+      "';";
+  } else if (P_course == "Tournament") {
+    query =
+      "SELECT * FROM `tournament` where from_date >= '" +
+      formatDate(new Date()) +
+      "';";
+  } else if (P_course == "Animation") {
+    query =
+      "SELECT id,Description,Location,Postalcode,Eventdetails,Price,filename,Plan,Coach_Id FROM `animations`;";
+  } else {
+    query = "SELECT * FROM `team_building`;";
+  }
+
+  console.log("query", query);
+
+  await db_library
+    .execute(query)
+    .then(value => {
+      if (value.length > 0) {
+        var obj = {
+          event_list: value
+        };
+        _output.data = obj;
+        _output.isSuccess = true;
+        _output.message = "Event Get Successfull";
+      } else {
+        var obj = {
+          event_list: []
+        };
+        _output.data = obj;
+        _output.isSuccess = true;
+        _output.message = " No Event Found";
+      }
+    })
+    .catch(err => {
+      _output.data = err.message;
+      _output.isSuccess = false;
+      _output.message = "Event Get Failed";
+    });
+  res.send(_output);
+};
+
+exports.getCoachbyevent = async function(req, res, next) {
+  var _output = new output();
+  const P_course = req.body.P_course;
+  const P_CoachId = req.body.P_CoachId;
+
+  if (P_course == "Stage") {
+    var query =
+      "select c.* from `course_stage` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email WHERE cs.Coach_Id = " +
+      P_CoachId +
+      ";";
+  } else if (P_course == "Tournament") {
+    var query =
+      "select c.* from `tournament` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email WHERE cs.Coach_Id = " +
+      P_CoachId +
+      ";";
+  } else if (P_course == "Animation") {
+    var query =
+      "select c.* from `animations` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email WHERE cs.Coach_Id = " +
+      P_CoachId +
+      ";";
+  } else {
+    var query =
+      "select c.* from `team_building` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email WHERE cs.Coach_Id = " +
+      P_CoachId +
+      ";";
+  }
+
+  await db_library
+    .execute(query)
+    .then(value => {
+      if (value.length > 0) {
+        var obj = {
+          coach_list: value
+        };
+        _output.data = obj;
+        _output.isSuccess = true;
+        _output.message = "Coach Get Successfull";
+      } else {
+        var obj = {
+          coach_list: []
+        };
+        _output.data = obj;
+        _output.isSuccess = true;
+        _output.message = " No Coach Found";
+      }
+    })
+    .catch(err => {
+      _output.data = err.message;
+      _output.isSuccess = false;
+      _output.message = "Coach Get Failed";
+    });
+  res.send(_output);
+};
+
+exports.getEventbyId = async function(req, res, next) {
+  var _output = new output();
+  const P_course = req.query.P_course;
+  const P_CoachId = req.query.P_CoachId;
+  const P_Eventid = req.query.P_Eventid;
+
+  if (P_course == "Stage") {
+    var query =
+      "SELECT * FROM `course_stage` where `Coach_Id`=" +
+      P_CoachId +
+      " AND `id`=" +
+      P_Eventid +
+      ";";
+  } else if (P_course == "Tournament") {
+    var query =
+      "SELECT * FROM `tournament` where `Coach_Id`=" +
+      P_CoachId +
+      " AND `id`=" +
+      P_Eventid +
+      ";";
+  } else if (P_course == "Animation") {
+    var query =
+      "SELECT * FROM `animations` where `Coach_Id`=" +
+      P_CoachId +
+      " AND `id`=" +
+      P_Eventid +
+      ";";
+  } else {
+    var query =
+      "SELECT * FROM `team_building` where `Coach_Id`=" +
+      P_CoachId +
+      " AND `id`=" +
+      P_Eventid +
+      ";";
+  }
+
+  await db_library
+    .execute(query)
+    .then(value => {
+      if (value.length > 0) {
+        var obj = {
+          event_list: value
+        };
+        _output.data = obj;
+        _output.isSuccess = true;
+        _output.message = "Event Get Successfull";
+      } else {
+        var obj = {
+          event_list: []
+        };
+        _output.data = obj;
+        _output.isSuccess = true;
+        _output.message = " No Event Found";
+      }
+    })
+    .catch(err => {
+      _output.data = err.message;
+      _output.isSuccess = false;
+      _output.message = "Event Get Failed";
+    });
+  res.send(_output);
+};

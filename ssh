@@ -1,0 +1,18 @@
+SSH:
+172.107.175.10
+User Name: administrator
+Password: $8m9bB~4Q
+-----------------------------------------
+FTP:
+172.107.175.10
+User Name: admin
+Password: vkLg!iEeN2W
+------------------------------------------
+Mysql:
+Username: root
+Password: $8m9bB~4Q  
+-------------------------------------------
+PHP MY ADMIN
+URL:https://172.107.175.10:8080/phpmyadmin/index.php
+Username: root
+Password: $8m9bB~4Q
