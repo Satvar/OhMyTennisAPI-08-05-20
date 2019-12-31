@@ -956,7 +956,7 @@ exports.getTournament = async function (req, res, next) {
     const id = req.query.id;
 
     if (id != "" && Coach_id != "") {
-        var query = "select * from tournament where Coach_Id = " + Coach_id + " AND id = " + id + "";
+        var query = "select tournament.*,users.* from tournament JOIN users ON  tournament.Coach_Id = users.id where tournament.Coach_Id = " + Coach_id + " AND tournament.id = " + id + "";
         await db_library
             .execute(query).then(async (value) => {
                 var result = value;
@@ -1232,7 +1232,7 @@ exports.getAnimation = async function (req, res, next) {
     const id = req.query.id;
 
     if (id != "" && Coach_id != "") {
-        var query = "select * from animations where Coach_Id = " + Coach_id + " AND id = " + id + "";
+        var query = "select animations.*,users.* from animations JOIN users ON  animations.Coach_Id = users.id where animations.Coach_Id = " + Coach_id + " AND animations.id = " + id + "";
 
     // const id = req.query.coachId;
 
@@ -1363,6 +1363,45 @@ exports.getTeambuildingCourse = async function (req, res, next) {
         _output.data = "Required Field are missing";
         _output.isSuccess = false;
         _output.message = "Teambuilding course get Failed";
+    }
+    res.send(_output);
+}
+
+exports.getteambuilding = async function (req, res, next) {
+    var _output = new output();
+    const Coach_id = req.query.coachId;
+    const id = req.query.id;
+
+    if (id != "" && Coach_id != "") {
+        var query = "select team_building.*,users.* from team_building JOIN users ON  team_building.Coach_Id = users.id where team_building.Coach_Id = " + Coach_id + " AND team_building.id = " + id + "";
+
+        await db_library
+            .execute(query).then(async (value) => {
+                var result = value;
+                if (value.length > 0) {
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Team Building course Get successfully";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Team Building course Not Found";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Team Building course get Failed";
+            })
+    } else {
+        _output.data = "Required Field are missing";
+        _output.isSuccess = false;
+        _output.message = "Team Building course get Failed";
     }
     res.send(_output);
 }

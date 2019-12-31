@@ -52,6 +52,7 @@ router.post("/course/setanimationinsert", courseController.setAnimationInsert);
 router.post("/course/setanimationupdate", courseController.setAnimationUpdate);
 router.get("/course/getanimationcourse", courseController.getAnimationCourse);
 router.get("/course/getanimation", courseController.getAnimation);
+router.get("/course/getteambuilding", courseController.getteambuilding);
 
 router.post(
   "/course/setteambuildingcourse",
