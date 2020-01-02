@@ -1406,6 +1406,37 @@ exports.getteambuilding = async function (req, res, next) {
     res.send(_output);
 }
 
+exports.getcourse = async function (req, res, next) {
+    var _output = new output();
+
+    var query = "select * from course_dbs";
+
+        await db_library
+            .execute(query).then(async (value) => {
+                var result = value;
+                if (value.length > 0) {
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Team Building course Get successfully";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Team Building course Not Found";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Team Building course get Failed";
+            })
+    res.send(_output);
+}
+
 function formatDate(date) {
     var formate_date = moment(date).format('YYYY-MM-DD');
     return formate_date;

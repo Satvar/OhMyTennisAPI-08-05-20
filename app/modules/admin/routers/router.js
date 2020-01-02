@@ -58,5 +58,6 @@ router.get("/admin/tournoiservice", serviceController.gettournoiservice);
 router.get("/admin/getallcount", adminController.getallcount);
 router.post("/admin/getclubbyid", courtController.getclubbyid);
 router.post("/admin/getclubbypostal", courtController.getbypostal);
+router.get("/admin/getallcoach", paymentController.getCoach);
 
 module.exports = router;

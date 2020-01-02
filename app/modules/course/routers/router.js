@@ -76,4 +76,6 @@ router.get(
 );
 router.get("/course/getcourseyear", courseController.getYear);
 
+router.get("/course/getcourse", courseController.getcourse)
+
 module.exports = router;
