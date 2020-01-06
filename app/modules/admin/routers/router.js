@@ -59,5 +59,10 @@ router.get("/admin/getallcount", adminController.getallcount);
 router.post("/admin/getclubbyid", courtController.getclubbyid);
 router.post("/admin/getclubbypostal", courtController.getbypostal);
 router.get("/admin/getallcoach", paymentController.getCoach);
+router.post(
+  "/admin/getbookinganduserdetails",
+  paymentController.getbookinganduserdetails
+);
+router.get("/admin/getservice", serviceController.getservice);
 
 module.exports = router;

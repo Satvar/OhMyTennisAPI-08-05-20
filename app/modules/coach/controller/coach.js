@@ -87,7 +87,7 @@ exports.find_your_coach = async function (req, res, next) {
     var _output = new output();
     // if (ville != "" && date != "" && rayon != "" && course != "") {
     var query = "call filtercoach('" + ville + "','" + date + "','" + rayon + "','" + course + "')";
-    console.log(query);
+    //console.log(query);
     //var query = "SELECT * FROM users s inner join coaches_dbs c on c.Coach_Email = s.email INNER join cities ct on ct.id = s.cityId where c.Coach_Rayon = " + rayon + " AND ct.Nom_commune like '%" + ville + "%'";
 
     await db_library
@@ -383,7 +383,8 @@ exports.setStatus = async function (req, res, next) {
 
         if (course == 'CoursCollectifOndemand') {
             var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`discount_club`= '" + discount + "',`amount`= '" + amount + "' WHERE `Coach_id`=" + Coach_id + " AND `bookingDate`='" + booking_date + "' AND `bookingCourse`='" + course + "'";
-            var sel_qry = "SELECT s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserLastname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.bookingCourse='" + course + "' AND b.bookingDate ='" + booking_date + "' AND b.Coach_ID = " + Coach_id + " AND b.BookingTime = '" + booking_time + "'"
+            // var sel_qry = "SELECT s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserLastname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.bookingCourse='" + course + "' AND b.bookingDate ='" + booking_date + "' AND b.Coach_ID = " + Coach_id + " AND b.BookingTime = '" + booking_time + "'"
+            var sel_qry = "SELECT s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserLastname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.booking_Id =" + booking_id + ""
         } else if (course == 'CoursIndividuel') {
             // var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`discount_club`= '" + discount + "',`amount`= '" + amount + "' WHERE `Coach_id`=" + Coach_id + " AND `booking_id`=" + booking_id + "";
             var update_qry = "call proc_set_booking_status(" + booking_id + "," + amount + ",'" + status + "')"
@@ -395,7 +396,7 @@ exports.setStatus = async function (req, res, next) {
             var sel_qry = "SELECT s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserFirstname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.booking_Id =" + booking_id + ""
         }
         else {
-            var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`discount_club`= '" + discount + "',`amount`= '" + amount + "' WHERE `Coach_id`=" + Coach_id + " AND `bookingDate`='" + booking_date + "' AND `bookingCourse`='" + course + "' AND `user_Id`='" + user_Id + "'";
+            var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`discount_club`= '" + discount + "',`amount`= '" + amount + "' WHERE `Coach_id`=" + Coach_id + " AND `bookingDate`='" + booking_date + "' AND `bookingCourse`='" + course + "'";
             var sel_qry = "SELECT s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserFirstname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.booking_Id =" + booking_id + ""
         }
 

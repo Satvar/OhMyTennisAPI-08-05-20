@@ -222,7 +222,7 @@ exports.updateProfile = async function(req, res, next) {
       .parameterexecute(coach_query, [
         Coach_Fname,
         Coach_Lname,
-        Coach_Lname,
+        Coach_Phone,
         InstagramURL,
         TwitterURL,
         FacebookURL,

@@ -1420,19 +1420,19 @@ exports.getcourse = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Team Building course Get successfully";
+                    _output.message = "Course get successfully";
                 } else {
                     var obj = {
                         course: []
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Team Building course Not Found";
+                    _output.message = "Course not found";
                 }
             }).catch((err) => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Team Building course get Failed";
+                _output.message = "Course get Failed";
             })
     res.send(_output);
 }

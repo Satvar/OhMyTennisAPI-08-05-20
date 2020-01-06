@@ -31,22 +31,78 @@ exports.getallbookings = async function(req, res, next) {
 };
 
 exports.getCoach = async function(req, res, next) {
-  console.log("[payments.js--getCoach--]");
+  //console.log("[payments.js--getCoach--]");
   var _output = new output();
   await db_library
     .execute(
       "SELECT `Coach_ID`, `Coach_Fname`, `Coach_Lname` FROM `coaches_dbs`"
     )
     .then(value => {
-      console.log("[payments.js--getCoach--]", value);
+      //console.log("[payments.js--getCoach--]", value);
       var obj = {
         coach_list: value
       };
-      console.log(obj);
+      //console.log(obj);
       var result = obj;
       _output.data = result;
       _output.isSuccess = true;
       _output.message = "Get coach list Successfully";
+    })
+    .catch(err => {
+      _output.data = {};
+      _output.isSuccess = false;
+      _output.message = "Get coach list Failed";
+    });
+
+  res.send(_output);
+};
+
+exports.getbookinganduserdetails = async function(req, res, next) {
+  //console.log("[payments.js--getbookinganduserdetails--]");
+  var _output = new output();
+  const { coach_id, course_short_name, course_id } = req.body;
+  await db_library
+    .execute(
+      "SELECT `Coach_ID`, `Coach_Fname`, `Coach_Lname`, `Coach_Email` FROM `coaches_dbs` WHERE `Coach_ID` =" +
+        coach_id
+    )
+    .then(async value => {
+      var sel_qry =
+        "SELECT * FROM `users` WHERE email = '" + value[0].Coach_Email + "'";
+      // console.log(sel_qry);
+      await db_library
+        .execute(sel_qry)
+        .then(async val => {
+          var sel_qry_val =
+            "SELECT s.id as UserID, s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserLastname, b.booking_Id as BookedID,b.bookingDate as BookedDate, b.bookingEnd as BookedEnd, b.bookingCourse as BookedCourse, b.amount as Amount FROM `booking_dbs` b INNER JOIN users s on b.user_Id = s.id WHERE b.Coach_ID = '" +
+            val[0].id +
+            "' AND b.bookingCourse = '" +
+            course_short_name +
+            "'";
+          //console.log(sel_qry_val);
+          await db_library
+            .execute(sel_qry_val)
+            .then(async val1 => {
+              var obj = {
+                payment: val1
+              };
+              //console.log(obj);
+              var result = obj;
+              _output.data = result;
+              _output.isSuccess = true;
+              _output.message = "Get coach list Successfully";
+            })
+            .catch(err => {
+              _output.data = {};
+              _output.isSuccess = false;
+              _output.message = "Mail Not Sent";
+            });
+        })
+        .catch(err => {
+          _output.data = {};
+          _output.isSuccess = false;
+          _output.message = "Mail Not Sent";
+        });
     })
     .catch(err => {
       _output.data = {};

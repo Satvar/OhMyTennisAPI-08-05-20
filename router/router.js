@@ -9,6 +9,7 @@ const cities = require("../app/modules/cities/routers/router");
 const course = require("../app/modules/course/routers/router");
 const coachdetails = require("../app/modules/coachdetails/routers/router");
 const calender = require("../app/modules/calender/routers/router");
+const home = require("../app/modules/home/routers/router");
 
 router.use("/", user);
 router.use("/", coach);
@@ -17,4 +18,5 @@ router.use("/", course);
 router.use("/", calender);
 router.use("/", coachdetails);
 router.use("/", admin);
+router.use("/", home);
 module.exports = router;
