@@ -438,19 +438,19 @@ exports.gettournoiservice = async function(req, res, next) {
 exports.getservice = async function(req, res, next) {
   var _output = new output();
   let data = [];
+  let serData = {};
   await db_library
     .execute("SELECT * FROM `service`")
     .then(value => {
-      //console.log(value.length);
-      for (let i = 0; i < value.length; i++) {
-        const servValue = value[i];
-        let servKey = value[i].commission_type;
-        const serData = {
-          servKey: servValue
-        };
-        //data.push({ value[i]['commission_type']  value[i] })
-        //console.log(serData);
-      }
+      //console.log(value);
+      // for (const [key, val] of Object.entries(value)) {
+      //   //console.log(key, val);
+      //   val.key = val;
+      //   console.log(val);
+      // }
+      // for (let i = 0; i < value.length; i++) {
+      //   data[value[i].commission_type] = value[i];
+      // }
       var obj = {
         service_list: value
       };

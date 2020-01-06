@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const appConfig = require("../../../../config/appConfig");
 const mail_template = require("../../MailTemplate/mailTemplate");
+const stripe = require("stripe");
 
 exports.getallbookings = async function(req, res, next) {
   var _output = new output();
@@ -147,3 +148,65 @@ exports.getbookinganduserdetails = async function(req, res, next) {
 //   }
 //   res.send(_output);
 // };
+
+exports.createcustomerac = async function(req, res, next) {
+  var _output = new output();
+  const stripe = require("stripe")(
+    "sk_test_TAPpzQna3UT4N3ZvV8Gxkora00RffPjZlP"
+  );
+  const { status, response } = req.body;
+  if (status === 200) {
+    // stripe.customers.create(
+    //   {
+    //     description: "jenny.rosen@example.com"
+    //   },
+    //   function(err, customer) {
+    //     // asynchronously called
+    //   }
+    // );
+    stripe.customers.createSource(
+      "cus_GUwFp0f85hueeD",
+      { source: response.id },
+      function(err, bankAccount) {
+        // asynchronously called
+      }
+    );
+    // stripe.accounts.createExternalAccount(
+    //   "acct_1F7ctuHPYEpTpWDB",
+    //   {
+    //     external_account: response.id
+    //   },
+    // stripe.customers.createSource(
+    //   "acct_1F7ctuHPYEpTpWDB",
+    //   { source: response.id },
+    //   function(err, bankAccount) {
+    //     if (err) {
+    //       _output.data = err;
+    //       _output.isSuccess = false;
+    //       _output.message = "Get coach list Failed";
+    //     }
+    //     res.send(_output);
+    //   }
+    // );
+    // .then(value => {
+    //   //console.log("[payments.js--getCoach--]", value);
+    //   var obj = {
+    //     coach_list: value
+    //   };
+    //   //console.log(obj);
+    //   var result = obj;
+    //   _output.data = result;
+    //   _output.isSuccess = true;
+    //   _output.message = "Get coach list Successfully";
+    // })
+    // .catch(err => {
+    //   _output.data = err;
+    //   _output.isSuccess = false;
+    //   _output.message = "Get coach list Failed";
+    // });
+  } else {
+    _output.data = "";
+    _output.isSuccess = false;
+    _output.message = "Customer account does not create!";
+  }
+};

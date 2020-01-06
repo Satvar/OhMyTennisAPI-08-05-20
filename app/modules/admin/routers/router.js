@@ -64,5 +64,6 @@ router.post(
   paymentController.getbookinganduserdetails
 );
 router.get("/admin/getservice", serviceController.getservice);
+router.post("/admin/createcustomerac", paymentController.createcustomerac);
 
 module.exports = router;
