@@ -331,7 +331,7 @@ exports.search_for_event = async function(req, res, next) {
       P_postalcode +
       "' =''";
   }
-  console.log(query);
+  //console.log(query);
   await db_library
     .execute(query)
     .then(value => {
@@ -356,7 +356,7 @@ exports.search_for_event = async function(req, res, next) {
       _output.isSuccess = false;
       _output.message = "Event Get Failed";
     });
-  console.log(_output);
+  //console.log(_output);
   res.send(_output);
 };
 
@@ -416,7 +416,7 @@ exports.search_for_event_top_3 = async function(req, res, next) {
       P_postalcode +
       "' =''";
   }
-  console.log(query);
+  // console.log(query);
   await db_library
     .execute(query)
     .then(value => {
@@ -441,7 +441,7 @@ exports.search_for_event_top_3 = async function(req, res, next) {
       _output.isSuccess = false;
       _output.message = "Event Get Failed";
     });
-  console.log(_output);
+  //console.log(_output);
   res.send(_output);
 };
 
@@ -466,7 +466,7 @@ exports.getall_course = async function(req, res, next) {
     query = "SELECT * FROM `team_building`;";
   }
 
-  console.log("query", query);
+  // console.log("query", query);
 
   await db_library
     .execute(query)
@@ -502,22 +502,22 @@ exports.getCoachbyevent = async function(req, res, next) {
 
   if (P_course == "Stage") {
     var query =
-      "select c.* from `course_stage` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email WHERE cs.Coach_Id = " +
+      "select c.*,ci.coordonnees_gps from `course_stage` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email INNER JOIN `cities` ci on ci.Code_postal = cs.Postalcode WHERE cs.Coach_Id = " +
       P_CoachId +
       ";";
   } else if (P_course == "Tournament") {
     var query =
-      "select c.* from `tournament` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email WHERE cs.Coach_Id = " +
+      "select c.*,ci.coordonnees_gps from `tournament` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email INNER JOIN `cities` ci on ci.Code_postal = cs.Postalcode WHERE cs.Coach_Id = " +
       P_CoachId +
       ";";
   } else if (P_course == "Animation") {
     var query =
-      "select c.* from `animations` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email WHERE cs.Coach_Id = " +
+      "select c.*,ci.coordonnees_gps from `animations` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email INNER JOIN `cities` ci on ci.Code_postal = cs.Postalcode WHERE cs.Coach_Id = " +
       P_CoachId +
       ";";
   } else {
     var query =
-      "select c.* from `team_building` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email WHERE cs.Coach_Id = " +
+      "select c.*,ci.coordonnees_gps from `team_building` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email INNER JOIN `cities` ci on ci.Code_postal = cs.Postalcode WHERE cs.Coach_Id = " +
       P_CoachId +
       ";";
   }
