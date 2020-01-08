@@ -71,7 +71,8 @@ exports.getIndividualCourse = async function (req, res, next) {
     const id = req.query.coachId;
 
     if (id != "") {
-        var query = "select * from individualcourses where Coach_Id = " + id;
+        //var query = "select * from individualcourses where Coach_Id = " + id;
+        var query = "select ind.*,ci.coordonnees_gps from `individualcourses` ind INNER JOIN `cities` ci on ci.Code_postal = ind.Postalcode where Coach_Id = " + id;
         await db_library
             .execute(query).then(async (value) => {
                 var result = value;
@@ -180,7 +181,7 @@ exports.getcouseCollectiveDemanad = async function (req, res, next) {
 
     if (Coach_Id != "") {
         await db_library
-            .execute("SELECT * FROM `course_collective_if_demand` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
+            .execute("SELECT cd.*,ci.coordonnees_gps FROM `course_collective_if_demand` cd INNER JOIN `cities` ci on ci.Code_postal = cd.Postalcode WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
                 if (value.length > 0) {
                     var result = value;
                     var obj = {
@@ -364,7 +365,7 @@ exports.getCourseCollectiveClub = async function (req, res, next) {
 
     if (ids != "") {
         await db_library
-            .execute("SELECT * FROM `couse_collective_if_club` WHERE Coach_Id=" + ids + "").then(async (value) => {
+            .execute("SELECT c.*,ci.coordonnees_gps FROM `couse_collective_if_club` c INNER JOIN `cities` ci on ci.Code_postal = c.Postalcode WHERE Coach_Id=" + ids + "").then(async (value) => {
                 await db_library.execute("SELECT * FROM `courseclub_availablity` WHERE CoachId = " + ids + "").then((res) => {
                     if (value.length > 0 && res.length > 0) {
                         var obj = {

@@ -353,7 +353,6 @@ exports.getbypostal = async function(req, res, next) {
 };
 
 exports.getclubbyid = async function(req, res, next) {
-  console.log("test");
   const court_id = req.body.court_id;
   var _output = new output();
 
@@ -365,12 +364,12 @@ exports.getclubbyid = async function(req, res, next) {
           "' LIMIT 1"
       )
       .then(value => {
-        console.log(value);
+        //console.log(value);
         if (value.length > 0) {
           var obj = {
             club_list: value
           };
-          console.log(obj);
+          //console.log(obj);
           var result = obj;
           _output.data = result;
           _output.isSuccess = true;
