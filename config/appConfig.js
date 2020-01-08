@@ -23,8 +23,7 @@ module.exports = {
   ],
   CROS_OPTIONS: {
     origin: [
-      "http://localhost:3003",
-      "http://172.107.175.10:3003",
+      "http://192.168.1.21:4001",
       "http://localhost:3001",
       "http://172.107.175.10:4001",
       "http://192.168.1.32:4001"
