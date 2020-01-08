@@ -510,7 +510,7 @@ exports.setStageCourse = async function (req, res, next) {
         _output.message = "Stage course added Failed";
     }
     res.send(_output);
-    console.log(output)
+    //console.log(output)
 }
 
 exports.getStageCourse = async function (req, res, next) {
@@ -574,7 +574,7 @@ exports.setTournamentCourse = async function (req, res, next) {
 
         var update_query = "Update `tournament` set `filename`=?, `Description`=?, `Price`=?," +
             "`Photo`=?, `from_date`=?, `Plan` =?, `Location` =?, `to_date` =?, `Tournamentname` =?, `Eventdetails` =?, `Postalcode` =? where `Coach_Id` = ?";
-            console.log(update_query);
+            //console.log(update_query);
         await db_library
             .execute("SELECT * FROM `tournament` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
                 if (value.length > 0) {
@@ -585,7 +585,7 @@ exports.setTournamentCourse = async function (req, res, next) {
                             _output.isSuccess = true;
                             _output.message = "Tournament course updated successfully";
                         }).catch(err => {
-                            console.log(err);
+                            //console.log(err);
                             _output.data = {};
                             _output.isSuccess = false;
                             _output.message = "Tournament course update Failed";
@@ -697,6 +697,7 @@ exports.getStage = async function (req, res, next) {
 
 exports.setStageCourseUpdate = async function (req, res, next) {
     var _output = new output();
+    //console.log(req.body)
     const {
         id,
         Location,
@@ -935,7 +936,7 @@ exports.setTournamentCourseInsert = async function (req, res, next) {
                 _output.isSuccess = true;
                 _output.message = "Tournament course added successfully";
             }).catch(err => {
-                console.log(err)
+                //console.log(err)
                 _output.data = {};
                 _output.isSuccess = false;
                 _output.message = "Tournament course added Failed";

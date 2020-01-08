@@ -97,7 +97,7 @@ exports.bookCourse = async function(req, res, next) {
                 }
               })
               .catch(err => {
-                console.log(err);
+                //console.log(err);
                 _output.data = {};
                 _output.isSuccess = false;
                 _output.message = "Mail Not Sent";
@@ -105,7 +105,7 @@ exports.bookCourse = async function(req, res, next) {
           }
         })
         .catch(err => {
-          console.log(err);
+          //console.log(err);
           _output.data = {};
           _output.isSuccess = false;
           _output.message = "Booking Inserted Failed";
@@ -211,7 +211,7 @@ exports.bookCourse = async function(req, res, next) {
                       }
                     })
                     .catch(err => {
-                      console.log(err);
+                      //console.log(err);
                       _output.data = {};
                       _output.isSuccess = false;
                       _output.message = "Mail Sent Failed";
@@ -219,7 +219,7 @@ exports.bookCourse = async function(req, res, next) {
                 }
               })
               .catch(err => {
-                console.log(err);
+                //console.log(err);
                 _output.data = {};
                 _output.isSuccess = false;
                 _output.message = "Booking Inserted Failed";
@@ -227,7 +227,7 @@ exports.bookCourse = async function(req, res, next) {
           }
         })
         .catch(err => {
-          console.log(err);
+          //console.log(err);
           _output.data = {};
           _output.isSuccess = false;
           _output.message = "Booking Inserted Failed";

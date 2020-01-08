@@ -325,7 +325,7 @@ exports.getallcourts = async function(req, res, next) {
 exports.getbypostal = async function(req, res, next) {
   const court_postal_code = req.body.court_postal_code;
 
-  console.log(court_postal_code);
+  //console.log(court_postal_code);
   var _output = new output();
   $query =
     "SELECT * FROM `tenniscourt` WHERE court_postal_code = '" +

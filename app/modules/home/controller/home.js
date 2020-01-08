@@ -34,7 +34,7 @@ exports.searchindetailforcoach = async function(req, res, next) {
 exports.getallCourscount = async function(req, res, next) {
   var _output = new output();
   const Coach_id = req.body.Coach_ID;
-  console.log(Coach_id);
+  // console.log(Coach_id);
   var CoursIndividuel;
   var CoursCollectifOndemand;
   var CoursCollectifClub;
