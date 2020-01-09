@@ -663,7 +663,7 @@ exports.getStage = async function (req, res, next) {
 
     if (id != "" && Coach_id != "") {
         // var query = "select * from course_stage where Coach_Id = " + Coach_id + " AND id = " + id + "";
-        var query = "select course_stage.*,users.* from course_stage JOIN users ON  course_stage.Coach_Id = users.id where course_stage.Coach_Id = " + Coach_id + " AND course_stage.id = " + id + "";
+        var query = "select users.*,course_stage.* from course_stage JOIN users ON  course_stage.Coach_Id = users.id where course_stage.Coach_Id = " + Coach_id + " AND course_stage.id = " + id + "";
         await db_library
             .execute(query).then(async (value) => {
                 var result = value;
@@ -716,21 +716,21 @@ exports.setStageCourseUpdate = async function (req, res, next) {
     } = req.body;
 
     if (id != "" && Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Price != "" && Photo != "" && from_date != "" && Mode_of_transport != "" && Plan != "" && to_date != "" && Eventdetails != "" && Eventname != "") {
-
         // var insert_query = "INSERT INTO `course_stage` (`Coach_Id`, `Mode_of_transport`, `Description`, `Price`, `Photo`," +
         //     " `from_date`, `Plan`,`filename`,`Postalcode`,`Location`,`to_date`,`Eventname`,`Eventdetails`) VALUES " +
         //     "(?,?,?,?,?,?,?,?,?,?,?,?,?);";
-
-        var update_query = "Update `course_stage` set `Mode_of_transport`=?, `Description`=?, `filename`=?, `Price`=?, `Photo`=?, `from_date`=?, `Plan` =?, `Location` =?, `to_date` =?, `Eventname` =?, `Eventdetails` =?, `Postalcode` =? where `Coach_Id` = ? AND `id`=?";
-
+        
+        var update_query = "Update `course_stage` set `Mode_of_transport`=?, `Description`=?, `filename`=?, `Price`=?, `Photo`=?, `from_date`=?, `Plan` =?, `Location` =?, `to_date` =?, `Eventname` =?, `Eventdetails` =?, `Postalcode` =? where `id`=?";
+        
         // var insert_query = "INSERT INTO `course_stage` (`Coach_Id`, `Mode_of_transport`, `Description`, `Price`, `Photo`, `from_date`, `Plan`,`filename`,`Postalcode`,`Location`,`to_date`,`Eventname`,`Eventdetails`) VALUES ('" + Coach_Id + "','" + Mode_of_transport + "','" + Description + "','" + Price + "','" + Photo + "','" + from_date + "','" + Plan + "','" + filename + "','" + Postalcode + "','" + Location + "','" + to_date + "','" + Eventname + "','" + Eventdetails + "')"
-
+        
         // await db_library
         //     .execute("SELECT * FROM `course_stage` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
-        //         if (value.length > 0) {
-        await db_library
-            .parameterexecute(update_query, [Mode_of_transport, Description, filename, Price, Photo, formatDate(from_date), Plan, Location, formatDate(to_date), Eventname, Eventdetails, Postalcode, Coach_Id, id]).then((value) => {
-                var result = value;
+            //         if (value.length > 0) {
+                //console.log('[course.js]', id)
+                await db_library
+                .parameterexecute(update_query, [Mode_of_transport, Description, filename, Price, Photo, formatDate(from_date), Plan, Location, formatDate(to_date), Eventname, Eventdetails, Postalcode, id]).then((value) => {
+                    var result = value;
                 _output.data = {};
                 _output.isSuccess = true;
                 _output.message = "Stage course updated successfully";

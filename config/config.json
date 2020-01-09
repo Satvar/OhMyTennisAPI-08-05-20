@@ -5,12 +5,5 @@
     "database": "db_a2c2cd_tennis",
     "host": "localhost",
     "dialect": "mysql"
-  },
-  "production": {
-    "username": "a2c2cd_tennis",
-    "password": "teamwork@2018",
-    "database": "db_a2c2cd_tennis",
-    "host": "mysql7003.site4now.net",
-    "dialect": "mysql"
   }
 }
