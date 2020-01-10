@@ -224,114 +224,114 @@ exports.getbookinganduserdetails = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.createcustomerac = async function(req, res, next) {
-  var _output = new output();
-  const stripe = require("stripe")(
-    "sk_test_TAPpzQna3UT4N3ZvV8Gxkora00RffPjZlP"
-  );
-  const { status, response, data } = req.body;
-  if (status === 200) {
-    const btokId = response.id;
-    // stripe.accounts
-    //   .createExternalAccount("acct_1F7ctuHPYEpTpWDB", {
-    //     external_account: btokId
-    //   })
-    //   .then(function(payout) {
-    //     console.log(payout);
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
+// exports.createcustomerac = async function(req, res, next) {
+//   var _output = new output();
+//   const stripe = require("stripe")(
+//     "sk_test_TAPpzQna3UT4N3ZvV8Gxkora00RffPjZlP"
+//   );
+//   const { status, response, data } = req.body;
+//   if (status === 200) {
+//     const btokId = response.id;
+//     // stripe.accounts
+//     //   .createExternalAccount("acct_1F7ctuHPYEpTpWDB", {
+//     //     external_account: btokId
+//     //   })
+//     //   .then(function(payout) {
+//     //     console.log(payout);
+//     //   })
+//     //   .catch(err => {
+//     //     console.log(err);
+//     //   });
 
-    // stripe.accounts
-    //   .create({
-    //     type: "custom",
-    //     country: "US",
-    //     email: "jack25@yopmail.com",
-    //     requested_capabilities: ["card_payments", "transfers"]
-    //   })
-    //   .then(function(payout) {
-    //     console.log(payout);
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
-    // stripe.payouts
-    //   .create({
-    //     amount: 200,
-    //     currency: "usd",
-    //     destination: "ba_1FyZ7IHPYEpTpWDBxhN4Qjzd"
-    //   })
-    //   .then(function(payout) {
-    //     console.log(payout);
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
-    stripe.customers.create(
-      {
-        address: null,
-        description: null,
-        email: data.email,
-        metadata: {},
-        name: data.name,
-        phone: data.phone,
-        preferred_locales: ["fr"]
-      },
-      (err, customer) => {
-        if (err) {
-          _output.data = {};
-          _output.isSuccess = false;
-          _output.message = "Customer create failed";
-          res.send(_output);
-        } else {
-          const cusId = customer.id;
-          stripe.customers.createSource(cusId, { source: btokId }, function(
-            error,
-            bankAccount
-          ) {
-            console.log(bankAccount);
-            if (error) {
-              _output.data = {};
-              _output.isSuccess = false;
-              _output.message = "Customer bank account create failed";
-              res.send(_output);
-            } else {
-              // console.log(cusId);
-              // stripe.charges
-              //   .create({
-              //     amount: 300,
-              //     description: "sample charge",
-              //     currency: "usd",
-              //     customer: cusId
-              //   })
-              //   .then(charges => {
-              //     console.log(charges);
-              //     _output.data = charges;
-              //     _output.isSuccess = true;
-              //     _output.message =
-              //       "Customer bank account details created successfully";
-              //     res.send(_output);
-              //   })
-              //   .catch(err => {
-              // console.log(err);
-              _output.data = err;
-              _output.isSuccess = false;
-              _output.message = "Customer bank account create failed";
-              res.send(_output);
-              // });
-            }
-          });
-        }
-      }
-    );
-  } else {
-    _output.data = "";
-    _output.isSuccess = false;
-    _output.message = "Customer bank account create failed!";
-    res.send(_output);
-  }
-};
+//     // stripe.accounts
+//     //   .create({
+//     //     type: "custom",
+//     //     country: "US",
+//     //     email: "jack25@yopmail.com",
+//     //     requested_capabilities: ["card_payments", "transfers"]
+//     //   })
+//     //   .then(function(payout) {
+//     //     console.log(payout);
+//     //   })
+//     //   .catch(err => {
+//     //     console.log(err);
+//     //   });
+//     // stripe.payouts
+//     //   .create({
+//     //     amount: 200,
+//     //     currency: "usd",
+//     //     destination: "ba_1FyZ7IHPYEpTpWDBxhN4Qjzd"
+//     //   })
+//     //   .then(function(payout) {
+//     //     console.log(payout);
+//     //   })
+//     //   .catch(err => {
+//     //     console.log(err);
+//     //   });
+//     stripe.customers.create(
+//       {
+//         address: null,
+//         description: null,
+//         email: data.email,
+//         metadata: {},
+//         name: data.name,
+//         phone: data.phone,
+//         preferred_locales: ["fr"]
+//       },
+//       (err, customer) => {
+//         if (err) {
+//           _output.data = {};
+//           _output.isSuccess = false;
+//           _output.message = "Customer create failed";
+//           res.send(_output);
+//         } else {
+//           const cusId = customer.id;
+//           stripe.customers.createSource(cusId, { source: btokId }, function(
+//             error,
+//             bankAccount
+//           ) {
+//             console.log(bankAccount);
+//             if (error) {
+//               _output.data = {};
+//               _output.isSuccess = false;
+//               _output.message = "Customer bank account create failed";
+//               res.send(_output);
+//             } else {
+//               // console.log(cusId);
+//               // stripe.charges
+//               //   .create({
+//               //     amount: 300,
+//               //     description: "sample charge",
+//               //     currency: "usd",
+//               //     customer: cusId
+//               //   })
+//               //   .then(charges => {
+//               //     console.log(charges);
+//               //     _output.data = charges;
+//               //     _output.isSuccess = true;
+//               //     _output.message =
+//               //       "Customer bank account details created successfully";
+//               //     res.send(_output);
+//               //   })
+//               //   .catch(err => {
+//               // console.log(err);
+//               _output.data = err;
+//               _output.isSuccess = false;
+//               _output.message = "Customer bank account create failed";
+//               res.send(_output);
+//               // });
+//             }
+//           });
+//         }
+//       }
+//     );
+//   } else {
+//     _output.data = "";
+//     _output.isSuccess = false;
+//     _output.message = "Customer bank account create failed!";
+//     res.send(_output);
+//   }
+// };
 
 // function verifyCustomerAccount() {
 //   return new Promise
@@ -347,4 +347,132 @@ exports.createcustomerac = async function(req, res, next) {
 //   );
 // }
 
+exports.createcustomerac = async function(req, res, next) {
+  var _output = new output();
+  const stripe = require("stripe")(
+    "sk_test_TAPpzQna3UT4N3ZvV8Gxkora00RffPjZlP"
+  );
+  const { status, response, data } = req.body;
 
+  //console.log(req.body);
+  if (status === 200) {
+    const btokId = response.id;
+
+    stripe.customers.create(
+      {
+        address: null,
+        description: null,
+        email: data.email,
+        metadata: {},
+        name: data.name,
+        phone: data.phone,
+        preferred_locales: ["fr"]
+      },
+      (err, customer) => {
+        if (err) {
+          _output.data = err;
+          _output.isSuccess = false;
+          _output.message = "Customer create failed";
+          res.send(_output);
+        } else {
+          const cusId = customer.id;
+          stripe.customers.createSource(cusId, { source: btokId }, function(
+            error,
+            bankAccount
+          ) {
+            if (error) {
+              _output.data = {};
+              _output.isSuccess = false;
+              _output.message = "Customer bank account create failed";
+              res.send(_output);
+            } else {
+              var bank_id = bankAccount.id;
+              stripe.customers.verifySource(
+                cusId,
+                bank_id,
+                { amounts: [32, 45] },
+                async function(err, bankAccount) {
+                  if (err) {
+                    _output.data = err;
+                    _output.isSuccess = false;
+                    _output.message =
+                      "Customer bank account Verification failed!";
+                    res.send(_output);
+                  } else {
+                    querys =
+                      "INSERT INTO `payment_stripe`(`couch_id`, `coach_email`, `stripe_bank_token_id`, `stripe_bank_id`, `stripe_customer_id`)" +
+                      " VALUES ('" +
+                      data.coach_id +
+                      "','" +
+                      data.email +
+                      "','" +
+                      btokId +
+                      "','" +
+                      bank_id +
+                      "','" +
+                      cusId +
+                      "')";
+                    //console.log(querys);
+                    await db_library
+                      .execute(querys)
+                      .then(val => {
+                        //console.log(val);
+                        _output.data = val;
+                        _output.isSuccess = true;
+                        _output.message =
+                          "Stripe Customer bank account Verification Successfully";
+                        res.send(_output);
+                      })
+                      .catch(err => {
+                        _output.data = { err };
+                        _output.isSuccess = false;
+                        _output.message =
+                          "Stripe Customer bank account Verification failed";
+                        res.send(_output);
+                      });
+                  }
+                }
+              );
+            }
+          });
+        }
+      }
+    );
+  } else {
+    _output.data = "";
+    _output.isSuccess = false;
+    _output.message = "Customer bank account create failed!";
+    res.send(_output);
+  }
+};
+
+exports.CheckCustomerAccount = async function(req, res, next) {
+  console.log("stripepaymentstatus");
+  var _output = new output();
+  const Coach_id = req.body.Coach_id;
+
+  var query =
+    "SELECT *  FROM `payment_stripe` WHERE `couch_id` = " + Coach_id + " ";
+
+  await db_library
+    .execute(query)
+    .then(value => {
+      if (value.length > 0) {
+        _output.data = value;
+        _output.isSuccess = true;
+        _output.message = "Payment Coach Get Successfull";
+        res.send(_output);
+      } else {
+        _output.data = {};
+        _output.isSuccess = false;
+        _output.message = "Payment Coach Not Found";
+        res.send(_output);
+      }
+    })
+    .catch(err => {
+      _output.data = err.message;
+      _output.isSuccess = false;
+      _output.message = "Payment Coach Get Failed";
+      res.send(_output);
+    });
+};

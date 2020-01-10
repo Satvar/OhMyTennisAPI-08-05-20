@@ -65,5 +65,9 @@ router.post(
 );
 router.get("/admin/getservice", serviceController.getservice);
 router.post("/admin/createcustomerac", paymentController.createcustomerac);
+router.post(
+  "/admin/checkcustomeraccount",
+  paymentController.CheckCustomerAccount
+);
 
 module.exports = router;
