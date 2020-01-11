@@ -51,6 +51,10 @@ router.post("/course/setanimationcourse", courseController.setAnimationCourse);
 router.post("/course/setanimationinsert", courseController.setAnimationInsert);
 router.post("/course/setanimationupdate", courseController.setAnimationUpdate);
 router.get("/course/getanimationcourse", courseController.getAnimationCourse);
+router.get(
+  "/course/getAnimationCourseLeft",
+  courseController.getAnimationCourseLeft
+);
 router.get("/course/getanimation", courseController.getAnimation);
 router.get("/course/getteambuilding", courseController.getteambuilding);
 
@@ -76,6 +80,6 @@ router.get(
 );
 router.get("/course/getcourseyear", courseController.getYear);
 
-router.get("/course/getcourse", courseController.getcourse)
+router.get("/course/getcourse", courseController.getcourse);
 
 module.exports = router;

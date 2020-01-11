@@ -34,8 +34,44 @@ exports.getcoachbyid = async function(req, res, next) {
   if (Coach_id != "") {
     await db_library
       .execute(
-        "SELECT * FROM `coaches_dbs` WHERE Coach_Email='" + Coach_id + "'"
+        "SELECT * FROM `coaches_dbs` WHERE `Coach_Email` = '" + Coach_id + "'"
       )
+      .then(value => {
+        //console.log("[coach.js--]", value);
+        if (value.length > 0) {
+          var obj = {
+            coach_list: value
+          };
+          var result = obj;
+          _output.data = result;
+          _output.isSuccess = true;
+          _output.message = "Coach Get Successfull";
+        } else {
+          _output.data = {};
+          _output.isSuccess = false;
+          _output.message = " No Coach Found";
+        }
+      })
+      .catch(err => {
+        _output.data = err.message;
+        _output.isSuccess = false;
+        _output.message = "Coach Get Failed";
+      });
+  } else {
+    _output.data = "Required Field are missing";
+    _output.isSuccess = false;
+    _output.message = "Coach Get Failed";
+  }
+  res.send(_output);
+};
+
+exports.get_payment_coach_by_id = async function(req, res, next) {
+  const Coach_id = req.body.Coach_id;
+  var _output = new output();
+  //console.log("SELECT * FROM `coaches_dbs` WHERE Coach_ID =`" + Coach_id + "`");
+  if (Coach_id != "") {
+    await db_library
+      .execute("SELECT * FROM `coaches_dbs` WHERE `Coach_ID` = " + Coach_id)
       .then(value => {
         //console.log("[coach.js--]", value);
         if (value.length > 0) {

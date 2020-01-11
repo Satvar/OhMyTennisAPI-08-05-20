@@ -28,6 +28,10 @@ router.get("/admin/getUsers", userController.index);
 router.post("/admin/getuserbyid", userController.getuserbyid);
 router.get("/admin/getcoaches", coachController.getallcoaches);
 router.post("/admin/getcoachbyid", coachController.getcoachbyid);
+router.post(
+  "/admin/get_payment_coach_by_id",
+  coachController.get_payment_coach_by_id
+);
 router.post("/admin/updatecoachProfile", coachController.updatecoachProfile);
 router.post("/admin/coachstatustoactive", coachController.coachstatustoactive);
 router.post(

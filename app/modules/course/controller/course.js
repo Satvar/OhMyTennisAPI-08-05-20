@@ -786,12 +786,12 @@ exports.setStageCourseInsert = async function (req, res, next) {
 
     if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Price != "" && Photo != "" && from_date != "" && Mode_of_transport != "" && Plan != "" && to_date != "" && Eventdetails != "" && Eventname != "") {
 //console.log("request--- ", req.body)
-        // var insert_query = "INSERT INTO `course_stage` (`Coach_Id`, `Mode_of_transport`, `Description`, `Price`, `Photo`,`from_date`, `Plan`,`filename`,`Postalcode`,`Location`,`to_date`,`Eventname`,`Eventdetails`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        
 
         // var update_query = "Update `course_stage` set `Mode_of_transport`=?, `Description`=?, `filename`=?, `Price`=?," +
         //     "`Photo`=?, `from_date`=?, `Plan` =?, `Location` =?, `to_date` =?, `Eventname` =?, `Eventdetails` =?, `Postalcode` =? where `Coach_Id` = ?";
 
-        var insert_query = "INSERT INTO `course_stage` (`Coach_Id`, `Mode_of_transport`, `Description`, `Price`, `Photo`, `from_date`, `Plan`,`filename`,`Postalcode`,`Location`,`to_date`,`Eventname`,`Eventdetails`) VALUES ('" + Coach_Id + "','" + Mode_of_transport + "','" + Description + "','" + Price + "','" + Photo + "','" + formatDate(from_date) + "','" + Plan + "','" + filename + "','" + Postalcode + "','" + Location + "','" + formatDate(to_date) + "','" + Eventname + "','" + Eventdetails + "')"
+        // var insert_query = "INSERT INTO `course_stage` (`Coach_Id`, `Mode_of_transport`, `Description`, `Price`, `Photo`, `from_date`, `Plan`,`filename`,`Postalcode`,`Location`,`to_date`,`Eventname`,`Eventdetails`) VALUES ('" + Coach_Id + "','" + Mode_of_transport + "','" + Description + "','" + Price + "','" + Photo + "','" + formatDate(from_date) + "','" + Plan + "','" + filename + "','" + Postalcode + "','" + Location + "','" + formatDate(to_date) + "','" + Eventname + "','" + Eventdetails + "')"
 
         // await db_library
         //     .execute("SELECT * FROM `course_stage` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
@@ -811,8 +811,11 @@ exports.setStageCourseInsert = async function (req, res, next) {
         // } else {
 
         //[Coach_Id, Mode_of_transport, Description, Price, Photo, formatDate(from_date), Plan, filename, Postalcode, Location, formatDate(to_date), Eventname, Eventdetails]
+
+        var insert_query = "INSERT INTO `course_stage` (`Coach_Id`, `Mode_of_transport`, `Description`, `Price`, `Photo`,`from_date`, `Plan`,`filename`,`Postalcode`,`Location`,`to_date`,`Eventname`,`Eventdetails`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
+
         await db_library
-            .execute(insert_query).then((value) => {
+            .parameterexecute(insert_query, [Coach_Id, Mode_of_transport, Description, Price, Photo, formatDate(from_date), Plan, filename, Postalcode, Location, formatDate(to_date), Eventname, Eventdetails]).then((value) => {
                 var result = value;
                 _output.data = {};
                 _output.isSuccess = true;
@@ -865,7 +868,7 @@ exports.setTournamentCourseUpdate = async function (req, res, next) {
             .execute("SELECT * FROM `tournament` WHERE Coach_Id=" + Coach_Id + " AND id=" + id + "").then(async (value) => {
                 if (value.length > 0) {
                     await db_library
-                        .parameterexecute(update_query, [filename, Description, "0", Photo, from_date, Plan, Location, to_date, Tournamentname, Eventdetails, Postalcode, Coach_Id, id]).then((value) => {
+                        .parameterexecute(update_query, [filename, Description, Price, Photo, from_date, Plan, Location, to_date, Tournamentname, Eventdetails, Postalcode, Coach_Id, id]).then((value) => {
                             var result = value;
                             _output.data = {};
                             _output.isSuccess = true;
@@ -922,15 +925,18 @@ exports.setTournamentCourseInsert = async function (req, res, next) {
     } = req.body;
     if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Photo != "" && from_date != ""
         && Plan != "" && to_date != "" && Eventdetails != "" && Tournamentname != "") {
-        // var insert_query = "INSERT INTO `tournament` (`Coach_Id`, `Description`, `Price`, `from_date`, `Plan`,`Postalcode`,`Location`,`to_date`,`Tournamentname`,`Eventdetails`,`filename`) VALUES " +
-        //     "(?,?,?,?,?,?,?,?,?,?,?,?);";
-
-        var insert_query = "INSERT INTO `tournament` (`Coach_Id`, `Description`, `Price`, `Photo`,`from_date`, `Plan`,`Postalcode`,`Location`,`to_date`,`Tournamentname`,`Eventdetails`,`filename`) VALUES ('" + Coach_Id + "','" + Description + "','" + Price + "','" + Photo + "','" + from_date + "','" + Plan + "','" + Postalcode + "','" + Location + "','" + to_date + "','" + Tournamentname + "','" + Eventdetails + "','" + filename + "')"
-
+        
+        
+        // var insert_query = "INSERT INTO `course_stage` (`Coach_Id`, `Mode_of_transport`, `Description`, `Price`, `Photo`, `from_date`, `Plan`,`filename`,`Postalcode`,`Location`,`to_date`,`Eventname`,`Eventdetails`) VALUES " +
+        //     "(?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        // var insert_query = "INSERT INTO `tournament` (`Coach_Id`, `Description`, `Price`, `Photo`,`from_date`, `Plan`,`Postalcode`,`Location`,`to_date`,`Tournamentname`,`Eventdetails`,`filename`) VALUES ('" + Coach_Id + "','" + Description + "','" + Price + "','" + Photo + "','" + from_date + "','" + Plan + "','" + Postalcode + "','" + Location + "','" + to_date + "','" + Tournamentname + "','" + Eventdetails + "','" + filename + "')"
         //console.log(insert_query)
-
+        
+        var insert_query = "INSERT INTO `tournament` (`Coach_Id`, `Description`, `Price`, `Photo`,`from_date`, `Plan`,`Postalcode`,`Location`,`to_date`,`Tournamentname`,`Eventdetails`,`filename`) VALUES " +
+            "(?,?,?,?,?,?,?,?,?,?,?,?);";
+        
         await db_library
-            .execute(insert_query).then((value) => {
+            .parameterexecute(insert_query, [Coach_Id, Description, Price, Photo, from_date, Plan, Postalcode, Location, to_date, Tournamentname, Eventdetails, filename]).then((value) => {
                 var result = value;
                 _output.data = {};
                 _output.isSuccess = true;
@@ -958,7 +964,7 @@ exports.getTournament = async function (req, res, next) {
     const id = req.query.id;
 
     if (id != "" && Coach_id != "") {
-        var query = "select tournament.*,users.* from tournament JOIN users ON  tournament.Coach_Id = users.id where tournament.Coach_Id = " + Coach_id + " AND tournament.id = " + id + "";
+        var query = "select users.*,tournament.* from tournament JOIN users ON  tournament.Coach_Id = users.id where tournament.Coach_Id = " + Coach_id + " AND tournament.id = " + id + "";
         await db_library
             .execute(query).then(async (value) => {
                 var result = value;
@@ -1006,12 +1012,10 @@ exports.setAnimationInsert = async function (req, res, next) {
 
     if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Photo != "" && Plan != "" && Eventdetails != "") {
 
-        var insert_query = "INSERT INTO `animations` (`Coach_Id`, `Description`, `Photo`," +
-            "`Plan`,`Postalcode`,`Location`,`Eventdetails`,`filename`,`Price`) VALUES ('" + Coach_Id + "','" + Description + "','" + Photo + "','" + Plan + "','" + Postalcode + "','" + Location + "','" + Eventdetails + "','" + filename + "','" + Price + "')"
-
         // var insert_query = "INSERT INTO `animations` (`Coach_Id`, `Description`, `Photo`," +
-        //     "`Plan`,`Postalcode`,`Location`,`Eventdetails`,`filename`,`Price`) VALUES " +
-        //     "(?,?,?,?,?,?,?,?,?);";
+        //     "`Plan`,`Postalcode`,`Location`,`Eventdetails`,`filename`,`Price`) VALUES ('" + Coach_Id + "','" + Description + "','" + Photo + "','" + Plan + "','" + Postalcode + "','" + Location + "','" + Eventdetails + "','" + filename + "','" + Price + "')"
+
+        
 
         // var update_query = "Update `animations` set `Description`=?, `filename`=?," +
         //     "`Photo`=?, `Plan` =?, `Location` =?, `Eventdetails` =?, `Postalcode` =?, `Price` =? where `Coach_Id` =?";
@@ -1032,8 +1036,12 @@ exports.setAnimationInsert = async function (req, res, next) {
         //                     _output.message = "Animation course update Failed";
         //                 });
         //         } else {
+        var insert_query = "INSERT INTO `animations` (`Coach_Id`, `Description`, `Photo`," +
+            "`Plan`,`Postalcode`,`Location`,`Eventdetails`,`filename`,`Price`) VALUES " +
+            "(?,?,?,?,?,?,?,?,?);";
+        
         await db_library
-            .execute(insert_query).then((value) => {
+            .parameterexecute(insert_query, [Coach_Id, Description, Photo, Plan, Postalcode, Location, Eventdetails, filename, Price]).then((value) => {
                 var result = value;
                 _output.data = {};
                 _output.isSuccess = true;
@@ -1191,12 +1199,51 @@ exports.setAnimationCourse = async function (req, res, next) {
     res.send(_output);
 }
 
-exports.getAnimationCourse = async function (req, res, next) {
+exports.getAnimationCourseLeft = async function (req, res, next) {
     var _output = new output();
-    const id = req.query.coachId;
+    const coachId = req.query.coachId;
+    const id = req.query.id;
 
     if (id != "") {
-        var query = "select * from animations where Coach_Id = " + id;
+        var query = "select * from animations where `Coach_Id` = " + coachId;
+        await db_library
+            .execute(query).then(async (value) => {
+                var result = value;
+                if (value.length > 0) {
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Animation course Get successfully";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Animation course Not Found";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Animation course get Failed";
+            })
+    } else {
+        _output.data = "Required Field are missing";
+        _output.isSuccess = false;
+        _output.message = "Animation course get Failed";
+    }
+    res.send(_output);
+}
+
+exports.getAnimationCourse = async function (req, res, next) {
+    var _output = new output();
+    const coachId = req.query.coachId;
+    const id = req.query.id;
+
+    if (id != "") {
+        var query = "select * from animations where `Coach_Id` = " + coachId + " AND `id` = " + id;
         await db_library
             .execute(query).then(async (value) => {
                 var result = value;
@@ -1231,8 +1278,8 @@ exports.getAnimationCourse = async function (req, res, next) {
 exports.getAnimation = async function (req, res, next) {    
     var _output = new output();
     const Coach_id = req.query.coachId;
-    const id = req.query.id;
-
+    const id = req.query.animation_id;
+    console.log(req.query)
     if (id != "" && Coach_id != "") {
         var query = "select animations.*,users.* from animations JOIN users ON  animations.Coach_Id = users.id where animations.Coach_Id = " + Coach_id + " AND animations.id = " + id + "";
 
@@ -1281,20 +1328,20 @@ exports.setTeambuildingCourse = async function (req, res, next) {
         Mode_of_transport,
         Plan,
         Price,
+        Postalcode,
         filename
     } = req.body;
 
     if (Coach_Id != "" && Description != "" && Photo != "" && Mode_of_transport != "" && Plan != "" && Eventdetails != "") {
-        var insert_query = "INSERT INTO `team_building` (`Coach_Id`, `Mode_of_transport`, `Description`, `Photo`," +
-            "`Plan`,`Eventdetails`,`filename`,`Price`) VALUES (?,?,?,?,?,?,?,?);";
+        var insert_query = "INSERT INTO `team_building` (`Coach_Id`, `Mode_of_transport`, `Description`, `Photo`, `Postalcode`, `Plan`,`Eventdetails`,`filename`,`Price`) VALUES (?,?,?,?,?,?,?,?,?);";
 
-        var update_query = "Update `team_building` set `Mode_of_transport`=?, `Description`=?, `filename`=?,`Photo`=?, `Plan` =?, `Eventdetails` =?, `Price` =? where `Coach_Id` = ?";
+        var update_query = "Update `team_building` set `Mode_of_transport`=?, `Description`=?, `filename`=?,`Photo`=?, `Plan` =?, `Postalcode` =?, `Eventdetails` =?, `Price` =? where `Coach_Id` = ?";
 
         await db_library
             .execute("SELECT * FROM `team_building` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
                 if (value.length > 0) {
                     await db_library
-                        .parameterexecute(update_query, [Mode_of_transport, Description, filename, Photo, Plan, Eventdetails, "0", Coach_Id]).then((value) => {
+                        .parameterexecute(update_query, [Mode_of_transport, Description, filename, Photo, Plan, Postalcode, Eventdetails, "0", Coach_Id]).then((value) => {
                             var result = value;
                             _output.data = {};
                             _output.isSuccess = true;
@@ -1307,7 +1354,7 @@ exports.setTeambuildingCourse = async function (req, res, next) {
                         });
                 } else {
                     await db_library
-                        .parameterexecute(insert_query, [Coach_Id, Mode_of_transport, Description, Photo, Plan, Eventdetails, filename, "0"]).then((value) => {
+                        .parameterexecute(insert_query, [Coach_Id, Mode_of_transport, Description, Photo, Plan, Postalcode, Eventdetails, filename, "0"]).then((value) => {
                             var result = value;
                             _output.data = {};
                             _output.isSuccess = true;

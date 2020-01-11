@@ -521,7 +521,7 @@ exports.getCoachbyevent = async function(req, res, next) {
       P_CoachId +
       ";";
   }
-
+  // console.log(query);
   await db_library
     .execute(query)
     .then(value => {
