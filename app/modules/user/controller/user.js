@@ -271,7 +271,7 @@ exports.login = async function(req, res, next) {
       "`roleId`, `isOtpVerified`, `isActive`, `hashKey`" +
       " FROM `users` WHERE `email`= '" +
       email +
-      "' AND `isOtpVerified`= 1;";
+      "' AND `isOtpVerified`= 1 AND `isActive`= 1;";
 
     await db_library
       .execute(query)

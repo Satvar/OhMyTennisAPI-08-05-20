@@ -7,8 +7,7 @@ const moment = require("moment");
 
 exports.getallcoaches = async function(req, res, next) {
   var _output = new output();
-  var query =
-    "SELECT `Coach_ID`, `Coach_Fname`, `Coach_Lname`, `Coach_Email`, `Coach_Phone`, `Coach_transport`, `Coach_City`, `Coach_Image`, `Coach_Status`, `Coach_Description`, `Coach_Experience`, `Active_Status`, `User_type` FROM `coaches_dbs`";
+  var query = "SELECT * FROM `users` where roleId = 2 ";
   await db_library
     .execute(query)
     .then(value => {
@@ -34,7 +33,9 @@ exports.getcoachbyid = async function(req, res, next) {
   //console.log("SELECT * FROM `coaches_dbs` WHERE Coach_ID='" + Coach_id + "'");
   if (Coach_id != "") {
     await db_library
-      .execute("SELECT * FROM `coaches_dbs` WHERE Coach_ID='" + Coach_id + "'")
+      .execute(
+        "SELECT * FROM `coaches_dbs` WHERE Coach_Email='" + Coach_id + "'"
+      )
       .then(value => {
         //console.log("[coach.js--]", value);
         if (value.length > 0) {
@@ -207,11 +208,7 @@ exports.coachstatustoactive = async function(req, res, next) {
 
   if (Coach_id != "") {
     await db_library
-      .execute(
-        "UPDATE `coaches_dbs` SET `Active_Status` = 'No' WHERE Coach_ID='" +
-          Coach_id +
-          "'"
-      )
+      .execute("UPDATE `users` SET `isActive` = 0 WHERE id='" + Coach_id + "'")
       .then(value => {
         if (value.affectedRows == 1) {
           var obj = {
@@ -246,11 +243,7 @@ exports.coachstatustoinactive = async function(req, res, next) {
 
   if (Coach_id != "") {
     await db_library
-      .execute(
-        "UPDATE `coaches_dbs` SET `Active_Status` = 'Yes' WHERE Coach_ID='" +
-          Coach_id +
-          "'"
-      )
+      .execute("UPDATE `users` SET `isActive` = 1 WHERE id='" + Coach_id + "'")
       .then(value => {
         if (value.affectedRows == 1) {
           var obj = {
