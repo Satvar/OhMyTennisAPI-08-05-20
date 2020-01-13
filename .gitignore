@@ -62,4 +62,4 @@ typings/
 
 .vscode/
 
-config/
+config/config.json

@@ -3,6 +3,7 @@ const db_library = require("../../_helpers/db_library");
 const mail_template = require("../../MailTemplate/mailTemplate");
 const appConfig = require("../../../../config/appConfig");
 const moment = require("moment");
+const lang = require("../../../lang/language").franchContent;
 
 function formatDate(date) {
   var formate_date = moment(date).format("YYYY-MM-DD");
@@ -81,7 +82,7 @@ exports.bookCourse = async function(req, res, next) {
                   const mailOption = require("../../_mailer/mailOptions");
                   let _mailOption = new mailOption();
                   _mailOption.to = val[0].email;
-                  _mailOption.subject = "Booking Request";
+                  _mailOption.subject = lang.booking_request;
                   _mailOption.html = mailTemplate[0].template
                     .replace(
                       "{{username}}",
@@ -195,7 +196,7 @@ exports.bookCourse = async function(req, res, next) {
                         const mailOption = require("../../_mailer/mailOptions");
                         let _mailOption = new mailOption();
                         _mailOption.to = val[0].email;
-                        _mailOption.subject = "Booking Request";
+                        _mailOption.subject = lang.booking_request;
                         _mailOption.html = mailTemplate[0].template
                           .replace(
                             "{{username}}",
@@ -516,8 +517,12 @@ exports.getCoachbyevent = async function(req, res, next) {
       P_CoachId +
       ";";
   } else {
+    // var query =
+    //   "select c.*,ci.coordonnees_gps from `team_building` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email INNER JOIN `cities` ci on ci.Code_postal = cs.Postalcode WHERE cs.Coach_Id = " +
+    //   P_CoachId +
+    //   ";";
     var query =
-      "select c.*,ci.coordonnees_gps from `team_building` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email INNER JOIN `cities` ci on ci.Code_postal = cs.Postalcode WHERE cs.Coach_Id = " +
+      "select c.* from `team_building` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email WHERE cs.Coach_Id = " +
       P_CoachId +
       ";";
   }

@@ -447,7 +447,7 @@ exports.createcustomerac = async function(req, res, next) {
 };
 
 exports.CheckCustomerAccount = async function(req, res, next) {
-  console.log("stripepaymentstatus");
+  //console.log("stripepaymentstatus");
   var _output = new output();
   const Coach_id = req.body.Coach_id;
 

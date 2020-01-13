@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const mail_template = require("../../MailTemplate/mailTemplate");
 const appConfig = require("../../../../config/appConfig");
 const moment = require('moment');
+const lang = require("../../../lang/language").franchContent;
 
 exports.search_for_coach = async function (req, res, next) {
     const ville = req.query.ville;
@@ -55,7 +56,7 @@ exports.getallavailabilityforCoachDetail = async function (req, res, next) {
                 }
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = "Coach availability date Get Successfull";
+                _output.message = lang.coach_availability_success;
             } else {
                 var obj = {
                     coach_list: []
@@ -172,7 +173,7 @@ exports.getcoachbyid = async function (req, res, next) {
                 _output.message = "Coach Get Failed";
             });
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = lang.required_field;
         _output.isSuccess = false;
         _output.message = "Coach Get Failed";
     }
@@ -221,7 +222,7 @@ exports.getAvailability = async function (req, res, next) {
             _output.message = "Get Failed";
         })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = lang.required_field;
         _output.isSuccess = false;
         _output.message = "Get Failed";
     }
@@ -281,13 +282,13 @@ exports.coachReservation = async function (req, res, next) {
             const mailOption = require('../../_mailer/mailOptions');
             let _mailOption = new mailOption();
             _mailOption.to = coach_details[0].email;
-            _mailOption.subject = "Booking Request"
+            _mailOption.subject = lang.booking_request
             _mailOption.html = mailTemplate[0].template.replace('{{username}}', coach_details[0].firstName + " " + coach_details[0].lastName).replace('{{date}}', bookArray[0].P_Date).replace('{{course}}', bookArray[0].P_CourseId);
             var _mailer = require('../../_mailer/mailer');
             _mailer.sendMail(_mailOption);
         }
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = lang.required_field;
         _output.isSuccess = false;
         _output.message = "Booking Inserted Failed";
     }
@@ -327,7 +328,7 @@ exports.getReservation = async function (req, res, next) {
             _output.message = "Get Failed";
         })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = lang.required_field;
         _output.isSuccess = false;
         _output.message = "Get Failed";
     }
@@ -360,7 +361,7 @@ exports.getBookingDetail = async function (req, res, next) {
             _output.message = "Get Failed";
         })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = lang.required_field;
         _output.isSuccess = false;
         _output.message = "Get Failed";
     }
@@ -412,7 +413,7 @@ exports.setStatus = async function (req, res, next) {
                                     const mailOption = require('../../_mailer/mailOptions');
                                     let _mailOption = new mailOption();
                                     _mailOption.to = val[i].UserEmail;
-                                    _mailOption.subject = "Booking Approved"
+                                    _mailOption.subject = lang.booking_approved;
                                     _mailOption.html = mailTemplate[0].template.replace('{{username}}', val[i].UserFirstname + " " + val[i].UserFirstname).replace('{{bookingid}}', booking_id).replace('{{amount}}', amount);
                                     var _mailer = require('../../_mailer/mailer');
                                     _mailer.sendMail(_mailOption);
@@ -427,7 +428,7 @@ exports.setStatus = async function (req, res, next) {
                                             const mailOption = require('../../_mailer/mailOptions');
                                             let _mailOption = new mailOption();
                                             _mailOption.to = val[i].UserEmail;
-                                            _mailOption.subject = "Booking Reschedule"
+                                            _mailOption.subject = lang.booking_reshedule
                                             _mailOption.html = mailTemplate[0].template.replace('{{username}}', val[i].UserFirstname + " " + val[i].UserFirstname).replace('{{course}}', course).replace('{{book_date}}', booking_date).replace('{{coach}}', val[i].coachfirstname + " " + val[i].CoachLastname);
                                             var _mailer = require('../../_mailer/mailer');
                                             _mailer.sendMail(_mailOption);
@@ -446,7 +447,7 @@ exports.setStatus = async function (req, res, next) {
                                     const mailOption = require('../../_mailer/mailOptions');
                                     let _mailOption = new mailOption();
                                     _mailOption.to = val[i].UserEmail;
-                                    _mailOption.subject = "Booking Cancelled"
+                                    _mailOption.subject = lang.booking_cancelled
                                     _mailOption.html = mailTemplate[0].template.replace('{{username}}', val[i].userFirstname + " " + val[i].userLastname).replace('{{course}}', course).replace('{{book_date}}', booking_date).replace('{{coach}}', val[i].coachfirstname + " " + val[i].CoachLastname);
                                     var _mailer = require('../../_mailer/mailer');
                                     _mailer.sendMail(_mailOption);
@@ -469,7 +470,7 @@ exports.setStatus = async function (req, res, next) {
                 _output.message = "Status Update Failed"
             })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = lang.required_field;
         _output.isSuccess = false;
         _output.message = "Status Update Failed";
     }
@@ -510,7 +511,7 @@ exports.getTime_slot = async function (req, res, next) {
                 _output.message = "Time Slot Get Failed";
             });
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = lang.required_field;
         _output.isSuccess = false;
         _output.message = "Time Slot Get Failed";
     }
@@ -537,13 +538,13 @@ exports.setpayment = async function (req, res, next) {
                             const mailOption = require('../../_mailer/mailOptions');
                             let _mailOption = new mailOption();
                             _mailOption.to = val[0].email;
-                            _mailOption.subject = "Payment Réussie"
+                            _mailOption.subject = lang.payment_successful;
                             _mailOption.html = mailTemplate[0].template.replace('{{username}}', val[0].firstName + " " + val[0].lastName).replace('{{course}}', val[0].bookingCourse);
                             var _mailer = require('../../_mailer/mailer');
                             _mailer.sendMail(_mailOption);
                             _output.data = {};
                             _output.isSuccess = true;
-                            _output.message = "Payment Successfull";
+                            _output.message = lang.payment_successful;
                         }
                     }).catch((err) => {
                         _output.data = {};
@@ -557,7 +558,7 @@ exports.setpayment = async function (req, res, next) {
                 _output.message = "Payment Update Failed"
             })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = lang.required_field;
         _output.isSuccess = false;
         _output.message = "Payment Update Failed";
     }
@@ -597,7 +598,7 @@ exports.getDemandAvailability = async function (req, res, next) {
             _output.message = "CourseCollectiveDemand Slot get Failed";
         })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = lang.required_field;
         _output.isSuccess = false;
         _output.message = "CourseCollectiveDemand Slot get Failed";
     }
@@ -632,7 +633,7 @@ exports.getslotAvailability = async function (req, res, next) {
                 _output.message = "CourseCollectiveDemand Slot availabilty get Failed";
             })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = lang.required_field;
         _output.isSuccess = false;
         _output.message = "CourseCollectiveDemand Slot availabilty get Failed";
     }
@@ -731,7 +732,7 @@ exports.setClubavailability = async function (req, res, next) {
                 _output.message = "Erreur dans la mise à jour de disponibilité";
             });
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = lang.required_field;
         _output.isSuccess = false;
         _output.message = "Erreur dans la mise à jour de disponibilité";
     }
@@ -772,7 +773,7 @@ exports.getClubTime_slot = async function (req, res, next) {
                 _output.message = "Time Slot Get Failed";
             });
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = lang.required_field;
         _output.isSuccess = false;
         _output.message = "Time Slot Get Failed";
     }
@@ -839,7 +840,7 @@ exports.insertAvailability = async function (req, res, next) {
                             await db_library.execute(query).then(async (data) => {
                                 _output.data = {};
                                 _output.isSuccess = true;
-                                _output.message = "Inserted Coach Availability Successfully";
+                                _output.message = lang.insert_coach;
                             }).catch((err) => {
                                 _output.data = err;
                                 _output.isSuccess = false;
@@ -904,7 +905,7 @@ exports.getDemandPrice = async function (req, res, next) {
             _output.message = "CourseCollectiveDemand Price get Failed";
         })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = lang.required_field;
         _output.isSuccess = false;
         _output.message = "CourseCollectiveDemand Price get Failed";
     }

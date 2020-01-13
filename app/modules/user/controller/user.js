@@ -6,6 +6,7 @@ const path = require("path");
 const appConfig = require("../../../../config/appConfig");
 const mail_template = require("../../MailTemplate/mailTemplate");
 const moment = require("moment");
+const lang = require("../../../lang/language").franchContent;
 
 exports.welcome = async function(req, res, next) {
   var _output = new output();
@@ -113,7 +114,7 @@ exports.registerUser = async function(req, res, next) {
                 .then(value => {
                   _output.data = value;
                   _output.isSuccess = true;
-                  _output.message = "Coach Register Successfully";
+                  _output.message = lang.coach_register;
                 })
                 .catch(err => {
                   _output.data = {};
@@ -127,7 +128,7 @@ exports.registerUser = async function(req, res, next) {
             const mailOption = require("../../_mailer/mailOptions");
             let _mailOption = new mailOption();
             _mailOption.to = email;
-            _mailOption.subject = "Registeration Successfull";
+            _mailOption.subject = lang.registration_successful;
             var em = Buffer.from(email).toString("base64");
             var temp = mailTemplate[0].template;
             var temp1 = temp.replace("{{email}}", em);
@@ -155,7 +156,7 @@ exports.registerUser = async function(req, res, next) {
         _output.message = "Register Failed";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = lang.required_field;
     _output.isSuccess = false;
     _output.message = "Register Failed";
   }
@@ -254,7 +255,7 @@ exports.updateProfile = async function(req, res, next) {
         _output.message = "Update failed";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = lang.required_field;
     _output.isSuccess = false;
     _output.message = "Update failed";
   }
@@ -282,17 +283,17 @@ exports.login = async function(req, res, next) {
           if (match) {
             _output.data = result[0];
             _output.isSuccess = true;
-            _output.message = "Login Successfully";
+            _output.message = lang.login_success;
           } else {
             _output.data = {};
             _output.isSuccess = false;
-            _output.message = "Invalid logion credentials";
+            _output.message = lang.invalid_login;
           }
         }
         if (result.length == 0) {
           _output.data = {};
           _output.isSuccess = false;
-          _output.message = "Email not Exist or not verified";
+          _output.message = lang.email_verify;
         }
       })
       .catch(err => {
@@ -301,7 +302,7 @@ exports.login = async function(req, res, next) {
         _output.message = "login failed ";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = lang.required_field;
     _output.isSuccess = false;
     _output.message = "login failed";
   }
@@ -343,7 +344,7 @@ exports.forgotPassword = async function(req, res, next) {
                   const mailOption = require("../../_mailer/mailOptions");
                   let _mailOption = new mailOption();
                   _mailOption.to = email;
-                  _mailOption.subject = "Forgotten Password";
+                  _mailOption.subject = lang.forgotten_password;
                   _mailOption.html = mailTemplate[0].template
                     .replace(
                       "{{username}}",
@@ -379,7 +380,7 @@ exports.forgotPassword = async function(req, res, next) {
       _output.message = "err";
     }
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = lang.required_field;
     _output.isSuccess = false;
     _output.message = "Hash Key Generated Failed";
   }
@@ -426,7 +427,7 @@ exports.resetPassword = async function(req, res, next) {
         _output.message = "Password Reset falied";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = lang.required_field;
     _output.isSuccess = false;
     _output.message = "Password Reset falied";
   }
@@ -455,7 +456,7 @@ exports.userVerification = async function(req, res, next) {
         _output.message = "User Verification Failed";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = lang.required_field;
     _output.isSuccess = false;
     _output.message = "User Verification Failed";
   }
@@ -491,7 +492,7 @@ exports.setNewPassword = async function(req, res, next) {
         _output.message = "Password Updated Failed";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = lang.required_field;
     _output.isSuccess = false;
     _output.message = "Password Updated Failed";
   }
@@ -673,7 +674,7 @@ exports.updateUserProfile = async function(req, res, next) {
         _output.message = "Update failed";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = lang.required_field;
     _output.isSuccess = false;
     _output.message = "Update failed";
   }
@@ -711,7 +712,7 @@ exports.getuserbyid = async function(req, res, next) {
         _output.message = "Coach Get Failed";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = lang.required_field;
     _output.isSuccess = false;
     _output.message = "Coach Get Failed";
   }
@@ -753,7 +754,7 @@ exports.getUserReservation = async function(req, res, next) {
         _output.message = "Get Failed";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = lang.required_field;
     _output.isSuccess = false;
     _output.message = "Get Failed";
   }
@@ -879,7 +880,7 @@ exports.cancelReservation = async function(req, res, next) {
         _output.message = "Status Update Failed";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = lang.required_field;
     _output.isSuccess = false;
     _output.message = "Status Update Failed";
   }

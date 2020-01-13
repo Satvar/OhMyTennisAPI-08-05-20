@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const appConfig = require("../../../../config/appConfig");
 const mail_template = require("../../MailTemplate/mailTemplate");
+const lang = require("../../../lang/language").franchContent;
 
 exports.registerAdmin = async function(req, res, next) {
   var _output = new output();
@@ -14,17 +15,22 @@ exports.registerAdmin = async function(req, res, next) {
     last_name,
     admin_email,
     mobile,
-    password,
     address,
     role
   } = req.body;
+
+  var password = Math.random()
+    .toString(36)
+    .substring(2, 15)
+    .slice(-8);
+  // console.log(req.body,"   ",password);
 
   if (
     first_name != "" &&
     last_name != "" &&
     admin_email != "" &&
     mobile != "" &&
-    password != "" &&
+    address != "" &&
     role != ""
   ) {
     var encry_pass = await bcrypt.hash(password, 10);
@@ -61,21 +67,21 @@ exports.registerAdmin = async function(req, res, next) {
               .then(val => {
                 _output.data = val;
                 _output.isSuccess = true;
-                _output.message = "Register Successfully";
+                _output.message = "Admin Creation Successfully";
               })
               .catch(err => {
-                _output.data = {};
+                _output.data = err;
                 _output.isSuccess = false;
-                _output.message = "Register failed";
+                _output.message = "Admin Creation failed";
               });
 
             var mailTemplate = await mail_template.getMailTemplate(
-              appConfig.MailTemplate.Register
+              appConfig.MailTemplate.AdminRegister
             );
             const mailOption = require("../../_mailer/mailOptions");
             let _mailOption = new mailOption();
             _mailOption.to = admin_email;
-            _mailOption.subject = "Registeration Successfull";
+            _mailOption.subject = "Admin Creation Successfull";
             var em = Buffer.from(admin_email).toString("base64");
             var temp = mailTemplate[0].template;
             var temp1 = temp.replace("{{email}}", em);
@@ -83,13 +89,15 @@ exports.registerAdmin = async function(req, res, next) {
               "{{username}}",
               first_name + " " + last_name
             );
-            _mailOption.html = temp2;
+            var temp3 = temp2.replace("{{useremail}}", admin_email);
+            var temp4 = temp3.replace("{{password}}", password);
+            _mailOption.html = temp4;
             var _mailer = require("../../_mailer/mailer");
             _mailer.sendMail(_mailOption);
           } catch (error) {
             _output.data = error;
             _output.isSuccess = false;
-            _output.message = "Register Failed";
+            _output.message = "Admin Creation Failed";
           }
         } else {
           _output.data = {};
@@ -161,7 +169,7 @@ exports.updateProfile = async function(req, res, next) {
         _output.message = "Profile Update failed";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = "Les champs obligatoires sont manquants";
     _output.isSuccess = false;
     _output.message = "Profile Update failed";
   }
@@ -189,17 +197,17 @@ exports.loginAdmin = async function(req, res, next) {
           if (match) {
             _output.data = result[0];
             _output.isSuccess = true;
-            _output.message = "Login Successfully";
+            _output.message = "Connectez-vous avec succès";
           } else {
             _output.data = {};
             _output.isSuccess = false;
-            _output.message = "Invalid logion credentials";
+            _output.message = "Authentification invalide";
           }
         }
         if (result.length == 0) {
           _output.data = {};
           _output.isSuccess = false;
-          _output.message = "Email not Exist or not verified";
+          _output.message = "Email inexistant ou non vérifié";
         }
       })
       .catch(err => {
@@ -208,7 +216,7 @@ exports.loginAdmin = async function(req, res, next) {
         _output.message = "login failed ";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = "Les champs obligatoires sont manquants";
     _output.isSuccess = false;
     _output.message = "login failed";
   }
@@ -250,7 +258,7 @@ exports.forgotPassword = async function(req, res, next) {
                   const mailOption = require("../../_mailer/mailOptions");
                   let _mailOption = new mailOption();
                   _mailOption.to = email;
-                  _mailOption.subject = "Forgotten Password";
+                  _mailOption.subject = lang.forgotten_password;
                   _mailOption.html = mailTemplate[0].template
                     .replace(
                       "{{username}}",
@@ -287,7 +295,7 @@ exports.forgotPassword = async function(req, res, next) {
       _output.message = "err";
     }
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = "Les champs obligatoires sont manquants";
     _output.isSuccess = false;
     _output.message = "Hash Key Generated Failed";
   }
@@ -334,7 +342,7 @@ exports.resetPassword = async function(req, res, next) {
         _output.message = "Password Reset falied";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = "Les champs obligatoires sont manquants";
     _output.isSuccess = false;
     _output.message = "Password Reset falied";
   }
@@ -397,7 +405,7 @@ exports.changePassword = async function(req, res, next) {
       _output.message = "Password Updated Failed";
     }
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = "Les champs obligatoires sont manquants";
     _output.isSuccess = false;
     _output.message = "Password Updated Failed";
   }
@@ -453,7 +461,7 @@ exports.getadminbyid = async function(req, res, next) {
         _output.message = "Admin Get Failed";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = "Les champs obligatoires sont manquants";
     _output.isSuccess = false;
     _output.message = "Admin Get Failed";
   }
@@ -524,7 +532,7 @@ exports.changeadminstatus = async function(req, res, next) {
         _output.message = "Admin Status Update Failed";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = "Les champs obligatoires sont manquants";
     _output.isSuccess = false;
     _output.message = "Court Status Update Failed";
   }

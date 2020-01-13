@@ -14,7 +14,8 @@ module.exports = {
     PaymentSuccess: 7,
     Reschedule: 8,
     UserCancel: 9,
-    AdminForgotPassword: 10
+    AdminForgotPassword: 10,
+    AdminRegister: 11
   },
   AUTH_URL: [
     prefix + "/adminAuthenticate",
