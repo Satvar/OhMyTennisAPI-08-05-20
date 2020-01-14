@@ -66,6 +66,13 @@ exports.bookCourse = async function(req, res, next) {
     }
 
     var sel_qry = "SELECT * FROM `users` where `id` = " + Coach_id;
+    await db_library
+      .execute("SELECT * FROM `users` where `id` = " + User_Id)
+      .then(async value => {
+        if (value.length > 0) {
+          user_details = value;
+        }
+      });
 
     if (course == "Stage") {
       await db_library
@@ -87,6 +94,10 @@ exports.bookCourse = async function(req, res, next) {
                     .replace(
                       "{{username}}",
                       val[0].firstName + " " + val[0].lastName
+                    )
+                    .replace(
+                      "{{user}}",
+                      user_details[0].firstName + " " + user_details[0].lastName
                     )
                     .replace("{{date}}", formatDate(booking_date))
                     .replace("{{course}}", course);
@@ -182,6 +193,14 @@ exports.bookCourse = async function(req, res, next) {
                   ")";
               }
             }
+
+            await db_library
+              .execute("SELECT * FROM `users` where `id` = " + User_Id)
+              .then(async value => {
+                if (value.length > 0) {
+                  user_details = value;
+                }
+              });
             await db_library
               .parameterexecute(reserve_qry, [comapny, address])
               .then(async values => {
@@ -201,6 +220,12 @@ exports.bookCourse = async function(req, res, next) {
                           .replace(
                             "{{username}}",
                             val[0].firstName + " " + val[0].lastName
+                          )
+                          .replace(
+                            "{{user}}",
+                            user_details[0].firstName +
+                              " " +
+                              user_details[0].lastName
                           )
                           .replace("{{date}}", booking_date)
                           .replace("{{course}}", course);

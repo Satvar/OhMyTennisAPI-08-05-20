@@ -243,6 +243,12 @@ exports.coachReservation = async function (req, res, next) {
                 coach_details = val
             }
         })
+
+        await db_library.execute("SELECT * FROM `users` where `id` = " + bookArray[0].P_UserId).then(async (value) => {
+            if (value.length > 0) {
+                user_details = value
+            }
+        })
         for (var i = 0; i < bookArray.length; i++) {
             const {
                 P_CoachId,
@@ -283,7 +289,7 @@ exports.coachReservation = async function (req, res, next) {
             let _mailOption = new mailOption();
             _mailOption.to = coach_details[0].email;
             _mailOption.subject = lang.booking_request
-            _mailOption.html = mailTemplate[0].template.replace('{{username}}', coach_details[0].firstName + " " + coach_details[0].lastName).replace('{{date}}', bookArray[0].P_Date).replace('{{course}}', bookArray[0].P_CourseId);
+            _mailOption.html = mailTemplate[0].template.replace('{{username}}', coach_details[0].firstName + " " + coach_details[0].lastName).replace('{{user}}', user_details[0].firstName + " " + user_details[0].lastName).replace('{{date}}', bookArray[0].P_Date).replace('{{course}}', bookArray[0].P_CourseId);
             var _mailer = require('../../_mailer/mailer');
             _mailer.sendMail(_mailOption);
         }
@@ -394,11 +400,11 @@ exports.setStatus = async function (req, res, next) {
         }
         else if (course == 'Stage' || course == 'Tournoi' || course == 'TeamBuilding' || course == 'Animation') {
             var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`amount`= '" + amount + "' WHERE booking_id =" + booking_id + "";
-            var sel_qry = "SELECT s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserFirstname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.booking_Id =" + booking_id + ""
+            var sel_qry = "SELECT s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserLastname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.booking_Id =" + booking_id + ""
         }
         else {
             var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`discount_club`= '" + discount + "',`amount`= '" + amount + "' WHERE `Coach_id`=" + Coach_id + " AND `bookingDate`='" + booking_date + "' AND `bookingCourse`='" + course + "'";
-            var sel_qry = "SELECT s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserFirstname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.booking_Id =" + booking_id + ""
+            var sel_qry = "SELECT s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserLastname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.booking_Id =" + booking_id + ""
         }
 
         await db_library
@@ -414,7 +420,7 @@ exports.setStatus = async function (req, res, next) {
                                     let _mailOption = new mailOption();
                                     _mailOption.to = val[i].UserEmail;
                                     _mailOption.subject = lang.booking_approved;
-                                    _mailOption.html = mailTemplate[0].template.replace('{{username}}', val[i].UserFirstname + " " + val[i].UserFirstname).replace('{{bookingid}}', booking_id).replace('{{amount}}', amount);
+                                    _mailOption.html = mailTemplate[0].template.replace('{{username}}', val[i].UserFirstname + " " + val[i].UserLastname).replace('{{bookingid}}', booking_id).replace('{{amount}}', amount);
                                     var _mailer = require('../../_mailer/mailer');
                                     _mailer.sendMail(_mailOption);
                                     _output.data = {};
@@ -429,7 +435,7 @@ exports.setStatus = async function (req, res, next) {
                                             let _mailOption = new mailOption();
                                             _mailOption.to = val[i].UserEmail;
                                             _mailOption.subject = lang.booking_reshedule
-                                            _mailOption.html = mailTemplate[0].template.replace('{{username}}', val[i].UserFirstname + " " + val[i].UserFirstname).replace('{{course}}', course).replace('{{book_date}}', booking_date).replace('{{coach}}', val[i].coachfirstname + " " + val[i].CoachLastname);
+                                            _mailOption.html = mailTemplate[0].template.replace('{{username}}', val[i].UserFirstname + " " + val[i].UserLastname).replace('{{course}}', course).replace('{{book_date}}', booking_date).replace('{{coach}}', val[i].coachfirstname + " " + val[i].CoachLastname);
                                             var _mailer = require('../../_mailer/mailer');
                                             _mailer.sendMail(_mailOption);
                                             _output.data = {};
@@ -448,7 +454,7 @@ exports.setStatus = async function (req, res, next) {
                                     let _mailOption = new mailOption();
                                     _mailOption.to = val[i].UserEmail;
                                     _mailOption.subject = lang.booking_cancelled
-                                    _mailOption.html = mailTemplate[0].template.replace('{{username}}', val[i].userFirstname + " " + val[i].userLastname).replace('{{course}}', course).replace('{{book_date}}', booking_date).replace('{{coach}}', val[i].coachfirstname + " " + val[i].CoachLastname);
+                                    _mailOption.html = mailTemplate[0].template.replace('{{username}}', val[i].UserFirstname + " " + val[i].UserLastname).replace('{{course}}', course).replace('{{book_date}}', booking_date).replace('{{coach}}', val[i].coachfirstname + " " + val[i].CoachLastname);
                                     var _mailer = require('../../_mailer/mailer');
                                     _mailer.sendMail(_mailOption);
                                     _output.data = {};
