@@ -14,6 +14,7 @@ const coachController = require("../controller/coach");
 const courtController = require("../controller/court");
 const paymentController = require("../controller/payment");
 const serviceController = require("../controller/service");
+const cmsController = require("../controller/cms");
 
 router.post("/admin/create", adminController.registerAdmin);
 router.post("/admin", adminController.loginAdmin);
@@ -73,5 +74,11 @@ router.post(
   "/admin/checkcustomeraccount",
   paymentController.CheckCustomerAccount
 );
+//Content Management System
+//-------------------------
+router.post("/admin/cms/add", cmsController.create);
+router.get("/admin/cms/getCms", cmsController.getCms);
+router.get("/admin/cms/getcmsmenu", cmsController.getcmsmenu);
+router.get("/admin/cms/getCmsData/:endpoint/:cmsId", cmsController.getCmsData);
 
 module.exports = router;

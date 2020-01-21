@@ -390,8 +390,9 @@ exports.setStatus = async function (req, res, next) {
 
         if (course == 'CoursCollectifOndemand') {
             var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`discount_club`= '" + discount + "',`amount`= '" + amount + "' WHERE `Coach_id`=" + Coach_id + " AND `bookingDate`='" + booking_date + "' AND `bookingCourse`='" + course + "'";
-            // var sel_qry = "SELECT s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserLastname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.bookingCourse='" + course + "' AND b.bookingDate ='" + booking_date + "' AND b.Coach_ID = " + Coach_id + " AND b.BookingTime = '" + booking_time + "'"
-            var sel_qry = "SELECT s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserLastname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.booking_Id =" + booking_id + ""
+
+            var sel_qry = "SELECT b.booking_id as booking_id,s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserLastname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.bookingCourse='" + course + "' AND b.bookingDate ='" + booking_date + "' AND b.Coach_ID = " + Coach_id + " AND b.BookingTime = '" + booking_time + "'"
+            // var sel_qry = "SELECT s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserLastname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.booking_Id =" + booking_id + ""
         } else if (course == 'CoursIndividuel') {
             // var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`discount_club`= '" + discount + "',`amount`= '" + amount + "' WHERE `Coach_id`=" + Coach_id + " AND `booking_id`=" + booking_id + "";
             var update_qry = "call proc_set_booking_status(" + booking_id + "," + amount + ",'" + status + "')"
@@ -411,8 +412,10 @@ exports.setStatus = async function (req, res, next) {
             .execute(update_qry).then(async (value) => {
                 if (value.affectedRows > 0) {
                     await db_library.execute(sel_qry).then(async (val) => {
+                        
                         if (val.length > 0) {
                             for (var i = 0; i < val.length; i++) {
+                                //console.log('test',val[i].booking_id)
                                 if (status != 'C' && status != 'S') {
 
                                     var mailTemplate = await mail_template.getMailTemplate(appConfig.MailTemplate.BookingSuccess);
@@ -420,7 +423,7 @@ exports.setStatus = async function (req, res, next) {
                                     let _mailOption = new mailOption();
                                     _mailOption.to = val[i].UserEmail;
                                     _mailOption.subject = lang.booking_approved;
-                                    _mailOption.html = mailTemplate[0].template.replace('{{username}}', val[i].UserFirstname + " " + val[i].UserLastname).replace('{{bookingid}}', booking_id).replace('{{amount}}', amount);
+                                    _mailOption.html = mailTemplate[0].template.replace('{{username}}', val[i].UserFirstname + " " + val[i].UserLastname).replace('{{bookingid}}', val[i].booking_id).replace('{{amount}}', amount);
                                     var _mailer = require('../../_mailer/mailer');
                                     _mailer.sendMail(_mailOption);
                                     _output.data = {};

@@ -1,11 +1,11 @@
 const output = require("../../_models/output");
 const db_library = require("../../_helpers/db_library");
-const bcrypt = require("bcrypt");
-const fs = require("fs");
-const path = require("path");
-const appConfig = require("../../../../config/appConfig");
-const mail_template = require("../../MailTemplate/mailTemplate");
-const stripe = require("stripe");
+//const bcrypt = require("bcrypt");
+//const fs = require("fs");
+//const path = require("path");
+//const appConfig = require("../../../../config/appConfig");
+//const mail_template = require("../../MailTemplate/mailTemplate");
+//const stripe = require("stripe");
 
 exports.getallbookings = async function(req, res, next) {
   var _output = new output();

@@ -12,5 +12,9 @@ exports.franchContent = {
   booking_approved: "Réservation approuvée",
   payment_successful: "Paiement réussi",
   booking_reshedule: "Reshedule de réservation",
-  booking_cancelled: "Réservation annulée"
+  booking_cancelled: "Réservation annulée",
+  content_create_fail: "Content Creation Failed",
+  content_create_success: "Content Creation Successfully",
+  content_get_success: "Content management system get successfull",
+  contetn_get_fail: "Content management system get failed"
 };
