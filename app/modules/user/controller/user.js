@@ -886,3 +886,94 @@ exports.cancelReservation = async function(req, res, next) {
   }
   res.send(_output);
 };
+
+exports.getallusercoursecount = async function(req, res, next) {
+  var _output = new output();
+  const User_ID = req.body.User_ID;
+  var CoursIndividuel;
+  var CoursCollectifOndemand;
+  var CoursCollectifClub;
+  var Stage;
+  var Tournament;
+
+  await db_library
+    .execute(
+      `select count(*)
+ from booking_dbs s join users u on s.user_Id = u.id where bookingCourse = "CoursIndividuel" AND user_Id = ` +
+        User_ID
+    )
+    .then(value => {
+      CoursIndividuel = value[0]["count(*)"];
+    });
+  await db_library
+    .execute(
+      `select count(*)
+ from booking_dbs s join users u on s.user_Id = u.id where bookingCourse = "CoursCollectifOndemand" AND user_Id = ` +
+        User_ID
+    )
+    .then(value => {
+      CoursCollectifOndemand = value[0]["count(*)"];
+    });
+
+  await db_library
+    .execute(
+      `select count(*)
+ from booking_dbs s join users u on s.user_Id = u.id where bookingCourse = "CoursCollectifClub" AND user_Id = ` +
+        User_ID
+    )
+    .then(value => {
+      CoursCollectifClub = value[0]["count(*)"];
+    });
+
+  await db_library
+    .execute(
+      `select count(*)
+ from booking_dbs s join users u on s.user_Id = u.id where bookingCourse = "Stage" AND user_Id = ` +
+        User_ID
+    )
+    .then(value => {
+      Stage = value[0]["count(*)"];
+    });
+  await db_library
+    .execute(
+      `select count(*)
+ from booking_dbs s join users u on s.user_Id = u.id where bookingCourse = "Tournoi" AND user_Id = ` +
+        User_ID
+    )
+    .then(value => {
+      Tournament = value[0]["count(*)"];
+    });
+  await db_library
+    .execute(
+      `select count(*)
+ from booking_dbs s join users u on s.user_Id = u.id where bookingCourse = "TeamBuilding" AND user_Id = ` +
+        User_ID
+    )
+    .then(value => {
+      TeamBuilding = value[0]["count(*)"];
+    });
+
+  await db_library
+    .execute(
+      `select count(*)
+ from booking_dbs s join users u on s.user_Id = u.id where bookingCourse = "Animation" AND user_Id = ` +
+        User_ID
+    )
+    .then(value => {
+      Animation = value[0]["count(*)"];
+    });
+
+  var obj = {
+    CoursIndividuel: CoursIndividuel,
+    CoursCollectifOndemand: CoursCollectifOndemand,
+    CoursCollectifClub: CoursCollectifClub,
+    Stage: Stage,
+    Tournament: Tournament,
+    TeamBuilding: TeamBuilding,
+    Animation: Animation
+  };
+  _output.data = obj;
+  _output.isSuccess = true;
+  _output.message = "Get Successfull";
+  res.send(_output);
+};

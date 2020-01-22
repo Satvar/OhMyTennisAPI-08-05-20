@@ -77,7 +77,7 @@ exports.getallCourscount = async function(req, res, next) {
     });
   await db_library
     .execute(
-      `select count(*) from booking_dbs s join users u on s.user_Id = u.id where bookingCourse = "Tournament" AND Coach_Id = ` +
+      `select count(*) from booking_dbs s join users u on s.user_Id = u.id where bookingCourse = "Tournoi" AND Coach_Id = ` +
         Coach_id
     )
     .then(value => {
