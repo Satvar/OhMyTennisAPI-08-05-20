@@ -26,6 +26,9 @@ app.use(
     limit: "50mb"
   })
 );
+
+app.use(express.static("public"));
+
 app.use(
   bodyParser.urlencoded({
     limit: "50mb",

@@ -1,6 +1,28 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
+var multer = require("multer");
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./public/images");
+  },
+  filename: (req, file, cb) => {
+    //console.log(file);
+    var filetype = "";
+    if (file.mimetype === "image/gif") {
+      filetype = "gif";
+    }
+    if (file.mimetype === "image/png") {
+      filetype = "png";
+    }
+    if (file.mimetype === "image/jpeg") {
+      filetype = "jpg";
+    }
+    cb(null, "image-" + Date.now() + "." + filetype);
+  }
+});
+var upload = multer({ storage: storage });
+
 // const uploadfile = require('../../_helpers/uploadFile');
 // const passportFacebook = require('../../_helpers/auth/facebook');
 // const passport = require('passport')
@@ -75,10 +97,38 @@ router.post(
   paymentController.CheckCustomerAccount
 );
 //Content Management System
+
 //-------------------------
 router.post("/admin/cms/add", cmsController.create);
 router.get("/admin/cms/getCms", cmsController.getCms);
 router.get("/admin/cms/getcmsmenu", cmsController.getcmsmenu);
 router.get("/admin/cms/getCmsData/:endpoint/:cmsId", cmsController.getCmsData);
-
+router.post("/admin/cms/getCmsValue", cmsController.getCmsvalue);
+router.post("/admin/cms/del", cmsController.delete);
+router.post("/admin/cmsfileupload", upload.single("upload"), function(
+  req,
+  res,
+  next
+) {
+  //console.log(req.file);
+  //console.log(req.body.CKEditorFuncNum);
+  if (!req.file) {
+    res.status(500);
+    return next(err);
+  }
+  //var message = "";
+  //var CKEditorFuncNum = 0;
+  var fileUrl = "http://192.168.1.32:3004/images/" + req.file.filename;
+  //console.log(fileUrl);
+  // var data =
+  //   "window.parent.CKEDITOR.tools.callFunction(" +
+  //   CKEditorFuncNum +
+  //   ", " +
+  //   fileUrl +
+  //   ", " +
+  //   message +
+  //   ")";
+  //res.send(data);
+  res.json({ fileName: req.file.filename, uploaded: true, url: fileUrl });
+});
 module.exports = router;

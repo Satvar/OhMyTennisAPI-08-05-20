@@ -5,6 +5,7 @@ const mail_template = require("../../MailTemplate/mailTemplate");
 const appConfig = require("../../../../config/appConfig");
 const moment = require('moment');
 const lang = require("../../../lang/language").franchContent;
+const base64 = require("base-64");
 
 exports.search_for_coach = async function (req, res, next) {
     const ville = req.query.ville;
@@ -118,6 +119,99 @@ exports.find_your_coach = async function (req, res, next) {
             _output.isSuccess = false;
             _output.message = "Coach Get Failed";
         });
+    // } else {
+    //     _output.data = "Required Field are missing";
+    //     _output.isSuccess = false;
+    //     _output.message = "Coach Get Failed";
+    // }
+    res.send(_output);
+}
+
+// function decodeBase64Image(dataString) {
+//   var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
+//     response = {};
+
+//   if (matches.length !== 3) {
+//     return new Error("Invalid input string");
+//   }
+
+//   response.type = matches[1];
+//   response.data = new Buffer(matches[2], "base64");
+
+//   return response;
+// }
+
+exports.searchByCoach = async function (req, res, next) {
+    //console.log("coach.js > searchbycoach > ", req.query)
+    const ville = req.query.ville;
+    const date = req.query.date;
+    const rayon = req.query.rayon;
+    const course = req.query.course;
+    var _output = new output();
+
+    // if (ville != "" && date != "" && rayon != "" && course != "") {
+    //var query = "call filtercoach('" + ville + "','" + date + "','" + rayon + "','" + course + "')";
+    //console.log(query);
+    // var query = "SELECT * FROM users s inner join coaches_dbs c on c.Coach_Email = s.email INNER join cities ct on ct.id = s.cityId where c.Coach_Rayon = " + rayon + " AND ct.Nom_commune like '%" + ville + "%'";
+
+    var where = "";
+    if (ville !== "") {
+        const postalCode = ville.trim();
+        where += " AND u.postalCode = '" + postalCode + "'";
+    }
+    if (course !== "") {
+        const courses = course.trim();
+        where += " AND c.Coach_Services LIKE '%" + courses + "%'";
+    }
+    if (date) {
+        where += " AND a.Date = '"+ date + "'"
+    }
+    
+    var query =
+      "SELECT DISTINCT c.Coach_Fname, c.Coach_ID, c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1" +
+      where;
+
+    //console.log(query);
+    await db_library
+      .execute(query)
+      .then(value => {
+        //console.log(value)
+        if (value.length > 0) {
+          var result = value;
+          for (var i = 0; i < value.length; i++) {
+            result[i].Coach_Services = value[i].Coach_Services.split(",");
+
+            // var encoded = value[i].Coach_Image.replace(/^data:image\/\w+;base64,/, "");
+            // if (encoded != "") {
+            //   var bytes = base64.decode(encoded);
+            //   result[i].Coach_Image = utf8.decode(bytes);
+            // } else {
+            //   result[i].Coach_Image = "";
+            // }
+
+            //console.log(text);
+          }
+          var res = {
+            coach_list: result
+          };
+          //console.log(res)
+          _output.data = res;
+          _output.isSuccess = true;
+          _output.message = "Coach Get Successfull";
+        } else {
+          var obj = {
+            coach_list: []
+          };
+          _output.data = obj;
+          _output.isSuccess = true;
+          _output.message = " No Coach Found";
+        }
+      })
+      .catch(err => {
+        _output.data = err.message;
+        _output.isSuccess = false;
+        _output.message = "Coach Get Failed";
+      });
     // } else {
     //     _output.data = "Required Field are missing";
     //     _output.isSuccess = false;
