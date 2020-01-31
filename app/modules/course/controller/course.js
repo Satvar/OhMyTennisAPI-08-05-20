@@ -1320,6 +1320,7 @@ exports.getAnimation = async function (req, res, next) {
 
 exports.setTeambuildingCourse = async function (req, res, next) {
     var _output = new output();
+    //console.log(req.body)
     const {
         Coach_Id,
         Description,
@@ -1332,13 +1333,14 @@ exports.setTeambuildingCourse = async function (req, res, next) {
         filename
     } = req.body;
 
-    if (Coach_Id != "" && Description != "" && Photo != "" && Mode_of_transport != "" && Plan != "" && Eventdetails != "") {
+    if (Coach_Id != "" && Description != "" && Mode_of_transport != "" && Plan != "" && Eventdetails != "") {
         var insert_query = "INSERT INTO `team_building` (`Coach_Id`, `Mode_of_transport`, `Description`, `Photo`, `Postalcode`, `Plan`,`Eventdetails`,`filename`,`Price`) VALUES (?,?,?,?,?,?,?,?,?);";
 
         var update_query = "Update `team_building` set `Mode_of_transport`=?, `Description`=?, `filename`=?,`Photo`=?, `Plan` =?, `Postalcode` =?, `Eventdetails` =?, `Price` =? where `Coach_Id` = ?";
 
         await db_library
             .execute("SELECT * FROM `team_building` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
+                //console.log(value)
                 if (value.length > 0) {
                     await db_library
                         .parameterexecute(update_query, [Mode_of_transport, Description, filename, Photo, Plan, Postalcode, Eventdetails, "0", Coach_Id]).then((value) => {
@@ -1348,6 +1350,7 @@ exports.setTeambuildingCourse = async function (req, res, next) {
                             _output.message = "Teambuilding course updated successfully";
 
                         }).catch(err => {
+                            //console.log(err.message)
                             _output.data = {};
                             _output.isSuccess = false;
                             _output.message = "Teambuilding course update Failed";

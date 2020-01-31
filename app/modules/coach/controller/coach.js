@@ -163,15 +163,17 @@ exports.searchByCoach = async function (req, res, next) {
         const courses = course.trim();
         where += " AND c.Coach_Services LIKE '%" + courses + "%'";
     }
-    if (date) {
-        where += " AND a.Date = '"+ date + "'"
+    console.log(date)
+    if (date != "" && date != 'null') {
+        //const date = date.trim();
+        where += " AND a.Date = '" + date + "' GROUP BY a.Date"
     }
     
     var query =
       "SELECT DISTINCT c.Coach_Fname, c.Coach_ID, c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1" +
       where;
 
-    //console.log(query);
+    console.log(query);
     await db_library
       .execute(query)
       .then(value => {

@@ -45,6 +45,7 @@ exports.bookCourse = async function(req, res, next) {
         "','" +
         course +
         "',0)";
+      //console.log(insert_qry);
     } else {
       var insert_qry =
         "INSERT INTO `booking_dbs`(`Coach_ID`, `user_Id`, `status`, `bookingDate`, `bookingEnd`, `bookingCourse`, `amount`) " +
@@ -67,7 +68,7 @@ exports.bookCourse = async function(req, res, next) {
 
     var sel_qry = "SELECT * FROM `users` where `id` = " + Coach_id;
     await db_library
-      .execute("SELECT * FROM `users` where `id` = " + User_Id)
+      .execute("SELECT * FROM `users` where `id` = " + user_Id)
       .then(async value => {
         if (value.length > 0) {
           user_details = value;
@@ -117,7 +118,7 @@ exports.bookCourse = async function(req, res, next) {
           }
         })
         .catch(err => {
-          //console.log(err);
+          //console.log(err.message);
           _output.data = {};
           _output.isSuccess = false;
           _output.message = "Booking Inserted Failed";
@@ -151,7 +152,7 @@ exports.bookCourse = async function(req, res, next) {
                   " VALUES (" +
                   Coach_Id +
                   "," +
-                  User_Id +
+                  user_Id +
                   "," +
                   value.insertId +
                   ",'" +
@@ -175,7 +176,7 @@ exports.bookCourse = async function(req, res, next) {
                   " VALUES (" +
                   Coach_Id +
                   "," +
-                  User_Id +
+                  user_Id +
                   "," +
                   value.insertId +
                   ",'" +
@@ -195,7 +196,7 @@ exports.bookCourse = async function(req, res, next) {
             }
 
             await db_library
-              .execute("SELECT * FROM `users` where `id` = " + User_Id)
+              .execute("SELECT * FROM `users` where `id` = " + user_Id)
               .then(async value => {
                 if (value.length > 0) {
                   user_details = value;
@@ -245,7 +246,7 @@ exports.bookCourse = async function(req, res, next) {
                 }
               })
               .catch(err => {
-                //console.log(err);
+                //console.log(err.message);
                 _output.data = {};
                 _output.isSuccess = false;
                 _output.message = "Booking Inserted Failed";
@@ -344,11 +345,12 @@ exports.search_for_event = async function(req, res, next) {
       "'";
   } else if (P_course == "TeamBuilding") {
     var query =
-      "SELECT t.* FROM `team_building` t inner JOIN users u ON t.Coach_Id =  u.id  WHERE `postalCode` = '" +
+      "SELECT t.* FROM `team_building` t inner JOIN users u ON t.Coach_Id =  u.id  WHERE t.Postalcode = '" +
       P_postalcode +
       "' OR '" +
       P_postalcode +
       "' =''";
+    //console.log(query);
   } else {
     var query =
       "SELECT * FROM `animations` WHERE `Postalcode` = '" +
@@ -547,7 +549,7 @@ exports.getCoachbyevent = async function(req, res, next) {
     //   P_CoachId +
     //   ";";
     var query =
-      "select c.* from `team_building` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email WHERE cs.Coach_Id = " +
+      "select c.*,ci.coordonnees_gps from `team_building` cs INNER JOIN `users` u on u.id = cs.Coach_Id INNER JOIN `coaches_dbs` c on c.Coach_Email = u.email INNER JOIN `cities` ci on ci.Code_postal = cs.Postalcode WHERE cs.Coach_Id = " +
       P_CoachId +
       ";";
   }
