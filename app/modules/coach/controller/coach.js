@@ -6,6 +6,7 @@ const appConfig = require("../../../../config/appConfig");
 const moment = require('moment');
 const lang = require("../../../lang/language").franchContent;
 const base64 = require("base-64");
+const calculateLocationRadius = require('../../_helpers/calculateRadiusDistance');
 
 exports.search_for_coach = async function (req, res, next) {
     const ville = req.query.ville;
@@ -141,6 +142,87 @@ exports.find_your_coach = async function (req, res, next) {
 //   return response;
 // }
 
+// exports.searchByCoach = async function (req, res, next) {
+//     //console.log("coach.js > searchbycoach > ", req.query)
+//     const ville = req.query.ville;
+//     const date = req.query.date;
+//     const rayon = req.query.rayon;
+//     const course = req.query.course;
+//     var _output = new output();
+
+//     // if (ville != "" && date != "" && rayon != "" && course != "") {
+//     //var query = "call filtercoach('" + ville + "','" + date + "','" + rayon + "','" + course + "')";
+//     //console.log(query);
+//     // var query = "SELECT * FROM users s inner join coaches_dbs c on c.Coach_Email = s.email INNER join cities ct on ct.id = s.cityId where c.Coach_Rayon = " + rayon + " AND ct.Nom_commune like '%" + ville + "%'";
+
+//     var where = "";
+//     if (ville !== "") {
+//         const postalCode = ville.trim();
+//         where += " AND u.postalCode = '" + postalCode + "'";
+//     }
+//     if (course !== "") {
+//         const courses = course.trim();
+//         where += " AND c.Coach_Services LIKE '%" + courses + "%'";
+//     }
+//     //console.log(date)
+//     if (date != "" && date != 'null') {
+//         //const date = date.trim();
+//         where += " AND a.Date = '" + date + "' GROUP BY a.Date"
+//     }
+    
+//     var query =
+//       "SELECT DISTINCT c.Coach_Fname, c.Coach_ID, c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1" +
+//       where;
+
+//     //console.log(query);
+//     await db_library
+//       .execute(query)
+//       .then(value => {
+//         //console.log(value)
+//         if (value.length > 0) {
+//           var result = value;
+//           for (var i = 0; i < value.length; i++) {
+//             result[i].Coach_Services = value[i].Coach_Services.split(",");
+
+//             // var encoded = value[i].Coach_Image.replace(/^data:image\/\w+;base64,/, "");
+//             // if (encoded != "") {
+//             //   var bytes = base64.decode(encoded);
+//             //   result[i].Coach_Image = utf8.decode(bytes);
+//             // } else {
+//             //   result[i].Coach_Image = "";
+//             // }
+
+//             //console.log(text);
+//           }
+//           var res = {
+//             coach_list: result
+//           };
+//           //console.log(res)
+//           _output.data = res;
+//           _output.isSuccess = true;
+//           _output.message = "Coach Get Successfull";
+//         } else {
+//           var obj = {
+//             coach_list: []
+//           };
+//           _output.data = obj;
+//           _output.isSuccess = true;
+//           _output.message = " No Coach Found";
+//         }
+//       })
+//       .catch(err => {
+//         _output.data = err.message;
+//         _output.isSuccess = false;
+//         _output.message = "Coach Get Failed";
+//       });
+//     // } else {
+//     //     _output.data = "Required Field are missing";
+//     //     _output.isSuccess = false;
+//     //     _output.message = "Coach Get Failed";
+//     // }
+//     res.send(_output);
+// }
+
 exports.searchByCoach = async function (req, res, next) {
     //console.log("coach.js > searchbycoach > ", req.query)
     const ville = req.query.ville;
@@ -154,71 +236,234 @@ exports.searchByCoach = async function (req, res, next) {
     //console.log(query);
     // var query = "SELECT * FROM users s inner join coaches_dbs c on c.Coach_Email = s.email INNER join cities ct on ct.id = s.cityId where c.Coach_Rayon = " + rayon + " AND ct.Nom_commune like '%" + ville + "%'";
 
+
+
+
+    //SDKAT - START
     var where = "";
-    if (ville !== "") {
-        const postalCode = ville.trim();
-        where += " AND u.postalCode = '" + postalCode + "'";
-    }
-    if (course !== "") {
-        const courses = course.trim();
-        where += " AND c.Coach_Services LIKE '%" + courses + "%'";
-    }
-    console.log(date)
-    if (date != "" && date != 'null') {
-        //const date = date.trim();
-        where += " AND a.Date = '" + date + "' GROUP BY a.Date"
-    }
-    
-    var query =
-      "SELECT DISTINCT c.Coach_Fname, c.Coach_ID, c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1" +
-      where;
+    var query = "";
+    // if (course !== "") {
+    //     const courses = course.trim();
+    //     where += " AND c.Coach_Services LIKE '%" + courses + "%'";
+    // }
+    // if (date != "" && date != 'null') {
+    //     //const date = date.trim();
+    //     where += " AND a.Date = '" + date + "' GROUP BY a.Date"
+    // }
 
-    console.log(query);
-    await db_library
-      .execute(query)
-      .then(value => {
-        //console.log(value)
-        if (value.length > 0) {
-          var result = value;
-          for (var i = 0; i < value.length; i++) {
-            result[i].Coach_Services = value[i].Coach_Services.split(",");
-
-            // var encoded = value[i].Coach_Image.replace(/^data:image\/\w+;base64,/, "");
-            // if (encoded != "") {
-            //   var bytes = base64.decode(encoded);
-            //   result[i].Coach_Image = utf8.decode(bytes);
-            // } else {
-            //   result[i].Coach_Image = "";
-            // }
-
-            //console.log(text);
-          }
-          var res = {
-            coach_list: result
-          };
-          //console.log(res)
-          _output.data = res;
-          _output.isSuccess = true;
-          _output.message = "Coach Get Successfull";
-        } else {
-          var obj = {
-            coach_list: []
-          };
-          _output.data = obj;
-          _output.isSuccess = true;
-          _output.message = " No Coach Found";
+    // Checking for the Rayon is Empty
+    if (rayon == "0") {
+        if (ville !== "") {
+            const postalCode = ville.trim();
+            where += " AND u.postalCode = '" + postalCode + "'";
         }
-      })
-      .catch(err => {
-        _output.data = err.message;
-        _output.isSuccess = false;
-        _output.message = "Coach Get Failed";
-      });
+        if (course !== "") {
+            const courses = course.trim();
+            where += " AND c.Coach_Services LIKE '%" + courses + "%'";
+        }
+        if (date != "" && date != 'null') {
+            //const date = date.trim();
+            where += " AND a.Date = '" + date + "' GROUP BY a.Date"
+        }
+
+        var query = "SELECT DISTINCT (c.Coach_ID), c.Coach_Fname, c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1" + where;
+        console.log('Either Rayon or Ville is Empty');
+    }// End of rayon=='null' || rayon=='0'
+    else {
+        if (course !== "") {
+            //const courses = course.trim();
+            where += " AND coaches_dbs.Coach_Services LIKE '%" + course + "%'";
+        }
+        if (date != "" && date != 'null') {
+            //const date = date.trim();
+            where += " AND avaiablity.Date = '" + date + "' GROUP BY avaiablity.Date"
+        }
+        var query_internal = "SELECT Code_postal,coordonnees_gps FROM cities WHERE `Code_postal`=" + ville;
+        await db_library
+            .execute(query_internal)
+            .then(async results => {
+                if (results.length > 0) {
+                    // If Results Greater than 0 Process the Code postal along with latitude and Longitude
+                    let Code_postal = results[0].Code_postal;
+                    let coordonnees_gps = results[0].coordonnees_gps;
+                    let lat_long = coordonnees_gps.split(',');
+                    let longitude = lat_long[0];
+                    let latitude = lat_long[1];
+                    const postal_codes_list = await calculateLocationRadius(longitude, latitude, Code_postal, rayon);
+                    console.log(postal_codes_list);
+                    if (postal_codes_list.length > 0) {
+                        query = "SELECT DISTINCT(coaches_dbs.Coach_ID),coaches_dbs.Coach_Fname,coaches_dbs.Coach_Lname,coaches_dbs.InstagramURL,coaches_dbs.TwitterURL,coaches_dbs.FacebookURL,coaches_dbs.Coach_Phone, coaches_dbs.Coach_Email,coaches_dbs.Coach_Price, coaches_dbs.Coach_PriceX10, coaches_dbs.Coach_Description,coaches_dbs.Coach_Services,users.id FROM users JOIN coaches_dbs ON users.email = coaches_dbs.Coach_Email LEFT JOIN avaiablity ON users.id=avaiablity.CoachId WHERE users.postalCode IN (" + postal_codes_list + ") AND users.roleId='2' AND users.isActive='1'" + where;
+                    }
+                    else {
+                        console.log("If the Post Codes Are Not Found for the Rayon");
+                        query = "SELECT DISTINCT(coaches_dbs.Coach_ID),coaches_dbs.Coach_Fname,coaches_dbs.Coach_Lname,coaches_dbs.InstagramURL,coaches_dbs.TwitterURL,coaches_dbs.FacebookURL,coaches_dbs.Coach_Phone, coaches_dbs.Coach_Email,coaches_dbs.Coach_Price, coaches_dbs.Coach_PriceX10, coaches_dbs.Coach_Description,coaches_dbs.Coach_Services,users.id FROM users JOIN coaches_dbs ON users.email = coaches_dbs.Coach_Email LEFT JOIN avaiablity ON users.id=avaiablity.CoachId WHERE users.postalCode IN ('') AND users.roleId='2' AND users.isActive='1'" + where;
+                    }// End of Postal_codes.length <0
+                    //return;
+                }// End of results.length > 0
+                else {
+                    console.log("If the Post Codes Are Not Found for the Given Postal Code");
+                    query = "SELECT Code_postal,coordonnees_gps FROM cities WHERE `Code_postal`=" + ville;
+                }// End of results.length < 0
+            });// End of async results
+    }// End of rayon!='null' || rayon!='0'
+
+
+
+
+    //return;
+    // if (ville !== "") {
+    //     const postalCode = ville.trim();
+    //     where += " AND u.postalCode = '" + postalCode + "'";
+    // }
+    // if (course !== "") {
+    //     const courses = course.trim();
+    //     where += " AND c.Coach_Services LIKE '%" + courses + "%'";
+    // }
+    // //console.log(date)
+    // if (date != "" && date != 'null') {
+    //     //const date = date.trim();
+    //     where += " AND a.Date = '" + date + "' GROUP BY a.Date"
+    // }
+
+    // var query =
+    //   "SELECT DISTINCT c.Coach_Fname, c.Coach_ID, c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1" +
+    //   where;
+    console.log("Query O/P : " + query);
+    //return
+    await db_library
+        .execute(query)
+        .then(value => {
+            console.log("Query Executed");
+            console.log(query);
+            console.log("Output Length");
+            console.log(value.length);
+            if (value.length > 0) {
+                var result = value;
+                //console.log(result);
+                for (var i = 0; i < value.length; i++) {
+                    result[i].Coach_Services = value[i].Coach_Services.split(",");
+
+                    // var encoded = value[i].Coach_Image.replace(/^data:image\/\w+;base64,/, "");
+                    // if (encoded != "") {
+                    //   var bytes = base64.decode(encoded);
+                    //   result[i].Coach_Image = utf8.decode(bytes);
+                    // } else {
+                    //   result[i].Coach_Image = "";
+                    // }
+
+                    //console.log(text);
+                }
+                var res = {
+                    coach_list: result
+                };
+                //console.log(res);
+                //return
+                _output.data = res;
+                _output.isSuccess = true;
+                _output.message = "Coach Get Successfull";
+            } else {
+                var obj = {
+                    coach_list: []
+                };
+                _output.data = obj;
+                _output.isSuccess = true;
+                _output.message = " No Coach Found";
+            }
+        })
+        .catch(err => {
+            _output.data = err.message;
+            _output.isSuccess = false;
+            _output.message = "Coach Get Failed";
+        });
     // } else {
     //     _output.data = "Required Field are missing";
     //     _output.isSuccess = false;
     //     _output.message = "Coach Get Failed";
     // }
+    res.send(_output);
+}
+
+
+// New get coach list by postal code - mobile 
+
+exports.getCoachByPostalcode = async function (req, res, next) {
+    var _output = new output();
+   // console.log('Req Params 391: ' + req.params.code);
+    const code = req.params.code;
+    //console.log('393',code)
+    var query =
+        "SELECT DISTINCT c.Coach_Fname, c.Coach_ID, c.Coach_Image, c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1 AND u.postalCode = '" + code + "'";
+    await db_library
+        .execute(query)
+        .then(value => {
+            // console.log("Query Executed 399");
+            // console.log(query);
+            // console.log("Output Length 401");
+            // console.log(value.length);
+            if (value.length > 0) {
+                var result = value;
+                for (var i = 0; i < value.length; i++) {
+                    result[i].Coach_Services = value[i].Coach_Services.split(",");
+                }
+                var res = {
+                    coach_list: result
+                };
+                _output.data = res;
+                _output.isSuccess = true;
+                _output.message = "Coach Get Successfull";
+            } else {
+                var obj = {
+                    coach_list: []
+                };
+                _output.data = obj;
+                _output.isSuccess = true;
+                _output.message = " No Coach Found";
+            }
+        })
+        .catch(err => {
+            _output.data = err.message;
+            _output.isSuccess = false;
+            _output.message = "Coach Get Failed";
+        });
+    res.send(_output);
+}
+
+exports.getcoachdetailbyid = async function (req, res, next) {
+    const { id } = req.body;
+    //console.log(id)
+    var _output = new output();
+
+    var query =
+        "SELECT DISTINCT c.Coach_Fname, c.Coach_ID, c.InstagramURL, c.Coach_Image, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1 AND c.Coach_ID = '" + id + "'";
+    
+    if (id != "") {
+        await db_library
+            .execute(query).then((value) => {
+                //console.log(value)
+                if (value.length > 0) {
+                    var obj = {
+                        coach_list: value
+                    }
+                    var result = obj;
+                    _output.data = result;
+                    _output.isSuccess = true;
+                    _output.message = "Coach Get Successfull";
+                } else {
+                    _output.data = {};
+                    _output.isSuccess = true;
+                    _output.message = " No Coach Found";
+                }
+
+            }).catch(err => {
+                _output.data = err.message;
+                _output.isSuccess = false;
+                _output.message = "Coach Get Failed";
+            });
+    } else {
+        _output.data = lang.required_field;
+        _output.isSuccess = false;
+        _output.message = "Coach Get Failed";
+    }
     res.send(_output);
 }
 
@@ -244,12 +489,14 @@ exports.getallcoaches = async function (req, res, next) {
 
 exports.getcoachbyid = async function (req, res, next) {
     const coach_email = req.body.Coach_Email;
+    //console.log("coach.js-447-", coach_email)
     var _output = new output();
 
     if (coach_email != "") {
         await db_library
             .execute("SELECT * FROM `coaches_dbs` WHERE Coach_Email='" + coach_email + "'").then((value) => {
                 if (value.length > 0) {
+                    //console.log("coach.js-454-", value)
                     var obj = {
                         coach_list: value
                     }
@@ -626,6 +873,7 @@ exports.getTime_slot = async function (req, res, next) {
 
 exports.setpayment = async function (req, res, next) {
     var _output = new output();
+    console.log(req.body)
     const status = req.body.status;
     const booking_id = req.body.booking_id;
     const amount = req.body.amount;
@@ -633,12 +881,14 @@ exports.setpayment = async function (req, res, next) {
     if (status != "" && booking_id != "") {
 
         var update_qry = "call proc_set_booking_status(" + booking_id + "," + amount + ",'" + status + "')"
-
+        //var update_qry = 
         await db_library
             .execute(update_qry).then(async (value) => {
+                console.log("line - 886", value)
                 if (value.affectedRows > 0) {
                     await db_library.execute("SELECT u.*, b.* FROM `users` u INNER JOIN `booking_dbs` b on u.id = b.user_Id where b.`booking_id`=" + booking_id + "").then(async (val) => {
                         if (val.length > 0) {
+                            console.log("line - 890", val)
                             var mailTemplate = await mail_template.getMailTemplate(appConfig.MailTemplate.PaymentSuccess);
                             const mailOption = require('../../_mailer/mailOptions');
                             let _mailOption = new mailOption();
@@ -1013,6 +1263,49 @@ exports.getDemandPrice = async function (req, res, next) {
         _output.data = lang.required_field;
         _output.isSuccess = false;
         _output.message = "CourseCollectiveDemand Price get Failed";
+    }
+    res.send(_output);
+}
+
+exports.geolocationByPostalCode = async function (req, res, next) {
+    var _output = new output();
+    console.log('Req Params : ' + req.params.id);
+    const postalCode = req.params.id;
+    console.log(postalCode);
+    //return;
+    if (postalCode != "") {
+        var query = "SELECT * FROM cities WHERE Code_postal=" + postalCode;
+        await db_library
+            .execute(query)
+            .then(async (value) => {
+                console.log(value);
+                //return;
+                if (value.length > 0) {
+                    var obj = {
+                        coordonnees_gps: value[0].coordonnees_gps
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Coordinate GPS Found";
+                }// End of value.length > 0
+                else {
+                    var obj = {
+                        coordonnees_gps: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Coordinate GPS Not Found";
+                }// End of value.length < 0
+            }).catch((err) => {
+                _output.data = err.message;
+                _output.isSuccess = false;
+                _output.message = "Coordinate GPS Fetching Failed";
+            })
+    }
+    else {
+        _output.data = {};
+        _output.isSuccess = false;
+        _output.message = "Postal Code is not present";
     }
     res.send(_output);
 }

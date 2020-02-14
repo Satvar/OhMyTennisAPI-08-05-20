@@ -489,7 +489,7 @@ exports.getall_course = async function(req, res, next) {
       "';";
   } else if (P_course == "Animation") {
     query =
-      "SELECT id,Description,Location,Postalcode,Eventdetails,Price,filename,Plan,Coach_Id FROM `animations`;";
+      "SELECT id,Description,Location,Postalcode,Eventdetails,Price,filename,Plan,Coach_Id,Photo FROM `animations`;";
   } else {
     query = "SELECT * FROM `team_building`;";
   }

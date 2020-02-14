@@ -668,6 +668,7 @@ exports.getStage = async function (req, res, next) {
             .execute(query).then(async (value) => {
                 var result = value;
                 if (value.length > 0) {
+//                    result[0].from_date = formatDate(new Date(result[0].from_date))
                     var obj = {
                         course: result
                     }
@@ -785,6 +786,19 @@ exports.setStageCourseInsert = async function (req, res, next) {
     } = req.body;
 
     if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Price != "" && Photo != "" && from_date != "" && Mode_of_transport != "" && Plan != "" && to_date != "" && Eventdetails != "" && Eventname != "") {
+
+        // console.log(Location,
+        //     Postalcode,
+        //     Coach_Id,
+        //     Description,
+        //     Price,
+        //     from_date,
+        //     to_date,
+        //     Eventname,
+        //     Eventdetails,
+        //     Mode_of_transport,
+        //     Plan,
+        //     filename)
 //console.log("request--- ", req.body)
         
 
@@ -1010,6 +1024,7 @@ exports.setAnimationInsert = async function (req, res, next) {
         filename
     } = req.body;
 
+    
     if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Photo != "" && Plan != "" && Eventdetails != "") {
 
         // var insert_query = "INSERT INTO `animations` (`Coach_Id`, `Description`, `Photo`," +
@@ -1080,7 +1095,7 @@ exports.setAnimationUpdate = async function (req, res, next) {
         filename,
         id
     } = req.body;
-
+    
     if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Photo != "" && Plan != "" && Eventdetails != "") {
 
         // var insert_query = "INSERT INTO `animations` (`Coach_Id`, `Description`, `Photo`," +
@@ -1202,9 +1217,9 @@ exports.setAnimationCourse = async function (req, res, next) {
 exports.getAnimationCourseLeft = async function (req, res, next) {
     var _output = new output();
     const coachId = req.query.coachId;
-    const id = req.query.id;
+    //const id = req.query.id;
 
-    if (id != "") {
+    //if (id != "") {
         var query = "select * from animations where `Coach_Id` = " + coachId;
         await db_library
             .execute(query).then(async (value) => {
@@ -1229,11 +1244,11 @@ exports.getAnimationCourseLeft = async function (req, res, next) {
                 _output.isSuccess = false;
                 _output.message = "Animation course get Failed";
             })
-    } else {
-        _output.data = "Required Field are missing";
-        _output.isSuccess = false;
-        _output.message = "Animation course get Failed";
-    }
+    // } else {
+    //     _output.data = "Required Field are missing";
+    //     _output.isSuccess = false;
+    //     _output.message = "Animation course get Failed";
+    // }
     res.send(_output);
 }
 
@@ -1279,7 +1294,7 @@ exports.getAnimation = async function (req, res, next) {
     var _output = new output();
     const Coach_id = req.query.coachId;
     const id = req.query.animation_id;
-    console.log(req.query)
+    //console.log(req.query)
     if (id != "" && Coach_id != "") {
         var query = "select animations.*,users.* from animations JOIN users ON  animations.Coach_Id = users.id where animations.Coach_Id = " + Coach_id + " AND animations.id = " + id + "";
 
@@ -1332,7 +1347,7 @@ exports.setTeambuildingCourse = async function (req, res, next) {
         Postalcode,
         filename
     } = req.body;
-
+    
     if (Coach_Id != "" && Description != "" && Mode_of_transport != "" && Plan != "" && Eventdetails != "") {
         var insert_query = "INSERT INTO `team_building` (`Coach_Id`, `Mode_of_transport`, `Description`, `Photo`, `Postalcode`, `Plan`,`Eventdetails`,`filename`,`Price`) VALUES (?,?,?,?,?,?,?,?,?);";
 

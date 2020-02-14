@@ -245,16 +245,19 @@ exports.updateProfile = async function(req, res, next) {
         Coach_Email
       ])
       .then(value => {
+        console.log("value", value);
         _output.data = {};
         _output.isSuccess = true;
         _output.message = "Update Successfully";
       })
       .catch(err => {
+        console.log("err", err.message);
         _output.data = {};
         _output.isSuccess = false;
         _output.message = "Update failed";
       });
   } else {
+    console.log("err");
     _output.data = lang.required_field;
     _output.isSuccess = false;
     _output.message = "Update failed";
@@ -416,10 +419,17 @@ exports.resetPassword = async function(req, res, next) {
     await db_library
       .execute(query)
       .then(value => {
-        var result = {};
-        _output.data = result;
-        _output.isSuccess = true;
-        _output.message = "Reseted Password Successfully";
+        //console.log(value);
+        if (value.affectedRows > 0) {
+          //var result = {};
+          _output.data = {};
+          _output.isSuccess = true;
+          _output.message = "Reseted Password Successfully";
+        } else {
+          _output.data = {};
+          _output.isSuccess = false;
+          _output.message = "Password Reset falied";
+        }
       })
       .catch(err => {
         _output.data = {};

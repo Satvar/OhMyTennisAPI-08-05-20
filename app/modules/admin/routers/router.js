@@ -37,6 +37,7 @@ const courtController = require("../controller/court");
 const paymentController = require("../controller/payment");
 const serviceController = require("../controller/service");
 const cmsController = require("../controller/cms");
+const menuController = require("../controller/menu");
 
 router.post("/admin/create", adminController.registerAdmin);
 router.post("/admin", adminController.loginAdmin);
@@ -102,9 +103,14 @@ router.post(
 router.post("/admin/cms/add", cmsController.create);
 router.get("/admin/cms/getCms", cmsController.getCms);
 router.get("/admin/cms/getcmsmenu", cmsController.getcmsmenu);
-router.get("/admin/cms/getCmsData/:endpoint/:cmsId", cmsController.getCmsData);
+router.get("/admin/cms/getCmsData/:endpoint", cmsController.getCmsData);
 router.post("/admin/cms/getCmsValue", cmsController.getCmsvalue);
 router.post("/admin/cms/del", cmsController.delete);
+
+router.post("/admin/cms/delmenu", cmsController.deleteMenu);
+
+router.post("/admin/cms/update", cmsController.update);
+
 router.post("/admin/cmsfileupload", upload.single("upload"), function(
   req,
   res,
@@ -131,4 +137,32 @@ router.post("/admin/cmsfileupload", upload.single("upload"), function(
   //res.send(data);
   res.json({ fileName: req.file.filename, uploaded: true, url: fileUrl });
 });
+
+router.get("/admin/menu", menuController.getAll);
+router.post("/admin/menu/create/parent", menuController.createParent);
+router.post("/admin/menu/create", menuController.create);
+
+router.get("/admin/menu/view", menuController.view);
+
+router.get("/admin/menu/toptree", menuController.topTree);
+
+router.get("/admin/menu/bottomtree", menuController.bottomTree);
+
+router.get("/admin/menu/getname", menuController.getname);
+
+router.get("/admin/menu/list", menuController.list);
+
+router.get("/admin/editmenu/:id", menuController.editmenu);
+
+router.post("/admin/menu/createprimarymenu", menuController.createprimarymenu);
+
+router.get("/admin/getprimarymenu/:id", menuController.getprimarymenu);
+
+router.post("/admin/menu/menuDelete", menuController.menuDelete);
+
+router.post(
+  "/admin/menu/createsecondarymenu",
+  menuController.createsecondarymenu
+);
+
 module.exports = router;

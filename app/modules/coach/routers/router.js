@@ -31,4 +31,13 @@ router.get(
 );
 router.get("/coach/searchByCoach", coachController.searchByCoach);
 
+router.get("/coach/getcoachbycode/:code", coachController.getCoachByPostalcode);
+// Get coach detail by id
+router.post("/coach/getcoachdetailbyid", coachController.getcoachdetailbyid);
+
+//Get GeoLocation based on Postal code
+router.get(
+  "/coach/geolocationByPostalCode/:id",
+  coachController.geolocationByPostalCode
+);
 module.exports = router;
