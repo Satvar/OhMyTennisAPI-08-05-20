@@ -579,6 +579,7 @@ exports.coachReservation = async function (req, res, next) {
         bookArray
     } = req.body;
 
+    //console.log(req.body)
     var coach_details;
     if (bookArray.length > 0) {
         await db_library.execute("SELECT * FROM `users` where `id` = " + bookArray[0].P_CoachId).then(async (val) => {
@@ -685,10 +686,9 @@ exports.getReservation = async function (req, res, next) {
 }
 
 exports.getBookingDetail = async function (req, res, next) {
-    var _output = new output();
+    var _output = new output();    
     const booking_Id = req.query.booking_Id;
     if (booking_Id != "") {
-
         var Qry = "SELECT b.*,u.email FROM `booking_dbs` b LEFT JOIN `users` u on b.`user_Id` = u.id where  booking_Id  = " + booking_Id + "";
         await db_library.execute(Qry).then(async (val) => {
             var result = val;
@@ -728,13 +728,12 @@ exports.setStatus = async function (req, res, next) {
     const booking_date = req.body.booking_date;
     const booking_time = req.body.booking_time;
     const course = req.body.course;
-
     if (Coach_id != "" && status != "" && booking_id != "" && booking_date != "" && course != "") {
 
         if (course == 'CoursCollectifOndemand') {
             var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`discount_club`= '" + discount + "',`amount`= '" + amount + "' WHERE `Coach_id`=" + Coach_id + " AND `bookingDate`='" + booking_date + "' AND `bookingCourse`='" + course + "'";
 
-            var sel_qry = "SELECT b.booking_id as booking_id,s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserLastname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.bookingCourse='" + course + "' AND b.bookingDate ='" + booking_date + "' AND b.Coach_ID = " + Coach_id + " AND b.BookingTime = '" + booking_time + "'"
+            var sel_qry = "SELECT b.booking_id as booking_id,s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserLastname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.bookingCourse='" + course + "' AND b.bookingDate ='" + booking_date + "' AND b.Coach_ID = " + Coach_id;
             // var sel_qry = "SELECT s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserLastname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.booking_Id =" + booking_id + ""
         } else if (course == 'CoursIndividuel') {
             // var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`discount_club`= '" + discount + "',`amount`= '" + amount + "' WHERE `Coach_id`=" + Coach_id + " AND `booking_id`=" + booking_id + "";
@@ -757,8 +756,7 @@ exports.setStatus = async function (req, res, next) {
         await db_library
             .execute(update_qry).then(async (value) => {
                 if (value.affectedRows > 0) {
-                    await db_library.execute(sel_qry).then(async (val) => {
-                        
+                    await db_library.execute(sel_qry).then(async (val) => {                        
                         if (val.length > 0) {
                             for (var i = 0; i < val.length; i++) {
                                 //console.log('test',val[i].booking_id)
@@ -777,6 +775,7 @@ exports.setStatus = async function (req, res, next) {
                                     _output.data = {};
                                     _output.isSuccess = true;
                                     _output.message = "Status Update Successfull";
+                                    console.log('[coach.js - line 780]',_output);
                                 } else if (status == 'S') {
                                     var query = "INSERT INTO `balance`(`User_Id`, `Coach_Id`, `Course`, `BalanceAmt`) VALUES ("+user_Id+","+Coach_id+",'"+course+"',"+amount+")";
                                     await db_library.execute(query).then(async (update) => {
