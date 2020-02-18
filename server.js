@@ -70,7 +70,7 @@ app.use(function(req, res, next) {
 
 require("./app")(app);
 
-const port = process.env.PORT || 3004;
+const port = process.env.PORT || 4004;
 //app.listen(port, "192.168.1.32", function() {
 app.listen(port, function() {
   console.log("Currently running in " + modeconfig.ENVMODE + " Mode");
