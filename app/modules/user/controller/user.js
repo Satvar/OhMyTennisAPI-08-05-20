@@ -268,7 +268,6 @@ exports.updateProfile = async function(req, res, next) {
 exports.login = async function(req, res, next) {
   var _output = new output();
   const { email, password } = req.body;
-
   if (email != "" && password != "") {
     const query =
       "SELECT `id`, `firstName`, `lastName`, `email`, `gender`, `password`, `mobile`, `address`, `postalCode`, `cityId`," +
@@ -652,7 +651,6 @@ exports.updateUserProfile = async function(req, res, next) {
     mobile != "" &&
     User_Location != "" &&
     User_Level != "" &&
-    User_Team != "" &&
     address != "" &&
     User_Image != ""
   ) {
@@ -816,15 +814,31 @@ exports.cancelReservation = async function(req, res, next) {
         booking_time +
         "'";
     } else {
-      // var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`amount`= '" + amount + "' WHERE `Coach_id`=" + Coach_id + " AND `booking_id`=" + booking_id + "";
+      var where = "";
+      if (ville !== "") {
+        const postalCode = ville.trim();
+        where += " AND u.postalCode = '" + postalCode + "'";
+      }
+
       var update_qry =
-        "call proc_set_booking_status(" +
-        booking_id +
-        "," +
-        amount +
-        ",'" +
+        "UPDATE `booking_dbs` SET `status`= '" +
         status +
-        "')";
+        "' ,`amount`= '" +
+        amount +
+        "' WHERE `booking_Id`= '" +
+        booking_id +
+        "'";
+
+      // var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`amount`= '" + amount + "' WHERE `Coach_id`=" + Coach_id + " AND `booking_id`=" + booking_id + "";
+      // var update_qry =
+      //   "call proc_set_booking_status(" +
+      //   booking_id +
+      //   "," +
+      //   amount +
+      //   ",'" +
+      //   status +
+      //   "')";
+
       var sel_qry =
         "SELECT * FROM `users` u INNER JOIN `booking_dbs` b on u.id = b.user_Id INNER JOIN `coaches_dbs` cb where cb.Coach_Email = '" +
         email +

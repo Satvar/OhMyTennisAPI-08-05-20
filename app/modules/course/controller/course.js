@@ -33,12 +33,12 @@ exports.insertIndividualCourse = async function (req, res, next) {
                             var result = value;
                             _output.data = {};
                             _output.isSuccess = true;
-                            _output.message = "individual course updated successfully";
+                            _output.message = "Cours individuel mis à jour avec succès";
 
                         }).catch(err => {
                             _output.data = {};
                             _output.isSuccess = false;
-                            _output.message = "individual course update Failed";
+                            _output.message = "La mise à jour du cours individuel a échoué";
                         });
                 } else {
                     await db_library
@@ -46,23 +46,23 @@ exports.insertIndividualCourse = async function (req, res, next) {
                             var result = value;
                             _output.data = {};
                             _output.isSuccess = true;
-                            _output.message = "individual course added successfully";
+                            _output.message = "Cours individuel ajouté avec succès";
                         }).catch(err => {
                             _output.data = {};
                             _output.isSuccess = false;
-                            _output.message = "individual course added Failed";
+                            _output.message = "Cours individuel ajouté avec succès";
                         });
                 }
             }).catch(err => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Error in Individual Course Insert or Update";
+                _output.message = "Erreur lors de l'insertion ou de la mise à jour d'un cours individuel";
             });
         res.send(_output);
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "individual course added Failed";
+        _output.message = "Cours individuel ajouté avec succès";
     }
 }
 
@@ -82,24 +82,24 @@ exports.getIndividualCourse = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Individual course Get successfully";
+                    _output.message = "Le cours individuel réussit";
                 } else {
                     var obj = {
                         course: []
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Individual course Not Found";
+                    _output.message = "Cours individuel introuvable";
                 }
             }).catch((err) => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Individual course get Failed";
+                _output.message = "La leçon individuelle a échoué";
             })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Individual course get Failed";
+        _output.message = "La leçon individuelle a échoué";
     }
     res.send(_output);
 }
@@ -148,29 +148,29 @@ exports.setcouseCollectiveDemanad = async function (req, res, next) {
                         var result = {};
                         _output.data = result;
                         _output.isSuccess = true;
-                        _output.message = "Couse Collectice Demanad updated successfully";
+                        _output.message = "La demande collective de cours a été mise à jour avec succès";
 
                     }).catch(err => {
                         _output.data = err.message;
                         _output.isSuccess = false;
-                        _output.message = "Couse Collectice Demanad updated Failed";
+                        _output.message = "Échec de la demande de cours collectif mise à jour";
                     });
             } else {
                 await db_library
                     .parameterexecute(insert_query, [Coach_Id, Min_People, Max_People, Description, Location, Mode_of_transport, Price_2pl_1hr, Price_3pl_1hr, Price_4pl_1hr, Price_5pl_1hr, Price_6pl_1hr, Plan, Price_Mon, Price_Tue, Price_Wed, Price_Thr, Price_Fri, Price_Sat, Price_Sun, Postalcode]).then((value) => {
                         _output.data = {};
                         _output.isSuccess = true;
-                        _output.message = "Couse Collectice Demanad added successfully";
+                        _output.message = "La demande collective de cours a été ajoutée avec succès";
                     }).catch(err => {
                         _output.data = err.message;
                         _output.isSuccess = false;
-                        _output.message = "Couse Collectice Demanad added Failed";
+                        _output.message = "Échec de la demande collective de cours";
                     });
             }
         }).catch(err => {
             _output.data = err.message;
             _output.isSuccess = false;
-            _output.message = "Couse Collectice Demanad does not Exist";
+            _output.message = "La demande collective de cours n'existe pas";
         });
     res.send(_output);
 }
@@ -189,25 +189,25 @@ exports.getcouseCollectiveDemanad = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "couseCollectiveDemanad Get successfully";
+                    _output.message = "Cours demande collective Obtenez avec succès";
                 } else {
                     var obj = {
                         course: []
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "No record found";
+                    _output.message = "Aucun Enregistrement Trouvé";
                 }
 
             }).catch((err) => {
                 _output.data = err.message;
                 _output.isSuccess = false;
-                _output.message = "couseCollectiveDemanad get Failed";
+                _output.message = "Échec de la demande collective de cours";
             })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "couseCollectiveDemanad get Failed";
+        _output.message = "Échec de la demande collective de cours";
     }
     res.send(_output);
 }
@@ -264,18 +264,18 @@ exports.setCourseCollectiveClub = async function (req, res, next) {
                                         .execute(insert_availablity).then(async (res) => {
                                             _output.data = {};
                                             _output.isSuccess = true;
-                                            _output.message = "CourseCollectiveClub Updated successfully";
+                                            _output.message = "Le club collectif de cours a été mis à jour avec succès";
                                         }).catch(err => {
                                             _output.data = err.message;
                                             _output.isSuccess = false;
-                                            _output.message = "CourseCollectiveClub Update Failed";
+                                            _output.message = "Échec de la mise à jour du club collectif de cours";
                                         })
                                 }
                             }
                         }).catch(err => {
                             _output.data = err.message;
                             _output.isSuccess = false;
-                            _output.message = "CourseCollectiveClub updated Failed";
+                            _output.message = "Échec de la mise à jour du club collectif de cours";
                         });
                 } else {
                     await db_library
@@ -301,29 +301,29 @@ exports.setCourseCollectiveClub = async function (req, res, next) {
                                         .execute(insert_availablity).then(async (res) => {
                                             _output.data = {};
                                             _output.isSuccess = true;
-                                            _output.message = "CourseCollectiveClub added successfully";
+                                            _output.message = "Le club collectif de cours a été ajouté avec succès";
                                         }).catch(err => {
                                             _output.data = err.message;
                                             _output.isSuccess = false;
-                                            _output.message = "CourseCollectiveClub added Failed";
+                                            _output.message = "Échec du club collectif de cours";
                                         })
                                 }
                             }
                         }).catch(err => {
                             _output.data = err.message;
                             _output.isSuccess = false;
-                            _output.message = "CourseCollectiveClub added Failed";
+                            _output.message = "Échec du club collectif de cours";
                         });
                 }
             }).catch(err => {
                 _output.data = err.message;
                 _output.isSuccess = false;
-                _output.message = "CourseCollectiveClub does not Exist";
+                _output.message = "Le club collectif de cours n'existe pas";
             });
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "couseCollectiveDemanad get Failed";
+        _output.message = "Bien sûr, la demande collective a échoué";
     }
     res.send(_output);
 }
@@ -339,22 +339,22 @@ exports.deleteClubAvailablity = async function (req, res, next) {
                 if (value.affectedRows > 0) {
                     _output.data = {};
                     _output.isSuccess = true;
-                    _output.message = "Club Availability Delete Successfull";
+                    _output.message = "Suppression de la disponibilité du club réussie";
                 } else {
                     _output.data = {};
                     _output.isSuccess = true;
-                    _output.message = "No record found";
+                    _output.message = "Aucun Enregistrement Trouvé";
                 }
 
             }).catch((err) => {
                 _output.data = err.message;
                 _output.isSuccess = false;
-                _output.message = "Club Availability Delete Failed";
+                _output.message = "Échec de la suppression de la disponibilité du club";
             })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Club Availability Delete Failed";
+        _output.message = "Échec de la suppression de la disponibilité du club";
     }
     res.send(_output);
 }
@@ -374,7 +374,7 @@ exports.getCourseCollectiveClub = async function (req, res, next) {
                         }
                         _output.data = obj;
                         _output.isSuccess = true;
-                        _output.message = "CourseCollectiveClub Get successfully";
+                        _output.message = "Cours collectif club obtenir avec succès";
                     } else if (value.length > 0 && res.length == 0) {
                         var obj = {
                             course: value,
@@ -391,7 +391,7 @@ exports.getCourseCollectiveClub = async function (req, res, next) {
                         }
                         _output.data = obj;
                         _output.isSuccess = true;
-                        _output.message = "CourseCollectiveClub Get successfully";
+                        _output.message = "Cours collectif club obtenir avec succès";
                     } else {
                         var obj = {
                             course: [],
@@ -399,18 +399,18 @@ exports.getCourseCollectiveClub = async function (req, res, next) {
                         }
                         _output.data = obj;
                         _output.isSuccess = true;
-                        _output.message = "No records Found";
+                        _output.message = "Aucun Enregistrement Trouvé";
                     }
                 })
             }).catch((err) => {
                 _output.data = err.message;
                 _output.isSuccess = false;
-                _output.message = "CourseCollectiveClub get Failed";
+                _output.message = "Cours collectif club échoué";
             })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "CourseCollectiveClub get Failed";
+        _output.message = "Cours collectif club échoué";
     }
     res.send(_output);
 }
@@ -427,14 +427,14 @@ exports.getYear = async function (req, res, next) {
                 }
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = "Year Get successfully";
+                _output.message = "L'année réussit";
             } else {
                 var obj = {
                     course: []
                 }
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = "No records Found";
+                _output.message = "Aucun Enregistrement Trouvé";
             }
         }).catch((err) => {
             _output.data = err.message;
@@ -478,12 +478,12 @@ exports.setStageCourse = async function (req, res, next) {
                             var result = value;
                             _output.data = {};
                             _output.isSuccess = true;
-                            _output.message = "Stage course updated successfully";
+                            _output.message = "Stage mis à jour avec succès";
 
                         }).catch(err => {
                             _output.data = {};
                             _output.isSuccess = false;
-                            _output.message = "Stage course update Failed";
+                            _output.message = "Échec de la mise à jour du cours par étapes";
                         });
                 } else {
                     await db_library
@@ -501,11 +501,11 @@ exports.setStageCourse = async function (req, res, next) {
             }).catch(err => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Error in Stage Course Insert or Update";
+                _output.message = "Erreur lors de l'insertion ou de la mise à jour du cours par étapes";
             });
         
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
         _output.message = "Stage course added Failed";
     }
@@ -528,24 +528,24 @@ exports.getStageCourse = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Stage course Get successfully";
+                    _output.message = "Stage réussi";
                 } else {
                     var obj = {
                         course: []
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Stage course Not Found";
+                    _output.message = "Stage pas trouvé";
                 }
             }).catch((err) => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Stage course get Failed";
+                _output.message = "Le stage est échoué";
             })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Stage course get Failed";
+        _output.message = "Le stage est échoué";
     }
     res.send(_output);
 }
@@ -583,12 +583,12 @@ exports.setTournamentCourse = async function (req, res, next) {
                             var result = value;
                             _output.data = {};
                             _output.isSuccess = true;
-                            _output.message = "Tournament course updated successfully";
+                            _output.message = "Le parcours du tournoi a été mis à jour avec succès";
                         }).catch(err => {
                             //console.log(err);
                             _output.data = {};
                             _output.isSuccess = false;
-                            _output.message = "Tournament course update Failed";
+                            _output.message = "Échec de la mise à jour du parcours du tournoi";
                         });
                 } else {
                     await db_library
@@ -596,22 +596,22 @@ exports.setTournamentCourse = async function (req, res, next) {
                             var result = value;
                             _output.data = {};
                             _output.isSuccess = true;
-                            _output.message = "Tournament course added successfully";
+                            _output.message = "Le tournoi a été ajouté avec succès";
                         }).catch(err => {
                             _output.data = {};
                             _output.isSuccess = false;
-                            _output.message = "Tournament course added Failed";
+                            _output.message = "Le parcours du tournoi ajouté a échoué";
                         });
                 }
             }).catch(err => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Error in Tournament Course Insert or Update";
+                _output.message = "Erreur lors de l'insertion ou de la mise à jour du parcours du tournoi";
             });
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Tournament course added Failed";
+        _output.message = "Le parcours du tournoi ajouté a échoué";
     }
     res.send(_output);
 }
@@ -631,24 +631,24 @@ exports.getTournamentCourse = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Tournament course Get successfully";
+                    _output.message = "Le parcours du tournoi réussit";
                 } else {
                     var obj = {
                         course: []
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Tournament course Not Found";
+                    _output.message = "Parcours du tournoi introuvable";
                 }
             }).catch((err) => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Tournament course get Failed";
+                _output.message = "Le parcours du tournoi a échoué";
             })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Tournament course get Failed";
+        _output.message = "Le parcours du tournoi a échoué";
     }
     res.send(_output);
 }
@@ -674,24 +674,24 @@ exports.getStage = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Stage course Get successfully";
+                    _output.message = "Stage réussi";
                 } else {
                     var obj = {
                         course: []
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Stage course Not Found";
+                    _output.message = "Stage pas trouvé";
                 }
             }).catch((err) => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Stage course get Failed";
+                _output.message = "Le stage est échoué";
             })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Stage course get Failed";
+        _output.message = "Le stage est échoué";
     }
     res.send(_output);
 }
@@ -734,12 +734,12 @@ exports.setStageCourseUpdate = async function (req, res, next) {
                     var result = value;
                 _output.data = {};
                 _output.isSuccess = true;
-                _output.message = "Stage course updated successfully";
+                    _output.message = "Stage mis à jour avec succès";
 
             }).catch(err => {
                 _output.data = {};
                 _output.isSuccess = false;
-                _output.message = "Stage course update Failed";
+                _output.message = "Échec de la mise à jour du cours par étapes";
             });
         // } else {
         // await db_library
@@ -761,9 +761,9 @@ exports.setStageCourseUpdate = async function (req, res, next) {
         // });
         res.send(_output);
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Stage course update Failed";
+        _output.message = "Échec de la mise à jour du cours par étapes";
     }
 }
 
@@ -833,12 +833,12 @@ exports.setStageCourseInsert = async function (req, res, next) {
                 var result = value;
                 _output.data = {};
                 _output.isSuccess = true;
-                _output.message = "Stage course added successfully";
+                _output.message = "Le stage a été ajouté avec succès";
             }).catch(err => {
                 //console.log(err)
                 _output.data = {};
                 _output.isSuccess = false;
-                _output.message = "Stage course added Failed";
+                _output.message = "Le stage ajouté a échoué";
             });
         //     }
         // }).catch(err => {
@@ -848,9 +848,9 @@ exports.setStageCourseInsert = async function (req, res, next) {
         // });
         res.send(_output);
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Stage course added Failed";
+        _output.message = "Le stage ajouté a échoué";
         res.send(_output);
     }
 }
@@ -886,12 +886,12 @@ exports.setTournamentCourseUpdate = async function (req, res, next) {
                             var result = value;
                             _output.data = {};
                             _output.isSuccess = true;
-                            _output.message = "Tournament course updated successfully";
+                            _output.message = "Le parcours du tournoi a été mis à jour avec succès";
                         }).catch(err => {
                             //console.log(err);
                             _output.data = {};
                             _output.isSuccess = false;
-                            _output.message = "Tournament course update Failed";
+                            _output.message = "Échec de la mise à jour du parcours du tournoi";
                         });
                 }
                 // else {
@@ -910,12 +910,12 @@ exports.setTournamentCourseUpdate = async function (req, res, next) {
             }).catch(err => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Error in Tournament Course Insert or Update";
+                _output.message = "Erreur lors de l'insertion ou de la mise à jour du parcours du tournoi";
             });
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Tournament course added Failed";
+        _output.message = "Échec de la mise à jour du parcours du tournoi";
     }
     res.send(_output);
 }
@@ -954,18 +954,18 @@ exports.setTournamentCourseInsert = async function (req, res, next) {
                 var result = value;
                 _output.data = {};
                 _output.isSuccess = true;
-                _output.message = "Tournament course added successfully";
+                _output.message = "Le tournoi a été ajouté avec succès";
             }).catch(err => {
                 //console.log(err)
                 _output.data = {};
                 _output.isSuccess = false;
-                _output.message = "Tournament course added Failed";
+                _output.message = "Tournament course added failed";
             });
 
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Tournament course added Failed";
+        _output.message = "Tournament course added failed";
     }
     res.send(_output);
 }
@@ -988,24 +988,24 @@ exports.getTournament = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Tournament course Get successfully";
+                    _output.message = "Le parcours du tournoi réussit";
                 } else {
                     var obj = {
                         course: []
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Tournament course Not Found";
+                    _output.message = "Parcours du tournoi introuvable";
                 }
             }).catch((err) => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Tournament course get Failed";
+                _output.message = "Le parcours du tournoi a échoué";
             })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Tournament course get Failed";
+        _output.message = "Le parcours du tournoi a échoué";
     }
     res.send(_output);
 }
@@ -1060,11 +1060,11 @@ exports.setAnimationInsert = async function (req, res, next) {
                 var result = value;
                 _output.data = {};
                 _output.isSuccess = true;
-                _output.message = "Animation course added successfully";
+                _output.message = "Cours d'animation ajouté avec succès";
             }).catch(err => {
                 _output.data = {};
                 _output.isSuccess = false;
-                _output.message = "Animation course added Failed";
+                _output.message = "Échec du cours d'animation ajouté";
             });
         //     }
         // }).catch(err => {
@@ -1074,9 +1074,9 @@ exports.setAnimationInsert = async function (req, res, next) {
         // });
         res.send(_output);
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Stage Animation added Failed";
+        _output.message = "Échec du cours d'animation ajouté";
     }
 }
 
@@ -1113,12 +1113,12 @@ exports.setAnimationUpdate = async function (req, res, next) {
                 var result = value;
                 _output.data = {};
                 _output.isSuccess = true;
-                _output.message = "Animation course updated successfully";
+                _output.message = "Cours d'animation mis à jour avec succès";
 
             }).catch(err => {
                 _output.data = {};
                 _output.isSuccess = false;
-                _output.message = "Animation course update Failed";
+                _output.message = "Échec de la mise à jour du cours d'animation";
             });
         //         } else {
         // await db_library
@@ -1140,9 +1140,9 @@ exports.setAnimationUpdate = async function (req, res, next) {
         // });
         res.send(_output);
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Stage Animation added Failed";
+        _output.message = "Échec du cours d'animation ajouté";
     }
 }
 
@@ -1180,12 +1180,12 @@ exports.setAnimationCourse = async function (req, res, next) {
                             var result = value;
                             _output.data = {};
                             _output.isSuccess = true;
-                            _output.message = "Animation course updated successfully";
+                            _output.message = "Cours d'animation mis à jour avec succès";
 
                         }).catch(err => {
                             _output.data = {};
                             _output.isSuccess = false;
-                            _output.message = "Animation course update Failed";
+                            _output.message = "Échec de la mise à jour du cours d'animation";
                         });
                 } else {
                     await db_library
@@ -1193,23 +1193,23 @@ exports.setAnimationCourse = async function (req, res, next) {
                             var result = value;
                             _output.data = {};
                             _output.isSuccess = true;
-                            _output.message = "Animation course added successfully";
+                            _output.message = "Cours d'animation ajouté avec succès";
                         }).catch(err => {
                             _output.data = {};
                             _output.isSuccess = false;
-                            _output.message = "Animation course added Failed";
+                            _output.message = "Échec du cours d'animation ajouté";
                         });
                 }
             }).catch(err => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Error in Animation Course Insert or Update";
+                _output.message = "Erreur lors de l'insertion ou de la mise à jour du cours d'animation";
             });
        
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Stage Animation added Failed";
+        _output.message = "Échec du cours d'animation ajouté";
     }
     res.send(_output);
 }
@@ -1230,22 +1230,22 @@ exports.getAnimationCourseLeft = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Animation course Get successfully";
+                    _output.message = "Le cours d'animation réussit";
                 } else {
                     var obj = {
                         course: []
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Animation course Not Found";
+                    _output.message = "Cours d'animation introuvable";
                 }
             }).catch((err) => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Animation course get Failed";
+                _output.message = "Cours d'animation introuvable";
             })
     // } else {
-    //     _output.data = "Required Field are missing";
+    //     _output.data = "Le champ obligatoire est manquant";
     //     _output.isSuccess = false;
     //     _output.message = "Animation course get Failed";
     // }
@@ -1268,24 +1268,24 @@ exports.getAnimationCourse = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Animation course Get successfully";
+                    _output.message = "Cours d'animation réussi";
                 } else {
                     var obj = {
                         course: []
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Animation course Not Found";
+                    _output.message = "Cours d'animation introuvable";
                 }
             }).catch((err) => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Animation course get Failed";
+                _output.message = "Cours d'animation introuvable";
             })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Animation course get Failed";
+        _output.message = "Cours d'animation introuvable";
     }
     res.send(_output);
 }
@@ -1323,12 +1323,12 @@ exports.getAnimation = async function (req, res, next) {
             }).catch((err) => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Animation course get Failed";
+                _output.message = "Cours d'animation introuvable";
             })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Animation course get Failed";
+        _output.message = "Cours d'animation introuvable";
     }
     res.send(_output);
 }
@@ -1389,7 +1389,7 @@ exports.setTeambuildingCourse = async function (req, res, next) {
                 _output.message = "Error in Teambuilding Course Insert or Update";
             });
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
         _output.message = "Teambuilding course added Failed";
     }
@@ -1427,7 +1427,7 @@ exports.getTeambuildingCourse = async function (req, res, next) {
                 _output.message = "Teambuilding course get Failed";
             })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
         _output.message = "Teambuilding course get Failed";
     }
@@ -1466,7 +1466,7 @@ exports.getteambuilding = async function (req, res, next) {
                 _output.message = "Team Building course get Failed";
             })
     } else {
-        _output.data = "Required Field are missing";
+        _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
         _output.message = "Team Building course get Failed";
     }

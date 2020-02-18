@@ -738,7 +738,10 @@ exports.setStatus = async function (req, res, next) {
             // var sel_qry = "SELECT s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserLastname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.booking_Id =" + booking_id + ""
         } else if (course == 'CoursIndividuel') {
             // var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`discount_club`= '" + discount + "',`amount`= '" + amount + "' WHERE `Coach_id`=" + Coach_id + " AND `booking_id`=" + booking_id + "";
-            var update_qry = "call proc_set_booking_status(" + booking_id + "," + amount + ",'" + status + "')"
+            // var update_qry = "call proc_set_booking_status(" + booking_id + "," + amount + ",'" + status + "')"
+
+            var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`amount`= '" + amount + "' WHERE `booking_Id`= '" + booking_id + "'";
+            
             var sel_qry = "SELECT s.firstName as UserFirstname,s.email as UserEmail, s.lastName as UserLastname, c.firstName coachfirstname, c.lastName as CoachLastname FROM `booking_dbs` b INNER JOIN users s on b.user_id = s.id INNER JOIN users c on b.Coach_ID = c.id where b.booking_Id =" + booking_id + ""
 
         }
@@ -760,13 +763,15 @@ exports.setStatus = async function (req, res, next) {
                             for (var i = 0; i < val.length; i++) {
                                 //console.log('test',val[i].booking_id)
                                 if (status != 'C' && status != 'S') {
-
+                                    console.log('coach.js - line 766',discount);
+                                    var discountAmount = (discount != "" ? discount : amount);
+                                    console.log('coach.js - line 768', discountAmount);
                                     var mailTemplate = await mail_template.getMailTemplate(appConfig.MailTemplate.BookingSuccess);
                                     const mailOption = require('../../_mailer/mailOptions');
                                     let _mailOption = new mailOption();
                                     _mailOption.to = val[i].UserEmail;
                                     _mailOption.subject = lang.booking_approved;
-                                    _mailOption.html = mailTemplate[0].template.replace('{{username}}', val[i].UserFirstname + " " + val[i].UserLastname).replace('{{bookingid}}', val[i].booking_id).replace('{{amount}}', amount);
+                                    _mailOption.html = mailTemplate[0].template.replace('{{username}}', val[i].UserFirstname + " " + val[i].UserLastname).replace('{{bookingid}}', booking_id).replace('{{amount}}', discountAmount);
                                     var _mailer = require('../../_mailer/mailer');
                                     _mailer.sendMail(_mailOption);
                                     _output.data = {};
@@ -873,22 +878,23 @@ exports.getTime_slot = async function (req, res, next) {
 
 exports.setpayment = async function (req, res, next) {
     var _output = new output();
-    console.log(req.body)
+    //console.log(req.body)
     const status = req.body.status;
     const booking_id = req.body.booking_id;
     const amount = req.body.amount;
 
     if (status != "" && booking_id != "") {
 
-        var update_qry = "call proc_set_booking_status(" + booking_id + "," + amount + ",'" + status + "')"
+        //var update_qry = "call proc_set_booking_status(" + booking_id + "," + amount + ",'" + status + "')"
+        var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`amount`= '" + amount + "' WHERE `booking_Id`= '" + booking_id + "'";
         //var update_qry = 
         await db_library
             .execute(update_qry).then(async (value) => {
-                console.log("line - 886", value)
+                //console.log("line - 886", value)
                 if (value.affectedRows > 0) {
                     await db_library.execute("SELECT u.*, b.* FROM `users` u INNER JOIN `booking_dbs` b on u.id = b.user_Id where b.`booking_id`=" + booking_id + "").then(async (val) => {
                         if (val.length > 0) {
-                            console.log("line - 890", val)
+                            //console.log("line - 890", val)
                             var mailTemplate = await mail_template.getMailTemplate(appConfig.MailTemplate.PaymentSuccess);
                             const mailOption = require('../../_mailer/mailOptions');
                             let _mailOption = new mailOption();
