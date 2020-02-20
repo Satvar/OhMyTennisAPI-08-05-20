@@ -388,22 +388,129 @@ exports.searchByCoach = async function (req, res, next) {
 
 exports.getCoachByPostalcode = async function (req, res, next) {
     var _output = new output();
-   // console.log('Req Params 391: ' + req.params.code);
     const code = req.params.code;
-    //console.log('393',code)
+
+    async function checkCourseIndividual(id) {
+        try {
+            const Query = "SELECT 1 FROM `individualcourses` WHERE `Coach_Id`= '" + id + "'";
+        return await db_library.execute(Query).then(async data => {
+            return data.length > 0 ? true : false;
+        });
+        } catch (error) {
+        return error;
+        }
+    }
+
+    async function checkOndemand(id) {
+        try {
+            const Query = "SELECT 1 FROM `course_collective_if_demand` WHERE `Coach_Id`= '" + id + "'";
+        return await db_library.execute(Query).then(async data => {
+            return data.length > 0 ? true : false;
+        });
+        } catch (error) {
+        return error;
+        }
+    }
+    async function checkClub(id) {
+        try {
+            const Query = "SELECT 1 FROM `couse_collective_if_club` WHERE `Coach_Id`= '" + id + "'";
+        return await db_library.execute(Query).then(async data => {
+            return data.length > 0 ? true : false;
+        });
+        } catch (error) {
+        return error;
+        }
+    }
+    async function checkStage(id) {
+        try {
+            const Query = "SELECT 1 FROM `course_stage` WHERE `Coach_Id`= '" + id + "'";
+        return await db_library.execute(Query).then(async data => {
+            return data.length > 0 ? true : false;
+        });
+        } catch (error) {
+        return error;
+        }
+    }
+    async function checkAnimation(id) {
+        try {
+            const Query = "SELECT 1 FROM `animations` WHERE `Coach_Id`= '" + id + "'";
+        return await db_library.execute(Query).then(async data => {
+            return data.length > 0 ? true : false;
+        });
+        } catch (error) {
+        return error;
+        }
+    }
+    async function checkTeamBuilding(id) {
+        try {
+            const Query = "SELECT 1 FROM `team_building` WHERE `Coach_Id`= '" + id + "'";
+        return await db_library.execute(Query).then(async data => {
+            return data.length > 0 ? true : false;
+        });
+        } catch (error) {
+        return error;
+        }
+    }
+    async function checkTournament(id) {
+        try {
+            const Query = "SELECT 1 FROM `tournament` WHERE `Coach_Id`= '" + id + "'";
+            return await db_library.execute(Query).then(async data => {
+                return data.length > 0 ? true : false;
+            });
+        } catch (error) {
+            return error;
+        }
+    }
     var query =
-        "SELECT DISTINCT c.Coach_Fname, c.Coach_ID, c.Coach_Image, c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1 AND u.postalCode = '" + code + "'";
+        "SELECT DISTINCT c.Coach_Fname, c.Coach_ID, c.Coach_Image,c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1 AND u.postalCode = '" + code + "'";
     await db_library
         .execute(query)
-        .then(value => {
-            // console.log("Query Executed 399");
-            // console.log(query);
-            // console.log("Output Length 401");
-            // console.log(value.length);
+        .then(async value => {
             if (value.length > 0) {
-                var result = value;
+                var result = [];
+                var indiv = false;
+                var ondemand = false;
+                var club = false;
+                var stage = false;
+                var animation = false;
+                var teambuilding = false;
+                var tournament = false;
                 for (var i = 0; i < value.length; i++) {
-                    result[i].Coach_Services = value[i].Coach_Services.split(",");
+                    value[i].Coach_Services = value[i].Coach_Services.split(",");
+                    if (value[i].Coach_Services[0].length > 0) {
+                        if (value[i].Coach_Services.includes('CoursIndividuel')) {  
+                            indiv = true;
+                        } else if (value[i].Coach_Services.includes('CoursCollectifOndemand')) {
+                            ondemand = true;
+                        } else if (value[i].Coach_Services.includes('CoursCollectifClub')) {
+                            club = true;
+                        } else if (value[i].Coach_Services.includes('Stage')) {
+                            stage = true;
+                        } else if (value[i].Coach_Services.includes('Animation')) {
+                            animation = true;
+                        } else if (value[i].Coach_Services.includes('TeamBuilding')) {
+                            teambuilding = true;
+                        } else if (value[i].Coach_Services.includes('Tournament')) {
+                            tournament = true;
+                        }
+                        
+                        if (indiv === true || ondemand === true || club === true || stage === true || animation === true || teambuilding === true || tournament === true) {
+                            const checkCheckIndividual = await checkCourseIndividual(value[i].Id);
+                            const checkCheckOndemand = await checkOndemand(value[i].Id);
+                            const checkCheckClub = await checkClub(value[i].Id);
+                            const checkCheckStage = await checkStage(value[i].Id);
+                            const checkCheckAnimation = await checkAnimation(value[i].Id);
+                            const checkCheckTeamBuilding = await checkTeamBuilding(value[i].Id);
+                            const checkCheckTournament = await checkTournament(value[i].Id);
+
+                            // if (checkCheckIndividual === true) {
+                            //     value[i].Coach_Services.push('CoursIndividuel')
+                            // }
+                            if (checkCheckIndividual === true || checkCheckOndemand === true || checkCheckClub === true || checkCheckStage === true || checkCheckAnimation === true || checkCheckTeamBuilding === true || checkCheckTournament === true) {
+                                result.push(value[i])
+                            }
+                        }                        
+                    }                    
                 }
                 var res = {
                     coach_list: result
@@ -579,7 +686,7 @@ exports.coachReservation = async function (req, res, next) {
         bookArray
     } = req.body;
 
-    //console.log(req.body)
+    console.log(req.body)
     var coach_details;
     if (bookArray.length > 0) {
         await db_library.execute("SELECT * FROM `users` where `id` = " + bookArray[0].P_CoachId).then(async (val) => {
@@ -609,7 +716,7 @@ exports.coachReservation = async function (req, res, next) {
             if (P_Amount == "") {
                 amt = 0;
             }
-            var query = "call proc_ins_booking(" + P_CoachId + ",'" + P_CourseId + "','" + P_Date + "','" + P_Hour + "'," + P_UserId + "," + amt + ",'" + P_Remarks + "')";
+            var query = "call proc_ins_booking_dbs(" + P_CoachId + ",'" + P_CourseId + "','" + P_Date + "','" + P_Hour + "'," + P_UserId + "," + amt + ",'" + P_Remarks + "')";
             await db_library.execute(query).then(async (val) => {
                 if (val) {
 
