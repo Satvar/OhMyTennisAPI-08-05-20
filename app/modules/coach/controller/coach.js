@@ -871,7 +871,7 @@ exports.coachReservationFun = async function (req, res, next) {
             if (bookArray[i].P_CourseId === 'CoursIndividuel') {
                 await availUpdateFun(bookArray[i]);
             }
-            dateArr.push(formatDate(bookArray[i].P_Date))
+            dateArr.push(bookArray[i].P_Date)
         }
 
         var dateString = dateArr.join();
