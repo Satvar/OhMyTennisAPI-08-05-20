@@ -976,7 +976,7 @@ exports.cancelReservations = async function(req, res, next) {
                 var dateArr = [];
                 console.log("[user.js - line 951]", getSlotBookingId);
                 //if (getSlotBookingId.length > 0) {
-                for (let i = 0; i < getSlotBookingId.length; i++) {
+                for (let j = 0; j < getSlotBookingId.length; j++) {
                   //const element = array[i];
                   await updateSlotDetailsByBookingIds(
                     Coach_id,
