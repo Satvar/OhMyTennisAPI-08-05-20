@@ -792,6 +792,7 @@ async function updateSlotDetailsByBookingIds(
   booking_time
 ) {
   try {
+    console.log(Coach_id, user_Id, booking_date, course, booking_time);
     const Query =
       "UPDATE `avaiablity` SET `Status`= 'Y' WHERE `CoachId`= '" +
       Coach_id +
@@ -976,16 +977,16 @@ exports.cancelReservations = async function(req, res, next) {
                 var dateArr = [];
                 console.log("[user.js - line 951]", getSlotBookingId);
                 //if (getSlotBookingId.length > 0) {
-                for (let j = 0; j < getSlotBookingId.length; j++) {
+                for (var j = 0; j < getSlotBookingId.length; j++) {
                   //const element = array[i];
                   await updateSlotDetailsByBookingIds(
                     Coach_id,
                     val[0].id,
-                    formatDate(getSlotBookingId[i].booking_date),
+                    formatDate(getSlotBookingId[j].booking_date),
                     course,
-                    getSlotBookingId[i].booking_time
+                    getSlotBookingId[j].booking_time
                   );
-                  dateArr.push(formatDate(getSlotBookingId[i].booking_date));
+                  dateArr.push(formatDate(getSlotBookingId[j].booking_date));
                 }
                 //}
 
