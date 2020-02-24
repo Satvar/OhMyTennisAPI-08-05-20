@@ -839,7 +839,7 @@ async function setCancelStatusAvaiablitys(
       await updateSlotDetailsByBookingIds(
         Coach_id,
         user_Id,
-        booking_date,
+        getSlotBookingId[i].booking_date,
         course,
         getSlotBookingId[i].booking_time
       );
