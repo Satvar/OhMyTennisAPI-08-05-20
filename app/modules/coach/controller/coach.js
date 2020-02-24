@@ -1135,7 +1135,7 @@ async function setCancelStatusAvaiablity(Coach_id, user_Id, booking_date, course
         console.log(getSlotBookingId);
         for (let i = 0; i < getSlotBookingId.length; i++) {
             //const element = array[i];
-            await updateSlotDetailsByBookingId(Coach_id, user_Id, booking_date, course, getSlotBookingId[i].booking_time);
+            await updateSlotDetailsByBookingId(Coach_id, user_Id, formatDate(getSlotBookingId[i].booking_date), course, getSlotBookingId[i].booking_time);
         }
         return true;
         
