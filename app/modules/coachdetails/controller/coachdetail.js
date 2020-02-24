@@ -106,14 +106,14 @@ exports.bookCourse = async function(req, res, next) {
                   _mailer.sendMail(_mailOption);
                   _output.data = {};
                   _output.isSuccess = true;
-                  _output.message = "Booking Successfully Inserted";
+                  _output.message = "Réservation réussie";
                 }
               })
               .catch(err => {
                 //console.log(err);
                 _output.data = {};
                 _output.isSuccess = false;
-                _output.message = "Mail Not Sent";
+                _output.message = "Réservation réussie";
               });
           }
         })
@@ -121,7 +121,7 @@ exports.bookCourse = async function(req, res, next) {
           //console.log(err.message);
           _output.data = {};
           _output.isSuccess = false;
-          _output.message = "Booking Inserted Failed";
+          _output.message = "La réservation a échoué";
         });
     } else {
       await db_library
@@ -234,14 +234,14 @@ exports.bookCourse = async function(req, res, next) {
                         _mailer.sendMail(_mailOption);
                         _output.data = {};
                         _output.isSuccess = true;
-                        _output.message = "Booking Successfully Inserted";
+                        _output.message = "Réservation réussie";
                       }
                     })
                     .catch(err => {
                       //console.log(err);
                       _output.data = {};
                       _output.isSuccess = false;
-                      _output.message = "Mail Sent Failed";
+                      _output.message = "Courrier non envoyé";
                     });
                 }
               })
@@ -249,7 +249,7 @@ exports.bookCourse = async function(req, res, next) {
                 //console.log(err.message);
                 _output.data = {};
                 _output.isSuccess = false;
-                _output.message = "Booking Inserted Failed";
+                _output.message = "La réservation a échoué";
               });
           }
         })
@@ -257,13 +257,13 @@ exports.bookCourse = async function(req, res, next) {
           //console.log(err);
           _output.data = {};
           _output.isSuccess = false;
-          _output.message = "Booking Inserted Failed";
+          _output.message = "La réservation a échoué";
         });
     }
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = "Le champ obligatoire est manquant";
     _output.isSuccess = false;
-    _output.message = "Booking Inserted Failed";
+    _output.message = "La réservation a échoué";
   }
 
   res.send(_output);
@@ -287,17 +287,17 @@ exports.getCourseReservation = async function(req, res, next) {
         var result = obj;
         _output.data = result;
         _output.isSuccess = true;
-        _output.message = "Booking Get Successfull";
+        _output.message = "Réservation réussie";
       })
       .catch(err => {
         _output.data = err.message;
         _output.isSuccess = false;
-        _output.message = "Booking Get Failed";
+        _output.message = "La réservation a échoué";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = "Le champ obligatoire est manquant";
     _output.isSuccess = false;
-    _output.message = "Get Failed";
+    _output.message = "La réservation a échoué";
   }
   res.send(_output);
 };
@@ -369,20 +369,20 @@ exports.search_for_event = async function(req, res, next) {
         };
         _output.data = obj;
         _output.isSuccess = true;
-        _output.message = "Event Get Successfull";
+        _output.message = "Événement réussi";
       } else {
         var obj = {
           event_list: []
         };
         _output.data = obj;
         _output.isSuccess = true;
-        _output.message = " No Event Found";
+        _output.message = " Aucun événement trouvé";
       }
     })
     .catch(err => {
       _output.data = err.message;
       _output.isSuccess = false;
-      _output.message = "Event Get Failed";
+      _output.message = "L'événement a échoué";
     });
   //console.log(_output);
   res.send(_output);
@@ -454,20 +454,20 @@ exports.search_for_event_top_3 = async function(req, res, next) {
         };
         _output.data = obj;
         _output.isSuccess = true;
-        _output.message = "Event Get Successfull";
+        _output.message = "Événement réussi";
       } else {
         var obj = {
           event_list: []
         };
         _output.data = obj;
         _output.isSuccess = true;
-        _output.message = " No Event Found";
+        _output.message = " Aucun événement trouvé";
       }
     })
     .catch(err => {
       _output.data = err.message;
       _output.isSuccess = false;
-      _output.message = "Event Get Failed";
+      _output.message = "L'événement a échoué";
     });
   //console.log(_output);
   res.send(_output);
@@ -505,20 +505,20 @@ exports.getall_course = async function(req, res, next) {
         };
         _output.data = obj;
         _output.isSuccess = true;
-        _output.message = "Event Get Successfull";
+        _output.message = "Événement réussi";
       } else {
         var obj = {
           event_list: []
         };
         _output.data = obj;
         _output.isSuccess = true;
-        _output.message = " No Event Found";
+        _output.message = "Aucun événement trouvé";
       }
     })
     .catch(err => {
       _output.data = err.message;
       _output.isSuccess = false;
-      _output.message = "Event Get Failed";
+      _output.message = "L'événement a échoué";
     });
   res.send(_output);
 };
@@ -570,13 +570,13 @@ exports.getCoachbyevent = async function(req, res, next) {
         };
         _output.data = obj;
         _output.isSuccess = true;
-        _output.message = " No Coach Found";
+        _output.message = "Aucun entraîneur trouvé";
       }
     })
     .catch(err => {
       _output.data = err.message;
       _output.isSuccess = false;
-      _output.message = "Coach Get Failed";
+      _output.message = "L'entraîneur a échoué";
     });
   res.send(_output);
 };
@@ -626,20 +626,20 @@ exports.getEventbyId = async function(req, res, next) {
         };
         _output.data = obj;
         _output.isSuccess = true;
-        _output.message = "Event Get Successfull";
+        _output.message = "Événement réussi";
       } else {
         var obj = {
           event_list: []
         };
         _output.data = obj;
         _output.isSuccess = true;
-        _output.message = " No Event Found";
+        _output.message = "Aucun événement trouvé";
       }
     })
     .catch(err => {
       _output.data = err.message;
       _output.isSuccess = false;
-      _output.message = "Event Get Failed";
+      _output.message = "L'événement a échoué";
     });
   res.send(_output);
 };

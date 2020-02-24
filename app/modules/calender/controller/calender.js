@@ -18,17 +18,17 @@ exports.getCalendar = async function(req, res, next) {
         };
         _output.data = obj;
         _output.isSuccess = true;
-        _output.message = "Calender Get Successfully";
+        _output.message = "Calendrier avec succès";
       })
       .catch(err => {
         _output.data = err.message;
         _output.isSuccess = false;
-        _output.message = "Calender Get Failed";
+        _output.message = "Échec du calendrier";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = "Le champ obligatoire est manquant";
     _output.isSuccess = false;
-    _output.message = "Calender Get Failed";
+    _output.message = "Échec du calendrier";
   }
   res.send(_output);
 };
@@ -48,17 +48,17 @@ exports.getCalendarMobile = async function(req, res, next) {
         };
         _output.data = obj;
         _output.isSuccess = true;
-        _output.message = "Calender Get Successfully";
+        _output.message = "Calendrier avec succès";
       })
       .catch(err => {
         _output.data = err.message;
         _output.isSuccess = false;
-        _output.message = "Calender Get Failed";
+        _output.message = "Échec du calendrier";
       });
   } else {
-    _output.data = "Required Field are missing";
+    _output.data = "Le champ obligatoire est manquant";
     _output.isSuccess = false;
-    _output.message = "Calender Get Failed";
+    _output.message = "Échec du calendrier";
   }
   res.send(_output);
 };

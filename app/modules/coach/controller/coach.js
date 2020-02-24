@@ -132,20 +132,20 @@ exports.search_for_coach = async function (req, res, next) {
                 }
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = "Coach Get Successfull";
+                _output.message = "L'entraîneur réussit";
             } else {
                 var obj = {
                     coach_list: []
                 }
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = " No Coach Found";
+                _output.message = "Aucun entraîneur trouvé";
             }
 
         }).catch(err => {
             _output.data = err.message;
             _output.isSuccess = false;
-            _output.message = "Coach Get Failed";
+            _output.message = "L'entraîneur a échoué";
         });
     res.send(_output);
 }
@@ -170,13 +170,13 @@ exports.getallavailabilityforCoachDetail = async function (req, res, next) {
                 }
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = " No Coach availability date Found";
+                _output.message = "Aucune date de disponibilité de coach trouvée";
             }
 
         }).catch(err => {
             _output.data = err.message;
             _output.isSuccess = false;
-            _output.message = "Coach availability date Get Failed";
+            _output.message = "Date de disponibilité de l'entraîneur";
         });
     // } else {
     //     _output.data = "Required Field are missing";
@@ -209,20 +209,20 @@ exports.find_your_coach = async function (req, res, next) {
                 }
                 _output.data = res;
                 _output.isSuccess = true;
-                _output.message = "Coach Get Successfull";
+                _output.message = "L'entraîneur réussit";
             } else {
                 var obj = {
                     coach_list: []
                 }
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = " No Coach Found";
+                _output.message = "Aucun entraîneur trouvé";
             }
 
         }).catch(err => {
             _output.data = err.message;
             _output.isSuccess = false;
-            _output.message = "Coach Get Failed";
+            _output.message = "L'entraîneur a échoué";
         });
     // } else {
     //     _output.data = "Required Field are missing";
@@ -464,20 +464,20 @@ exports.searchByCoach = async function (req, res, next) {
                 //return
                 _output.data = res;
                 _output.isSuccess = true;
-                _output.message = "Coach Get Successfull";
+                _output.message = "L'entraîneur réussit";
             } else {
                 var obj = {
                     coach_list: []
                 };
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = " No Coach Found";
+                _output.message = "Aucun entraîneur trouvé";
             }
         })
         .catch(err => {
             _output.data = err.message;
             _output.isSuccess = false;
-            _output.message = "Coach Get Failed";
+            _output.message = "L'entraîneur a échoué";
         });
     // } else {
     //     _output.data = "Required Field are missing";
@@ -621,20 +621,20 @@ exports.getCoachByPostalcode = async function (req, res, next) {
                 };
                 _output.data = res;
                 _output.isSuccess = true;
-                _output.message = "Coach Get Successfull";
+                _output.message = "L'entraîneur réussit";
             } else {
                 var obj = {
                     coach_list: []
                 };
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = " No Coach Found";
+                _output.message = "Aucun entraîneur trouvé";
             }
         })
         .catch(err => {
             _output.data = err.message;
             _output.isSuccess = false;
-            _output.message = "Coach Get Failed";
+            _output.message = "L'entraîneur a échoué";
         });
     res.send(_output);
 }
@@ -658,22 +658,22 @@ exports.getcoachdetailbyid = async function (req, res, next) {
                     var result = obj;
                     _output.data = result;
                     _output.isSuccess = true;
-                    _output.message = "Coach Get Successfull";
+                    _output.message = "L'entraîneur réussit";
                 } else {
                     _output.data = {};
                     _output.isSuccess = true;
-                    _output.message = " No Coach Found";
+                    _output.message = "Aucun entraîneur trouvé";
                 }
 
             }).catch(err => {
                 _output.data = err.message;
                 _output.isSuccess = false;
-                _output.message = "Coach Get Failed";
+                _output.message = "L'entraîneur a échoué";
             });
     } else {
         _output.data = lang.required_field;
         _output.isSuccess = false;
-        _output.message = "Coach Get Failed";
+        _output.message = "L'entraîneur a échoué";
     }
     res.send(_output);
 }
@@ -689,11 +689,11 @@ exports.getallcoaches = async function (req, res, next) {
             var result = obj;
             _output.data = result;
             _output.isSuccess = true;
-            _output.message = "Coaches Get Successfull";
+            _output.message = "L'entraîneur réussit";
         }).catch(err => {
             _output.data = err.message;
             _output.isSuccess = false;
-            _output.message = "Coaches Get Failed";
+            _output.message = "Les entraîneurs ont échoué";
         });
     res.send(_output);
 }
@@ -714,22 +714,22 @@ exports.getcoachbyid = async function (req, res, next) {
                     var result = obj;
                     _output.data = result;
                     _output.isSuccess = true;
-                    _output.message = "Coach Get Successfull";
+                    _output.message = "L'entraîneur réussit";
                 } else {
                     _output.data = {};
                     _output.isSuccess = true;
-                    _output.message = " No Coach Found";
+                    _output.message = "Aucun entraîneur trouvé";
                 }
 
             }).catch(err => {
                 _output.data = err.message;
                 _output.isSuccess = false;
-                _output.message = "Coach Get Failed";
+                _output.message = "Les entraîneurs ont échoué";
             });
     } else {
         _output.data = lang.required_field;
         _output.isSuccess = false;
-        _output.message = "Coach Get Failed";
+        _output.message = "L'entraîneur a échoué";
     }
     res.send(_output);
 }
@@ -764,23 +764,138 @@ exports.getAvailability = async function (req, res, next) {
             if (result.length > 0) {
                 _output.data = result;
                 _output.isSuccess = true;
-                _output.message = "Get Successfull";
+                _output.message = "Soyez réussi";
             } else {
                 _output.data = {};
                 _output.isSuccess = true;
-                _output.message = "No records Found";
+                _output.message = "Aucun enregistrement trouvé";
             }
         }).catch((err) => {
             _output.data = {};
             _output.isSuccess = false;
-            _output.message = "Get Failed";
+            _output.message = "Échec";
         })
     } else {
         _output.data = lang.required_field;
         _output.isSuccess = false;
-        _output.message = "Get Failed";
+        _output.message = "Échec";
     }
     res.send(_output)
+}
+
+async function bookedFun(arr, remaingSlotStatus, totalAmt) {
+    try {
+        console.log("[coach.js - line - 788]", arr);
+        const { P_CoachId, P_UserId, P_Date, P_CourseId, P_Hour, P_Remarks } = arr;
+        const Query = "Insert into `booking_dbs` (`Coach_ID`,`user_Id`,`payment_Id`,`status`,`bookingDate`,`bookingCourse`,`amount`,`BookingTime`,`Remarks`,`remaingSlotStatus`) values ('" + P_CoachId + "','" + P_UserId + "','0','R','" + P_Date + "','" + P_CourseId + "','" + totalAmt + "','" + P_Hour + "','" + P_Remarks + "','" + remaingSlotStatus + "')";
+        
+        return await db_library.execute(Query).then(async data => {
+            if (data.insertId) {
+                return data.insertId;
+            }            
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+async function bookedSlotFun(bookArray, bookingID) {
+    try {
+        console.log("[coach.js - line - 805]", bookArray);
+        const {
+                    P_CoachId,
+                    P_CourseId,
+                    P_Date,
+                    P_Hour,
+                    P_UserId,
+                    P_Amount,
+                    P_Remarks
+                } = bookArray
+        const Query = "Insert into `booking_slot_dbs` (`coach_id`, `user_id`, `booking_id`, `status`, `booking_date`, `booking_course`, `amount`, `booking_time`, `remarks`) values ('" + P_CoachId + "','" + P_UserId + "','" + bookingID + "','R','" + P_Date + "','" + P_CourseId + "','" + P_Amount + "','" + P_Hour + "','" + P_Remarks + "')";
+
+        return await db_library.execute(Query).then(async data => {            
+            return data;
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+async function availUpdateFun(bookArray) {
+    try {
+        const {
+            P_CoachId,
+            P_CourseId,
+            P_Date,
+            P_Hour,
+            P_UserId,
+            P_Amount,
+        } = bookArray
+        const Query = "UPDATE `avaiablity` SET `Status`= 'R' , `UserId` = '" + P_UserId + "', CourseId = '"+ P_CourseId + "', Price = '" + P_Amount + "', TotalSeat = '1' WHERE `CoachId`= '" + P_CoachId + "' AND `Date`= '" + P_Date + "' AND `Hour`= '" + P_Hour + "'";
+        
+        return await db_library.execute(Query).then(async data => {
+            return data;
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+exports.coachReservationFun = async function (req, res, next) {
+    var _output = new output();
+
+    const {
+        bookArray
+    } = req.body;
+    console.log("[coach.js - line 850]", req.body)
+    var coach_details;
+    if (bookArray.length > 0) {
+        await db_library.execute("SELECT * FROM `users` where `id` = " + bookArray[0].P_CoachId).then(async (val) => {
+            if (val.length > 0) {
+                coach_details = val
+            }
+        })
+
+        await db_library.execute("SELECT * FROM `users` where `id` = " + bookArray[0].P_UserId).then(async (value) => {
+            if (value.length > 0) {
+                user_details = value
+            }
+        })
+        var P_TotalAmt = req.body.totalAmt;
+        var P_RemaingTenStatus = req.body.remaingStatus;
+        const lastInsertId = await bookedFun(bookArray[0],P_RemaingTenStatus, P_TotalAmt);
+        console.log("[coach.js - line - 867]",lastInsertId);
+        var dateArr = []
+        for (var i = 0; i < bookArray.length; i++) {
+            await bookedSlotFun(bookArray[i], lastInsertId);
+            if (bookArray[i].P_CourseId === 'CoursIndividuel') {
+                await availUpdateFun(bookArray[i]);
+            }
+            dateArr.push(bookArray[i].P_Date)
+        }
+
+        var dateString = dateArr.join();
+        console.log("[coach.js - line - 878]", dateArr)
+        // if (_output.message == "Booking Successfully Inserted") {
+            var mailTemplate = await mail_template.getMailTemplate(appConfig.MailTemplate.CoachAcceoptance);
+            const mailOption = require('../../_mailer/mailOptions');
+            let _mailOption = new mailOption();
+            _mailOption.to = coach_details[0].email;
+            _mailOption.subject = lang.booking_request
+        _mailOption.html = mailTemplate[0].template.replace('{{username}}', coach_details[0].firstName + " " + coach_details[0].lastName).replace('{{user}}', user_details[0].firstName + " " + user_details[0].lastName).replace('{{date}}', dateString).replace('{{course}}', bookArray[0].P_CourseId);
+            var _mailer = require('../../_mailer/mailer');
+            _mailer.sendMail(_mailOption);
+        // }
+        console.log("[coach.js - line - 889]")
+        _output.data = {};
+        _output.isSuccess = true;
+        _output.message = "Réservation réussie";
+    } else {
+        _output.data = lang.required_field;
+        _output.isSuccess = false;
+        _output.message = "La réservation a échoué";
+    }
+    res.send(_output);
 }
 
 exports.coachReservation = async function (req, res, next) {
@@ -827,20 +942,20 @@ exports.coachReservation = async function (req, res, next) {
                 if (val) {
                     _output.data = {};
                     _output.isSuccess = true;
-                    _output.message = "Booking Successfully Inserted";
+                    _output.message = "Réservation réussie";
                 } else {
                     _output.data = {};
                     _output.isSuccess = false;
-                    _output.message = "Booking Inserted Failed";
+                    _output.message = "La réservation a échoué";
                 }
             }).catch((err) => {
                 console.log("[coach.js - line 837]", err)
                 _output.data = {};
                 _output.isSuccess = false;
-                _output.message = "Booking Inserted Failed";
+                _output.message = "La réservation a échoué";
             })
         }
-        if (_output.message == "Booking Successfully Inserted") {
+        if (_output.message == "Réservation réussie") {
             var mailTemplate = await mail_template.getMailTemplate(appConfig.MailTemplate.CoachAcceoptance);
             const mailOption = require('../../_mailer/mailOptions');
             let _mailOption = new mailOption();
@@ -853,7 +968,7 @@ exports.coachReservation = async function (req, res, next) {
     } else {
         _output.data = lang.required_field;
         _output.isSuccess = false;
-        _output.message = "Booking Inserted Failed";
+        _output.message = "La réservation a échoué";
     }
     res.send(_output);
 }
@@ -887,24 +1002,24 @@ exports.getReservations = async function (req, res, next) {
                 }                
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = "Get Successfull";
+                _output.message = "Soyez réussi";
             } else {
                 var obj = {
                     booking: []
                 }
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = "No records Found";
+                _output.message = "Aucun enregistrement trouvé";
             }
         }).catch((err) => {
             _output.data = {};
             _output.isSuccess = false;
-            _output.message = "Get Failed";
+            _output.message = "Échec";
         })
     } else {
         _output.data = lang.required_field;
         _output.isSuccess = false;
-        _output.message = "Get Failed";
+        _output.message = "Échec";
     }
     res.send(_output)
 }
@@ -925,24 +1040,24 @@ exports.getReservation = async function (req, res, next) {
                 }
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = "Get Successfull";
+                _output.message = "Soyez réussi";
             } else {
                 var obj = {
                     booking: []
                 }
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = "No records Found";
+                _output.message = "Aucun enregistrement trouvé";
             }
         }).catch((err) => {
             _output.data = {};
             _output.isSuccess = false;
-            _output.message = "Get Failed";
+            _output.message = "Échec";
         })
     } else {
         _output.data = lang.required_field;
         _output.isSuccess = false;
-        _output.message = "Get Failed";
+        _output.message = "Échec";
     }
     res.send(_output)
 }
@@ -960,21 +1075,21 @@ exports.getBookingDetail = async function (req, res, next) {
                 }
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = "Get Successfull";
+                _output.message = "Soyez réussi";
             } else {
                 _output.data = {};
                 _output.isSuccess = true;
-                _output.message = "No records Found";
+                _output.message = "Aucun enregistrement trouvé";
             }
         }).catch((err) => {
             _output.data = {};
             _output.isSuccess = false;
-            _output.message = "Get Failed";
+            _output.message = "Échec";
         })
     } else {
         _output.data = lang.required_field;
         _output.isSuccess = false;
-        _output.message = "Get Failed";
+        _output.message = "Échec";
     }
     res.send(_output)
 }
@@ -1087,7 +1202,7 @@ exports.setStatus = async function (req, res, next) {
                                     _mailer.sendMail(_mailOption);
                                     _output.data = {};
                                     _output.isSuccess = true;
-                                    _output.message = "Status Update Successfull";
+                                    _output.message = "Mise à jour du statut réussie";
                                     console.log('[coach.js - line 780]',_output);
                                 } else if (status == 'S') {
                                     var query = "INSERT INTO `balance`(`User_Id`, `Coach_Id`, `Course`, `BalanceAmt`) VALUES ("+user_Id+","+Coach_id+",'"+course+"',"+amount+")";
@@ -1103,12 +1218,12 @@ exports.setStatus = async function (req, res, next) {
                                             _mailer.sendMail(_mailOption);
                                             _output.data = {};
                                             _output.isSuccess = true;
-                                            _output.message = "Status Update Successfull";
+                                            _output.message = "Mise à jour du statut réussie";
                                         }
                                     }).catch((err) => {
                                         _output.data = {};
                                         _output.isSuccess = false;
-                                        _output.message = "Reschedule Booking Failed"
+                                        _output.message = "Replanifier la réservation a échoué"
                                     })
                                 }
                                 else {
@@ -1124,7 +1239,7 @@ exports.setStatus = async function (req, res, next) {
                                     _mailer.sendMail(_mailOption);
                                     _output.data = {};
                                     _output.isSuccess = true;
-                                    _output.message = "Status Update Successfull";
+                                    _output.message = "Mise à jour du statut réussie";
                                 }
                             }
 
@@ -1138,12 +1253,12 @@ exports.setStatus = async function (req, res, next) {
             }).catch((err) => {
                 _output.data = {};
                 _output.isSuccess = false;
-                _output.message = "Status Update Failed"
+                _output.message = "Échec de la mise à jour du statut"
             })
     } else {
         _output.data = lang.required_field;
         _output.isSuccess = false;
-        _output.message = "Status Update Failed";
+        _output.message = "Échec de la mise à jour du statut";
     }
 
     res.send(_output);
@@ -1166,25 +1281,25 @@ exports.getTime_slot = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Time Slot Get Successfull";
+                    _output.message = "Intervalle de temps réussi";
                 } else {
                     var obj = {
                         availabilty: result
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = " No Time Slot Found";
+                    _output.message = "Aucun créneau horaire trouvé";
                 }
 
             }).catch(err => {
                 _output.data = err.message;
                 _output.isSuccess = false;
-                _output.message = "Time Slot Get Failed";
+                _output.message = "Échec de la plage horaire";
             });
     } else {
         _output.data = lang.required_field;
         _output.isSuccess = false;
-        _output.message = "Time Slot Get Failed";
+        _output.message = "Échec de la plage horaire";
     }
     res.send(_output);
 }
@@ -1235,18 +1350,18 @@ exports.setpayment = async function (req, res, next) {
                     }).catch((err) => {
                         _output.data = {};
                         _output.isSuccess = false;
-                        _output.message = "Payment Failed"
+                        _output.message = "Paiement échoué"
                     })
                 }
             }).catch((err) => {
                 _output.data = {};
                 _output.isSuccess = false;
-                _output.message = "Payment Update Failed"
+                _output.message = "Paiement échoué"
             })
     } else {
         _output.data = lang.required_field;
         _output.isSuccess = false;
-        _output.message = "Payment Update Failed";
+        _output.message = "Paiement échoué";
     }
     res.send(_output);
 }
@@ -1269,24 +1384,24 @@ exports.getDemandAvailability = async function (req, res, next) {
                 }
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = "CourseCollectiveDemand Slot Get successfully";
+                _output.message = "CourseCollectiveDemand Slot Obtenez avec succès";
             } else {
                 var obj = {
                     availabilty: []
                 }
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = "No records Found";
+                _output.message = "Aucun enregistrement trouvé";
             }
         }).catch((err) => {
             _output.data = err.message;
             _output.isSuccess = false;
-            _output.message = "CourseCollectiveDemand Slot get Failed";
+            _output.message = "Échec de l'emplacement CourseCollectiveDemand";
         })
     } else {
         _output.data = lang.required_field;
         _output.isSuccess = false;
-        _output.message = "CourseCollectiveDemand Slot get Failed";
+        _output.message = "Échec de l'emplacement CourseCollectiveDemand";
     }
     res.send(_output);
 }
@@ -1307,21 +1422,21 @@ exports.getslotAvailability = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "CourseCollectiveDemand Slot availabilty successfully";
+                    _output.message = "CourseCollectiveDemand Slot disponible avec succès";
                 } else {
                     _output.data = {};
                     _output.isSuccess = true;
-                    _output.message = "No records Found";
+                    _output.message = "Aucun enregistrement trouvé";
                 }
             }).catch((err) => {
                 _output.data = err.message;
                 _output.isSuccess = false;
-                _output.message = "CourseCollectiveDemand Slot availabilty get Failed";
+                _output.message = "Échec de l'emplacement CourseCollectiveDemand";
             })
     } else {
         _output.data = lang.required_field;
         _output.isSuccess = false;
-        _output.message = "CourseCollectiveDemand Slot availabilty get Failed";
+        _output.message = "Échec de l'emplacement CourseCollectiveDemand";
     }
     res.send(_output);
 }
@@ -1443,25 +1558,25 @@ exports.getClubTime_slot = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Time Slot Get Successfull";
+                    _output.message = "Intervalle de temps réussi";
                 } else {
                     var obj = {
                         availabilty: result
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = " No Time Slot Found";
+                    _output.message = "Aucun créneau horaire trouvé";
                 }
 
             }).catch(err => {
                 _output.data = err.message;
                 _output.isSuccess = false;
-                _output.message = "Time Slot Get Failed";
+                _output.message = "Échec de la plage horaire";
             });
     } else {
         _output.data = lang.required_field;
         _output.isSuccess = false;
-        _output.message = "Time Slot Get Failed";
+        _output.message = "Échec de la plage horaire";
     }
     res.send(_output);
 }
@@ -1530,7 +1645,7 @@ exports.insertAvailability = async function (req, res, next) {
                             }).catch((err) => {
                                 _output.data = err;
                                 _output.isSuccess = false;
-                                _output.message = "Coach Availability insertion failed";
+                                _output.message = "Échec de l'insertion de la disponibilité du coach";
                             });
                             break;
 
@@ -1547,7 +1662,7 @@ exports.insertAvailability = async function (req, res, next) {
             else {
                 _output.data = {};
                 _output.isSuccess = false;
-                _output.message = "Slot Currently no available";
+                _output.message = "Emplacement actuellement non disponible";
             }
         })
 
@@ -1576,24 +1691,24 @@ exports.getDemandPrice = async function (req, res, next) {
                 }
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = "CourseCollectiveDemand Price Get successfully";
+                _output.message = "CourseCollectiveDemand Prix Obtenez avec succès";
             } else {
                 var obj = {
                     availabilty: []
                 }
                 _output.data = obj;
                 _output.isSuccess = true;
-                _output.message = "No records Found";
+                _output.message = "Aucun enregistrement trouvé";
             }
         }).catch((err) => {
             _output.data = err.message;
             _output.isSuccess = false;
-            _output.message = "CourseCollectiveDemand Price get Failed";
+            _output.message = "Échec du cours CourseCollectiveDemand";
         })
     } else {
         _output.data = lang.required_field;
         _output.isSuccess = false;
-        _output.message = "CourseCollectiveDemand Price get Failed";
+        _output.message = "Échec du cours CourseCollectiveDemand";
     }
     res.send(_output);
 }
@@ -1617,7 +1732,7 @@ exports.geolocationByPostalCode = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Coordinate GPS Found";
+                    _output.message = "Coordonnées GPS trouvées";
                 }// End of value.length > 0
                 else {
                     var obj = {
@@ -1625,12 +1740,12 @@ exports.geolocationByPostalCode = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Coordinate GPS Not Found";
+                    _output.message = "Coordonnées GPS introuvables";
                 }// End of value.length < 0
             }).catch((err) => {
                 _output.data = err.message;
                 _output.isSuccess = false;
-                _output.message = "Coordinate GPS Fetching Failed";
+                _output.message = "Coordonnées GPS introuvables";
             })
     }
     else {

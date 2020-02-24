@@ -12,6 +12,7 @@ router.get("/coach/getavailabilty", coachController.getAvailability);
 router.get("/coach/getreservation", coachController.getReservations);
 router.get("/coach/getcoachbycity", coachController.search_for_coach);
 router.post("/coach/setreservation", coachController.coachReservation);
+router.post("/coach/setreservationfun", coachController.coachReservationFun);
 router.post("/coach/setStatus", coachController.setStatus);
 router.get("/coach/findyourCoach", coachController.find_your_coach);
 router.get("/coach/getTimeslot", coachController.getTime_slot);

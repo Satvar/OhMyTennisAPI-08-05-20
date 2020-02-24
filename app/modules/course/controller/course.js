@@ -1311,14 +1311,14 @@ exports.getAnimation = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Animation course Get successfully";
+                    _output.message = "Le cours d'animation réussit";
                 } else {
                     var obj = {
                         course: []
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Animation course Not Found";
+                    _output.message = "Cours d'animation introuvable";
                 }
             }).catch((err) => {
                 _output.data = "";
@@ -1362,13 +1362,13 @@ exports.setTeambuildingCourse = async function (req, res, next) {
                             var result = value;
                             _output.data = {};
                             _output.isSuccess = true;
-                            _output.message = "Teambuilding course updated successfully";
+                            _output.message = "Le cours de consolidation d'équipe mis à jour avec succès";
 
                         }).catch(err => {
                             //console.log(err.message)
                             _output.data = {};
                             _output.isSuccess = false;
-                            _output.message = "Teambuilding course update Failed";
+                            _output.message = "Échec de la mise à jour du cours Team Building";
                         });
                 } else {
                     await db_library
@@ -1376,22 +1376,22 @@ exports.setTeambuildingCourse = async function (req, res, next) {
                             var result = value;
                             _output.data = {};
                             _output.isSuccess = true;
-                            _output.message = "Teambuilding course added successfully";
+                            _output.message = "Le cours Team Building a été ajouté avec succès";
                         }).catch(err => {
                             _output.data = {};
                             _output.isSuccess = false;
-                            _output.message = "Teambuilding course added Failed";
+                            _output.message = "Échec du cours de Team Building ajouté";
                         });
                 }
             }).catch(err => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Error in Teambuilding Course Insert or Update";
+                _output.message = "Erreur lors de l'insertion ou de la mise à jour du cours Team Building";
             });
     } else {
         _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Teambuilding course added Failed";
+        _output.message = "Échec du cours de Team Building ajouté";
     }
     res.send(_output);
 
@@ -1412,24 +1412,24 @@ exports.getTeambuildingCourse = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Teambuilding course Get successfully";
+                    _output.message = "Le cours Team Building réussit";
                 } else {
                     var obj = {
                         course: []
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Teambuilding course Not Found";
+                    _output.message = "Team Building introuvable";
                 }
             }).catch((err) => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Teambuilding course get Failed";
+                _output.message = "Échec du cours de Team Building ajouté";
             })
     } else {
         _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Teambuilding course get Failed";
+        _output.message = "Échec du cours de Team Building ajouté";
     }
     res.send(_output);
 }
@@ -1451,24 +1451,24 @@ exports.getteambuilding = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Team Building course Get successfully";
+                    _output.message = "Le cours Team Building réussit";
                 } else {
                     var obj = {
                         course: []
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Team Building course Not Found";
+                    _output.message = "Team Building introuvable";
                 }
             }).catch((err) => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Team Building course get Failed";
+                _output.message = "Échec du cours de Team Building ajouté";
             })
     } else {
         _output.data = "Le champ obligatoire est manquant";
         _output.isSuccess = false;
-        _output.message = "Team Building course get Failed";
+        _output.message = "Échec du cours de Team Building ajouté";
     }
     res.send(_output);
 }
@@ -1487,19 +1487,19 @@ exports.getcourse = async function (req, res, next) {
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Course get successfully";
+                    _output.message = "Le cours réussit";
                 } else {
                     var obj = {
                         course: []
                     }
                     _output.data = obj;
                     _output.isSuccess = true;
-                    _output.message = "Course not found";
+                    _output.message = "Le cours est introuvable";
                 }
             }).catch((err) => {
                 _output.data = "";
                 _output.isSuccess = false;
-                _output.message = "Course get Failed";
+                _output.message = "Le cours n'a pas échoué";
             })
     res.send(_output);
 }

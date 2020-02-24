@@ -93,12 +93,12 @@ exports.registerUser = async function(req, res, next) {
               .then(val => {
                 _output.data = val;
                 _output.isSuccess = true;
-                _output.message = "Register Successfully";
+                _output.message = "S'inscrire avec succès";
               })
               .catch(err => {
                 _output.data = {};
                 _output.isSuccess = false;
-                _output.message = "Register failed";
+                _output.message = "L'enregistrement a échoué";
               });
             if (roleId == 2) {
               await db_library
@@ -119,7 +119,7 @@ exports.registerUser = async function(req, res, next) {
                 .catch(err => {
                   _output.data = {};
                   _output.isSuccess = false;
-                  _output.message = "Coach Register Failed";
+                  _output.message = "L'enregistrement de l'entraîneur a échoué";
                 });
             }
             var mailTemplate = await mail_template.getMailTemplate(
@@ -142,23 +142,23 @@ exports.registerUser = async function(req, res, next) {
           } catch (error) {
             _output.data = error;
             _output.isSuccess = false;
-            _output.message = "Register Failed";
+            _output.message = "L'enregistrement a échoué";
           }
         } else {
           _output.data = {};
           _output.isSuccess = false;
-          _output.message = "UserEmail already Exist";
+          _output.message = "L'email existe déjà";
         }
       })
       .catch(err => {
         _output.data = err.message;
         _output.isSuccess = false;
-        _output.message = "Register Failed";
+        _output.message = "L'enregistrement a échoué";
       });
   } else {
     _output.data = lang.required_field;
     _output.isSuccess = false;
-    _output.message = "Register Failed";
+    _output.message = "L'enregistrement a échoué";
   }
 
   res.send(_output);
@@ -248,19 +248,19 @@ exports.updateProfile = async function(req, res, next) {
         console.log("value", value);
         _output.data = {};
         _output.isSuccess = true;
-        _output.message = "Update Successfully";
+        _output.message = "Mise à jour du profil réussie";
       })
       .catch(err => {
         console.log("err", err.message);
         _output.data = {};
         _output.isSuccess = false;
-        _output.message = "Update failed";
+        _output.message = "Échec de la mise à jour du profil";
       });
   } else {
     console.log("err");
     _output.data = lang.required_field;
     _output.isSuccess = false;
-    _output.message = "Update failed";
+    _output.message = "Échec de la mise à jour du profil";
   }
   res.send(_output);
 };
@@ -301,12 +301,12 @@ exports.login = async function(req, res, next) {
       .catch(err => {
         _output.data = {};
         _output.isSuccess = false;
-        _output.message = "login failed ";
+        _output.message = "Echec de la connexion";
       });
   } else {
     _output.data = lang.required_field;
     _output.isSuccess = false;
-    _output.message = "login failed";
+    _output.message = "Echec de la connexion";
   }
   res.send(_output);
 };
@@ -423,22 +423,22 @@ exports.resetPassword = async function(req, res, next) {
           //var result = {};
           _output.data = {};
           _output.isSuccess = true;
-          _output.message = "Reseted Password Successfully";
+          _output.message = "Réinitialisation du mot de passe réussie";
         } else {
           _output.data = {};
           _output.isSuccess = false;
-          _output.message = "Password Reset falied";
+          _output.message = "La réinitialisation du mot de passe a échou";
         }
       })
       .catch(err => {
         _output.data = {};
         _output.isSuccess = false;
-        _output.message = "Password Reset falied";
+        _output.message = "La réinitialisation du mot de passe a échou";
       });
   } else {
     _output.data = lang.required_field;
     _output.isSuccess = false;
-    _output.message = "Password Reset falied";
+    _output.message = "La réinitialisation du mot de passe a échou";
   }
   res.send(_output);
 };
@@ -462,12 +462,12 @@ exports.userVerification = async function(req, res, next) {
       .catch(err => {
         _output.data = {};
         _output.isSuccess = false;
-        _output.message = "User Verification Failed";
+        _output.message = "La vérification de l'utilisateur a échoué";
       });
   } else {
     _output.data = lang.required_field;
     _output.isSuccess = false;
-    _output.message = "User Verification Failed";
+    _output.message = "La vérification de l'utilisateur a échoué";
   }
   res.send(_output);
 };
@@ -493,17 +493,17 @@ exports.setNewPassword = async function(req, res, next) {
         var result = value;
         _output.data = result;
         _output.isSuccess = true;
-        _output.message = "Password Updated Successfully";
+        _output.message = "Mot de passe mis à jour avec succès";
       })
       .catch(err => {
         _output.data = err.message;
         _output.isSuccess = false;
-        _output.message = "Password Updated Failed";
+        _output.message = "Échec de la mise à jour du mot de passe";
       });
   } else {
     _output.data = lang.required_field;
     _output.isSuccess = false;
-    _output.message = "Password Updated Failed";
+    _output.message = "Échec de la mise à jour du mot de passe";
   }
   res.send(_output);
 };
@@ -519,12 +519,12 @@ exports.getCoachDetails = async function(req, res, next) {
       };
       _output.data = obj;
       _output.isSuccess = true;
-      _output.message = "Coach Get Successfully";
+      _output.message = "Coach réussit";
     })
     .catch(err => {
       _output.data = err.message;
       _output.isSuccess = false;
-      _output.message = "Coach Get Failed";
+      _output.message = "L'entraîneur a échoué";
     });
   res.send(_output);
 };
@@ -540,12 +540,12 @@ exports.getUserDetails = async function(req, res, next) {
       };
       _output.data = obj;
       _output.isSuccess = true;
-      _output.message = "User Get Successfully";
+      _output.message = "L'utilisateur obtient avec succès";
     })
     .catch(err => {
       _output.data = err.message;
       _output.isSuccess = false;
-      _output.message = "User Get Failed";
+      _output.message = "L'utilisateur a échoué";
     });
   res.send(_output);
 };
@@ -560,12 +560,12 @@ exports.blockCoach = async function(req, res, next) {
       var result = value;
       _output.data = result;
       _output.isSuccess = true;
-      _output.message = "Coach Blocked Successfully";
+      _output.message = "Entraîneur bloqué avec succès";
     })
     .catch(err => {
       _output.data = err.message;
       _output.isSuccess = false;
-      _output.message = "Coach Blocked Failed";
+      _output.message = "Échec de l'entraîneur bloqué";
     });
   res.send(_output);
 };
@@ -580,12 +580,12 @@ exports.blockUser = async function(req, res, next) {
       var result = value;
       _output.data = result;
       _output.isSuccess = true;
-      _output.message = "User Blocked Successfully";
+      _output.message = "Utilisateur bloqué avec succès";
     })
     .catch(err => {
       _output.data = err.message;
       _output.isSuccess = false;
-      _output.message = "User Blocked Failed";
+      _output.message = "Échec de l'utilisateur bloqué";
     });
   res.send(_output);
 };
@@ -600,12 +600,12 @@ exports.unBlockUser = async function(req, res, next) {
       var result = value;
       _output.data = result;
       _output.isSuccess = true;
-      _output.message = "User UnBlocked Successfully";
+      _output.message = "Utilisateur débloqué avec succès";
     })
     .catch(err => {
       _output.data = err.message;
       _output.isSuccess = false;
-      _output.message = "User UnBlocked Failed";
+      _output.message = "Échec du déverrouillage de l'utilisateur";
     });
   res.send(_output);
 };
@@ -620,12 +620,12 @@ exports.deleteUser = async function(req, res, next) {
       var result = value;
       _output.data = result;
       _output.isSuccess = true;
-      _output.message = "User Delete Successfully";
+      _output.message = "Suppression réussie de l'utilisateur";
     })
     .catch(err => {
       _output.data = err.message;
       _output.isSuccess = false;
-      _output.message = "User Delete Failed";
+      _output.message = "Échec de la suppression de l'utilisateur";
     });
   res.send(_output);
 };
@@ -674,17 +674,17 @@ exports.updateUserProfile = async function(req, res, next) {
       .then(value => {
         _output.data = {};
         _output.isSuccess = true;
-        _output.message = "Update Successfully";
+        _output.message = "mise à jour de profil réussie";
       })
       .catch(err => {
         _output.data = {};
         _output.isSuccess = false;
-        _output.message = "Update failed";
+        _output.message = "Échec de la mise à jour du profil";
       });
   } else {
     _output.data = lang.required_field;
     _output.isSuccess = false;
-    _output.message = "Update failed";
+    _output.message = "Échec de la mise à jour du profil";
   }
   res.send(_output);
 };
@@ -704,25 +704,25 @@ exports.getuserbyid = async function(req, res, next) {
           var result = obj;
           _output.data = result;
           _output.isSuccess = true;
-          _output.message = "User Get Successfull";
+          _output.message = "L'utilisateur obtient le succès";
         } else {
           var obj = {
             User_list: {}
           };
           var result = obj;
           _output.isSuccess = true;
-          _output.message = " No Coach Found";
+          _output.message = "Aucun entraîneur trouvé";
         }
       })
       .catch(err => {
         _output.data = err.message;
         _output.isSuccess = false;
-        _output.message = "Coach Get Failed";
+        _output.message = "L'utilisateur obtient le succès";
       });
   } else {
     _output.data = lang.required_field;
     _output.isSuccess = false;
-    _output.message = "Coach Get Failed";
+    _output.message = "L'utilisateur obtient le succès";
   }
   res.send(_output);
 };
@@ -730,6 +730,17 @@ exports.getuserbyid = async function(req, res, next) {
 exports.getUserReservation = async function(req, res, next) {
   var _output = new output();
   const User_ID = req.query.User_ID;
+  async function getBookingSlotTime(id) {
+    try {
+      const Query =
+        "SELECT * FROM `booking_slot_dbs` WHERE `booking_id`= '" + id + "'";
+      return await db_library.execute(Query).then(async data => {
+        return data;
+      });
+    } catch (error) {
+      return error;
+    }
+  }
 
   if (User_ID != "") {
     var Qry =
@@ -741,19 +752,23 @@ exports.getUserReservation = async function(req, res, next) {
       .then(async val => {
         var result = val;
         if (result.length > 0) {
+          for (let i = 0; i < result.length; i++) {
+            const slot = await getBookingSlotTime(result[i].booking_Id);
+            result[i].slot = slot;
+          }
           var obj = {
             booking: result
           };
           _output.data = obj;
           _output.isSuccess = true;
-          _output.message = "Get Successfull";
+          _output.message = "Obtenez le succès";
         } else {
           var obj = {
             booking: []
           };
           _output.data = obj;
           _output.isSuccess = true;
-          _output.message = "No records Found";
+          _output.message = "Aucun enregistrement trouvé";
         }
       })
       .catch(err => {
@@ -769,6 +784,224 @@ exports.getUserReservation = async function(req, res, next) {
   res.send(_output);
 };
 
+async function updateSlotDetailsByBookingIds(
+  Coach_id,
+  user_Id,
+  booking_date,
+  course,
+  booking_time
+) {
+  try {
+    const Query =
+      "UPDATE `avaiablity` SET `Status`= 'Y' WHERE `CoachId`= '" +
+      Coach_id +
+      "' AND `UserId`= '" +
+      user_Id +
+      "' AND `Date`= '" +
+      booking_date +
+      "' AND `Hour`= '" +
+      booking_time +
+      "' AND `CourseId`= '" +
+      course +
+      "'";
+    return await db_library.execute(Query).then(async data => {
+      return data;
+    });
+  } catch (error) {
+    return error;
+  }
+}
+
+async function getSlotDetailsByBookingIds(booking_id) {
+  try {
+    const Query =
+      "SELECT * FROM `booking_slot_dbs` where `booking_id` = " + booking_id;
+    return await db_library.execute(Query).then(async data => {
+      return data;
+    });
+  } catch (error) {
+    return error;
+  }
+}
+
+async function setCancelStatusAvaiablitys(
+  Coach_id,
+  user_Id,
+  booking_date,
+  course,
+  booking_id
+) {
+  try {
+    const getSlotBookingId = await getSlotDetailsByBookingIds(booking_id);
+    console.log(getSlotBookingId);
+    for (let i = 0; i < getSlotBookingId.length; i++) {
+      //const element = array[i];
+      await updateSlotDetailsByBookingIds(
+        Coach_id,
+        user_Id,
+        booking_date,
+        course,
+        getSlotBookingId[i].booking_time
+      );
+    }
+    return true;
+  } catch (error) {
+    return error;
+  }
+}
+
+exports.cancelReservations = async function(req, res, next) {
+  var _output = new output();
+  const Coach_id = req.body.Coach_ID;
+  const status = req.body.status;
+  const booking_id = req.body.booking_id;
+  const amount = req.body.amount;
+  const booking_date = req.body.booking_date;
+  const course = req.body.course;
+  const email = req.body.email;
+  const booking_time = req.body.booking_time;
+  //const user_Id = req.body.user_Id;
+
+  if (
+    Coach_id != "" &&
+    status != "" &&
+    booking_id != "" &&
+    amount != "" &&
+    booking_date != "" &&
+    course != ""
+  ) {
+    if (course == "CoursCollectifOndemand") {
+      var update_qry =
+        "UPDATE `booking_dbs` SET `status`= '" +
+        status +
+        "' ,`amount`= '" +
+        amount +
+        "' WHERE `booking_Id`=" +
+        booking_id +
+        " AND `bookingDate`='" +
+        booking_date +
+        "' AND `bookingCourse`='" +
+        course +
+        "'";
+      var sel_qry =
+        "SELECT * FROM `users` u INNER JOIN `booking_dbs` b on u.id = b.user_Id INNER JOIN `coaches_dbs` cb where cb.Coach_Email = '" +
+        email +
+        "' AND b.bookingCourse='" +
+        course +
+        "' AND b.bookingDate ='" +
+        booking_date +
+        "' AND b.Coach_ID = " +
+        Coach_id +
+        " AND b.BookingTime = '" +
+        booking_time +
+        "'";
+    } else {
+      // var where = "";
+      // if (ville !== "") {
+      //   const postalCode = ville.trim();
+      //   where += " AND u.postalCode = '" + postalCode + "'";
+      // }
+
+      var update_qry =
+        "UPDATE `booking_dbs` SET `status`= '" +
+        status +
+        "' ,`amount`= '" +
+        amount +
+        "' WHERE `booking_Id`= '" +
+        booking_id +
+        "'";
+
+      //const bookingSlotData = await setCancelStatusAvaiablity(req.body)
+      // var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`amount`= '" + amount + "' WHERE `Coach_id`=" + Coach_id + " AND `booking_id`=" + booking_id + "";
+      // var update_qry =
+      //   "call proc_set_booking_status(" +
+      //   booking_id +
+      //   "," +
+      //   amount +
+      //   ",'" +
+      //   status +
+      //   "')";
+
+      var sel_qry =
+        "SELECT * FROM `users` u INNER JOIN `booking_dbs` b on u.id = b.user_Id INNER JOIN `coaches_dbs` cb where cb.Coach_Email = '" +
+        email +
+        "' AND b.booking_id = " +
+        booking_id +
+        "";
+    }
+
+    await db_library
+      .execute(update_qry)
+      .then(async value => {
+        if (value.affectedRows > 0) {
+          await db_library
+            .execute(sel_qry)
+            .then(async val => {
+              if (val.length > 0) {
+                // console.log("[coach.js - line 1086]", Coach_id, user_Id, status, booking_date, course, booking_id)
+                await setCancelStatusAvaiablitys(
+                  Coach_id,
+                  val[0].id,
+                  booking_date,
+                  course,
+                  booking_id
+                );
+                for (var i = 0; i < val.length; i++) {
+                  if (status == "UC") {
+                    var mailTemplate = await mail_template.getMailTemplate(
+                      appConfig.MailTemplate.UserCancel
+                    );
+                    const mailOption = require("../../_mailer/mailOptions");
+                    let _mailOption = new mailOption();
+                    _mailOption.to = val[i].Coach_Email;
+                    _mailOption.subject =
+                      "Reservation Cancelled by " +
+                      val[i].firstName +
+                      " " +
+                      val[i].lastName;
+                    _mailOption.html = mailTemplate[0].template
+                      .replace(
+                        "{{username}}",
+                        val[i].Coach_Fname + " " + val[i].Coach_Lname
+                      )
+                      .replace(
+                        "{{user}}",
+                        val[i].firstName + " " + val[i].lastName
+                      )
+                      .replace("{{course}}", val[i].bookingCourse)
+                      .replace(
+                        "{{book_date}}",
+                        moment(val[i].bookingDate).format("DD-MM-YYYY")
+                      );
+                    var _mailer = require("../../_mailer/mailer");
+                    _mailer.sendMail(_mailOption);
+                  }
+                }
+                _output.data = {};
+                _output.isSuccess = true;
+                _output.message = "Réservation annulée avec succès";
+              }
+            })
+            .catch(err => {
+              _output.data = {};
+              _output.isSuccess = false;
+              _output.message = "Courrier non envoyé";
+            });
+        }
+      })
+      .catch(err => {
+        _output.data = {};
+        _output.isSuccess = false;
+        _output.message = "Échec de la mise à jour du statut";
+      });
+  } else {
+    _output.data = lang.required_field;
+    _output.isSuccess = false;
+    _output.message = "Échec de la mise à jour du statut";
+  }
+  res.send(_output);
+};
+
 exports.cancelReservation = async function(req, res, next) {
   var _output = new output();
   const Coach_id = req.body.Coach_ID;
@@ -779,6 +1012,7 @@ exports.cancelReservation = async function(req, res, next) {
   const course = req.body.course;
   const email = req.body.email;
   const booking_time = req.body.booking_time;
+  //const user_Id = req.body.user_Id;
 
   if (
     Coach_id != "" &&
@@ -856,6 +1090,8 @@ exports.cancelReservation = async function(req, res, next) {
             .execute(sel_qry)
             .then(async val => {
               if (val.length > 0) {
+                // console.log("[coach.js - line 1086]", Coach_id, user_Id, status, booking_date, course, booking_id)
+                // await setCancelStatusAvaiablity(Coach_id, user_Id, booking_date, course, booking_id);
                 for (var i = 0; i < val.length; i++) {
                   if (status == "UC") {
                     var mailTemplate = await mail_template.getMailTemplate(
@@ -889,25 +1125,25 @@ exports.cancelReservation = async function(req, res, next) {
                 }
                 _output.data = {};
                 _output.isSuccess = true;
-                _output.message = "Status Update Successfull";
+                _output.message = "Réservation annulée avec succès";
               }
             })
             .catch(err => {
               _output.data = {};
               _output.isSuccess = false;
-              _output.message = "Mail Not Sent";
+              _output.message = "Courrier non envoyé";
             });
         }
       })
       .catch(err => {
         _output.data = {};
         _output.isSuccess = false;
-        _output.message = "Status Update Failed";
+        _output.message = "Échec de la mise à jour du statut";
       });
   } else {
     _output.data = lang.required_field;
     _output.isSuccess = false;
-    _output.message = "Status Update Failed";
+    _output.message = "Échec de la mise à jour du statut";
   }
   res.send(_output);
 };

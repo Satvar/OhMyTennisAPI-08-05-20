@@ -29,6 +29,7 @@ router.post("/user/UnblockUser", userController.unBlockUser);
 router.post("/user/deleteUser", userController.deleteUser);
 router.get("/user/getreservation", userController.getUserReservation);
 router.post("/user/cancelreservation", userController.cancelReservation);
+router.post("/user/cancelreservations", userController.cancelReservations);
 
 //social logins
 
