@@ -850,6 +850,29 @@ async function getSlotDetailsByBookingIds(booking_id) {
 //   }
 // }
 
+function formatDate(date) {
+  var monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ];
+
+  var day = date.getDate();
+  var monthIndex = date.getMonth() + 1;
+  var year = date.getFullYear();
+
+  return year + "-" + monthIndex + "-" + day;
+}
+
 exports.cancelReservations = async function(req, res, next) {
   var _output = new output();
   const Coach_id = req.body.Coach_ID;
@@ -952,19 +975,19 @@ exports.cancelReservations = async function(req, res, next) {
                 );
                 var dateArr = [];
                 console.log("[user.js - line 951]", getSlotBookingId);
-                if (getSlotBookingId.length > 0) {
-                  for (let i = 0; i < getSlotBookingId.length; i++) {
-                    //const element = array[i];
-                    await updateSlotDetailsByBookingIds(
-                      Coach_id,
-                      val[0].id,
-                      getSlotBookingId[i].booking_date,
-                      course,
-                      getSlotBookingId[i].booking_time
-                    );
-                    dateArr.push(getSlotBookingId[i].booking_date);
-                  }
+                //if (getSlotBookingId.length > 0) {
+                for (let i = 0; i < getSlotBookingId.length; i++) {
+                  //const element = array[i];
+                  await updateSlotDetailsByBookingIds(
+                    Coach_id,
+                    val[0].id,
+                    formatDate(getSlotBookingId[i].booking_date),
+                    course,
+                    getSlotBookingId[i].booking_time
+                  );
+                  dateArr.push(formatDate(getSlotBookingId[i].booking_date));
                 }
+                //}
 
                 var dateString = dateArr.join();
 

@@ -787,7 +787,7 @@ async function bookedFun(arr, remaingSlotStatus, totalAmt) {
     try {
         console.log("[coach.js - line - 788]", arr);
         const { P_CoachId, P_UserId, P_Date, P_CourseId, P_Hour, P_Remarks } = arr;
-        const Query = "Insert into `booking_dbs` (`Coach_ID`,`user_Id`,`payment_Id`,`status`,`bookingDate`,`bookingCourse`,`amount`,`BookingTime`,`Remarks`,`remaingSlotStatus`) values ('" + P_CoachId + "','" + P_UserId + "','0','R','" + P_Date + "','" + P_CourseId + "','" + totalAmt + "','" + P_Hour + "','" + P_Remarks + "','" + remaingSlotStatus + "')";
+        const Query = "Insert into `booking_dbs` (`Coach_ID`,`user_Id`,`payment_Id`,`status`,`bookingDate`,`bookingCourse`,`amount`,`BookingTime`,`Remarks`,`remaingSlotStatus`) values ('" + P_CoachId + "','" + P_UserId + "','0','R','" + formatDate(P_Date) + "','" + P_CourseId + "','" + totalAmt + "','" + P_Hour + "','" + P_Remarks + "','" + remaingSlotStatus + "')";
         
         return await db_library.execute(Query).then(async data => {
             if (data.insertId) {
@@ -811,7 +811,7 @@ async function bookedSlotFun(bookArray, bookingID) {
                     P_Amount,
                     P_Remarks
                 } = bookArray
-        const Query = "Insert into `booking_slot_dbs` (`coach_id`, `user_id`, `booking_id`, `status`, `booking_date`, `booking_course`, `amount`, `booking_time`, `remarks`) values ('" + P_CoachId + "','" + P_UserId + "','" + bookingID + "','R','" + P_Date + "','" + P_CourseId + "','" + P_Amount + "','" + P_Hour + "','" + P_Remarks + "')";
+        const Query = "Insert into `booking_slot_dbs` (`coach_id`, `user_id`, `booking_id`, `status`, `booking_date`, `booking_course`, `amount`, `booking_time`, `remarks`) values ('" + P_CoachId + "','" + P_UserId + "','" + bookingID + "','R','" + formatDate(P_Date) + "','" + P_CourseId + "','" + P_Amount + "','" + P_Hour + "','" + P_Remarks + "')";
 
         return await db_library.execute(Query).then(async data => {            
             return data;
@@ -831,7 +831,7 @@ async function availUpdateFun(bookArray) {
             P_UserId,
             P_Amount,
         } = bookArray
-        const Query = "UPDATE `avaiablity` SET `Status`= 'R' , `UserId` = '" + P_UserId + "', CourseId = '"+ P_CourseId + "', Price = '" + P_Amount + "', TotalSeat = '1' WHERE `CoachId`= '" + P_CoachId + "' AND `Date`= '" + P_Date + "' AND `Hour`= '" + P_Hour + "'";
+        const Query = "UPDATE `avaiablity` SET `Status`= 'R' , `UserId` = '" + P_UserId + "', CourseId = '" + P_CourseId + "', Price = '" + P_Amount + "', TotalSeat = '1' WHERE `CoachId`= '" + P_CoachId + "' AND `Date`= '" + formatDate(P_Date) + "' AND `Hour`= '" + P_Hour + "'";
         
         return await db_library.execute(Query).then(async data => {
             return data;
@@ -871,7 +871,7 @@ exports.coachReservationFun = async function (req, res, next) {
             if (bookArray[i].P_CourseId === 'CoursIndividuel') {
                 await availUpdateFun(bookArray[i]);
             }
-            dateArr.push(bookArray[i].P_Date)
+            dateArr.push(formatDate(bookArray[i].P_Date))
         }
 
         var dateString = dateArr.join();
