@@ -824,31 +824,31 @@ async function getSlotDetailsByBookingIds(booking_id) {
   }
 }
 
-async function setCancelStatusAvaiablitys(
-  Coach_id,
-  user_Id,
-  booking_date,
-  course,
-  booking_id
-) {
-  try {
-    const getSlotBookingId = await getSlotDetailsByBookingIds(booking_id);
-    console.log(getSlotBookingId);
-    for (let i = 0; i < getSlotBookingId.length; i++) {
-      //const element = array[i];
-      await updateSlotDetailsByBookingIds(
-        Coach_id,
-        user_Id,
-        getSlotBookingId[i].booking_date,
-        course,
-        getSlotBookingId[i].booking_time
-      );
-    }
-    return true;
-  } catch (error) {
-    return error;
-  }
-}
+// async function setCancelStatusAvaiablitys(
+//   Coach_id,
+//   user_Id,
+//   booking_date,
+//   course,
+//   booking_id
+// ) {
+//   try {
+//     const getSlotBookingId = await getSlotDetailsByBookingIds(booking_id);
+//     console.log(getSlotBookingId);
+//     for (let i = 0; i < getSlotBookingId.length; i++) {
+//       //const element = array[i];
+//       await updateSlotDetailsByBookingIds(
+//         Coach_id,
+//         user_Id,
+//         getSlotBookingId[i].booking_date,
+//         course,
+//         getSlotBookingId[i].booking_time
+//       );
+//     }
+//     return true;
+//   } catch (error) {
+//     return error;
+//   }
+// }
 
 exports.cancelReservations = async function(req, res, next) {
   var _output = new output();
@@ -939,13 +939,35 @@ exports.cancelReservations = async function(req, res, next) {
             .then(async val => {
               if (val.length > 0) {
                 // console.log("[coach.js - line 1086]", Coach_id, user_Id, status, booking_date, course, booking_id)
-                await setCancelStatusAvaiablitys(
-                  Coach_id,
-                  val[0].id,
-                  booking_date,
-                  course,
+                // await setCancelStatusAvaiablitys(
+                //   Coach_id,
+                //   val[0].id,
+                //   booking_date,
+                //   course,
+                //   booking_id
+                // );
+
+                const getSlotBookingId = await getSlotDetailsByBookingIds(
                   booking_id
                 );
+                var dateArr = [];
+                console.log("[user.js - line 951]", getSlotBookingId);
+                if (getSlotBookingId.length > 0) {
+                  for (let i = 0; i < getSlotBookingId.length; i++) {
+                    //const element = array[i];
+                    await updateSlotDetailsByBookingIds(
+                      Coach_id,
+                      val[0].id,
+                      getSlotBookingId[i].booking_date,
+                      course,
+                      getSlotBookingId[i].booking_time
+                    );
+                    dateArr.push(getSlotBookingId[i].booking_date);
+                  }
+                }
+
+                var dateString = dateArr.join();
+
                 for (var i = 0; i < val.length; i++) {
                   if (status == "UC") {
                     var mailTemplate = await mail_template.getMailTemplate(
@@ -969,10 +991,7 @@ exports.cancelReservations = async function(req, res, next) {
                         val[i].firstName + " " + val[i].lastName
                       )
                       .replace("{{course}}", val[i].bookingCourse)
-                      .replace(
-                        "{{book_date}}",
-                        moment(val[i].bookingDate).format("DD-MM-YYYY")
-                      );
+                      .replace("{{book_date}}", dateString);
                     var _mailer = require("../../_mailer/mailer");
                     _mailer.sendMail(_mailOption);
                   }
