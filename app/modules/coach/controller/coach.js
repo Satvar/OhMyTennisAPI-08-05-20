@@ -834,6 +834,7 @@ exports.coachReservation = async function (req, res, next) {
                     _output.message = "Booking Inserted Failed";
                 }
             }).catch((err) => {
+                console.log("[coach.js - line 837]", err)
                 _output.data = {};
                 _output.isSuccess = false;
                 _output.message = "Booking Inserted Failed";
