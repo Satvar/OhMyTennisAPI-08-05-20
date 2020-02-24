@@ -829,6 +829,7 @@ exports.cancelReservation = async function(req, res, next) {
         booking_id +
         "'";
 
+      //const bookingSlotData = await setCancelStatusAvaiablity(req.body)
       // var update_qry = "UPDATE `booking_dbs` SET `status`= '" + status + "' ,`amount`= '" + amount + "' WHERE `Coach_id`=" + Coach_id + " AND `booking_id`=" + booking_id + "";
       // var update_qry =
       //   "call proc_set_booking_status(" +

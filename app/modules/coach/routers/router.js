@@ -9,7 +9,7 @@ router.post("/coach/getcoachbyid", coachController.getcoachbyid);
 router.get("/coach/getallcoaches", coachController.getallcoaches);
 router.post("/coach/insertavailabilty", coachController.insertAvailability);
 router.get("/coach/getavailabilty", coachController.getAvailability);
-router.get("/coach/getreservation", coachController.getReservation);
+router.get("/coach/getreservation", coachController.getReservations);
 router.get("/coach/getcoachbycity", coachController.search_for_coach);
 router.post("/coach/setreservation", coachController.coachReservation);
 router.post("/coach/setStatus", coachController.setStatus);
@@ -40,4 +40,15 @@ router.get(
   "/coach/geolocationByPostalCode/:id",
   coachController.geolocationByPostalCode
 );
+
+router.get(
+  "/coach/get_remaining_slot/:coach_id/:user_id/:booking_course",
+  coachController.get_remaining_slot
+);
+
+router.get(
+  "/coach/get_avail_ten_is_or_not/:coach_id/:date",
+  coachController.get_avail_ten_is_or_not
+);
+
 module.exports = router;

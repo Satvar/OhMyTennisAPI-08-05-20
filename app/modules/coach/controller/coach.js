@@ -1,12 +1,118 @@
 const output = require("../../_models/output");
 const db_library = require("../../_helpers/db_library");
-const bcrypt = require("bcrypt");
+//const bcrypt = require("bcrypt");
 const mail_template = require("../../MailTemplate/mailTemplate");
 const appConfig = require("../../../../config/appConfig");
 const moment = require('moment');
 const lang = require("../../../lang/language").franchContent;
-const base64 = require("base-64");
+//const base64 = require("base-64");
 const calculateLocationRadius = require('../../_helpers/calculateRadiusDistance');
+
+async function setStatusBookingSlotDbs(booking_id, status) {
+    try {
+        const Query = "UPDATE `booking_slot_dbs` SET `status`= '" + status + "' WHERE `booking_Id`= '" + booking_id + "'";
+        return await db_library.execute(Query).then(async data => {
+            return data;
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+async function setStatusAvaiablity(arrayData) {
+    try {
+        const { coach_id, user_id, status, booking_date, booking_course, booking_time } = arrayData;
+        const Query = "UPDATE `avaiablity` SET `Status`= '" + status + "' WHERE `CoachId`= '" + coach_id + "' AND `UserId`= '" + user_id + "' AND `Date`= '" + formatDate(booking_date) + "' AND `CourseId`= '" + booking_course + "' AND `Hour`= '" + booking_time + "'";
+        return await db_library.execute(Query).then(async data => {
+            return data;
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+async function getStatusBookingSlotData(id) {
+    try {
+        const Query = "SELECT * FROM `booking_slot_dbs` WHERE `booking_Id`= '" + id + "'";
+        return await db_library.execute(Query).then(async data => {
+            return data;
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+async function getRemainingTen(coach_id, user_id, booking_course) {
+    try {
+        const arrData = []
+        const query = "SELECT * FROM `booking_dbs` WHERE `Coach_ID` = '" + coach_id + "' AND `user_Id` = '" + user_id + "' AND `bookingCourse` = '" + booking_course + "' AND `remaingSlotStatus` = 'Yes'";
+        return await db_library.execute(query).then(async data => {
+            for (let i = 0; i < data.length; i++) {
+                const bookingSlotData = await getStatusBookingSlotData(data[i].booking_Id)
+                const obj = {
+                    booking_id: data[i].booking_Id,
+                    coach_id: parseInt(data[i].Coach_ID),
+                    user_id: parseInt(data[i].user_Id),
+                    amount: data[i].amount,
+                    booking_course: data[i].bookingCourse,
+                    remaingSlot: data[i].remaingSlot,
+                    remaingSlotStatus: data[i].remaingSlotStatus,
+                    slot: bookingSlotData
+                }
+                arrData.push(obj)
+            }
+            return arrData;
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+exports.get_remaining_slot = async function (req, res, next) {
+    const coach_id = req.params.coach_id;
+    const user_id = req.params.user_id;
+    const booking_course = req.params.booking_course;
+    var _output = new output();
+    const data = await getRemainingTen(coach_id, user_id, booking_course);
+    if (data.length > 0) {     
+        _output.data = data;
+        _output.isSuccess = true;
+        _output.message = "Get remaining data successful";
+    } else {
+        _output.data = data;
+        _output.isSuccess = true;
+        _output.message = " No Found";
+    }
+    res.send(_output);
+}
+
+async function check_avail_ten_is_or_not(id, date) {
+    try {
+        const Query = "SELECT count(id) AS total FROM `avaiablity` WHERE `CoachId`= '" + id + "' AND `Status`= 'Y' AND `Date` >= '" + date + "'";
+        return await db_library.execute(Query).then(async data => {
+            return data;
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+exports.get_avail_ten_is_or_not = async function (req, res, next) {
+    const coach_id = req.params.coach_id;
+    const date = req.params.date;
+    var _output = new output();
+    const data = await check_avail_ten_is_or_not(coach_id, date);
+    if (data[0].total >= 10) {
+        _output.data = { "ten": true };
+        _output.isSuccess = true;
+        _output.message = "Get remaining data successful";
+    } else {
+        _output.data = {"ten" : false};
+        _output.isSuccess = true;
+        _output.message = " No Found";
+    }
+    res.send(_output);
+}
 
 exports.search_for_coach = async function (req, res, next) {
     const ville = req.query.ville;
@@ -44,7 +150,6 @@ exports.search_for_coach = async function (req, res, next) {
     res.send(_output);
 }
 
-
 exports.getallavailabilityforCoachDetail = async function (req, res, next) {
     const coachId = req.query.coachId;
     var _output = new output();
@@ -80,7 +185,6 @@ exports.getallavailabilityforCoachDetail = async function (req, res, next) {
     // }
     res.send(_output);
 }
-
 
 exports.find_your_coach = async function (req, res, next) {
     const ville = req.query.ville;
@@ -462,7 +566,7 @@ exports.getCoachByPostalcode = async function (req, res, next) {
         }
     }
     var query =
-        "SELECT DISTINCT c.Coach_Fname, c.Coach_ID, c.Coach_Image,c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1 AND u.postalCode = '" + code + "'";
+        "SELECT DISTINCT c.Coach_Fname, c.Coach_ID,c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1 AND u.postalCode = '" + code + "'";
     await db_library
         .execute(query)
         .then(async value => {
@@ -683,10 +787,9 @@ exports.coachReservation = async function (req, res, next) {
     var _output = new output();
 
     const {
-        bookArray
+        bookArray        
     } = req.body;
-
-    console.log(req.body)
+    console.log("[coach.js - line 735]", req.body)
     var coach_details;
     if (bookArray.length > 0) {
         await db_library.execute("SELECT * FROM `users` where `id` = " + bookArray[0].P_CoachId).then(async (val) => {
@@ -700,6 +803,8 @@ exports.coachReservation = async function (req, res, next) {
                 user_details = value
             }
         })
+        var P_TotalAmt = req.body.totalAmt;
+        var P_RemaingTenStatus = req.body.remaingStatus;
         for (var i = 0; i < bookArray.length; i++) {
             const {
                 P_CoachId,
@@ -716,10 +821,9 @@ exports.coachReservation = async function (req, res, next) {
             if (P_Amount == "") {
                 amt = 0;
             }
-            var query = "call proc_ins_booking_dbs(" + P_CoachId + ",'" + P_CourseId + "','" + P_Date + "','" + P_Hour + "'," + P_UserId + "," + amt + ",'" + P_Remarks + "')";
+            var query = "call proc_ins_booking_dbs(" + P_CoachId + ",'" + P_CourseId + "','" + P_Date + "','" + P_Hour + "'," + P_UserId + "," + amt + ",'" + P_Remarks + "','" + P_TotalAmt + "','" + P_RemaingTenStatus + "')";
             await db_library.execute(query).then(async (val) => {
                 if (val) {
-
                     _output.data = {};
                     _output.isSuccess = true;
                     _output.message = "Booking Successfully Inserted";
@@ -752,7 +856,56 @@ exports.coachReservation = async function (req, res, next) {
     res.send(_output);
 }
 
-
+exports.getReservations = async function (req, res, next) {
+    var _output = new output();
+    const Coach_id = req.query.Coach_ID;
+    async function getBookingSlotTime(id) {
+        try {
+            const Query = "SELECT * FROM `booking_slot_dbs` WHERE `booking_id`= '" + id + "'";
+            return await db_library.execute(Query).then(async data => {
+                return data;
+            });
+        } catch (error) {
+            return error;
+        }
+    }
+    if (Coach_id != "") {
+        var Qry = `select booking_Id,BookingTime,Coach_ID,amount,bookingCourse, d.CourseName,(select DATE_FORMAT(bookingDate, '%Y-%m-%d')) as bookingDate,discount_club,paymentStatus,payment_Id,status,user_Id, u.firstName, u.lastName,s.Remarks from booking_dbs s
+        inner join course_dbs d on s.bookingCourse = d.Course_Shotname
+        inner join users u on s.user_Id = u.id where Coach_Id = ` + Coach_id;
+        await db_library.execute(Qry).then(async (val) => {            
+            var result = val;
+            if (result.length > 0) {
+                for (let i = 0; i < result.length; i++) {
+                    const slot = await getBookingSlotTime(result[i].booking_Id);
+                    result[i].slot = slot;
+                }
+                var obj = {
+                    booking: result
+                }                
+                _output.data = obj;
+                _output.isSuccess = true;
+                _output.message = "Get Successfull";
+            } else {
+                var obj = {
+                    booking: []
+                }
+                _output.data = obj;
+                _output.isSuccess = true;
+                _output.message = "No records Found";
+            }
+        }).catch((err) => {
+            _output.data = {};
+            _output.isSuccess = false;
+            _output.message = "Get Failed";
+        })
+    } else {
+        _output.data = lang.required_field;
+        _output.isSuccess = false;
+        _output.message = "Get Failed";
+    }
+    res.send(_output)
+}
 
 exports.getReservation = async function (req, res, next) {
     var _output = new output();
@@ -824,6 +977,56 @@ exports.getBookingDetail = async function (req, res, next) {
     res.send(_output)
 }
 
+async function getSlotDetailsByBookingId(booking_id) {
+    try {
+        const Query =
+            "SELECT * FROM `booking_slot_dbs` where `booking_id` = " + booking_id;
+        return await db_library.execute(Query).then(async data => {
+            return data;
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+
+async function updateSlotDetailsByBookingId(Coach_id, user_Id, booking_date, course, booking_time) {
+    try {
+        const Query =
+            "UPDATE `avaiablity` SET `Status`= 'Y' WHERE `CoachId`= '" +
+            Coach_id +
+            "' AND `UserId`= '" +
+            user_Id +
+            "' AND `Date`= '" +
+            booking_date +
+            "' AND `Hour`= '" +
+            booking_time +
+            "' AND `CourseId`= '" +
+            course +
+            "'";
+        return await db_library.execute(Query).then(async data => {
+            return data;
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+async function setCancelStatusAvaiablity(Coach_id, user_Id, booking_date, course, booking_id) {
+    try {
+        const getSlotBookingId = await getSlotDetailsByBookingId(booking_id);
+        console.log(getSlotBookingId);
+        for (let i = 0; i < getSlotBookingId.length; i++) {
+            //const element = array[i];
+            await updateSlotDetailsByBookingId(Coach_id, user_Id, booking_date, course, getSlotBookingId[i].booking_time);
+        }
+        return true;
+        
+    } catch (error) {
+        return error;
+    }
+}
+
 exports.setStatus = async function (req, res, next) {
     var _output = new output();
     const discount = req.body.discount;
@@ -835,6 +1038,7 @@ exports.setStatus = async function (req, res, next) {
     const booking_date = req.body.booking_date;
     const booking_time = req.body.booking_time;
     const course = req.body.course;
+    
     if (Coach_id != "" && status != "" && booking_id != "" && booking_date != "" && course != "") {
 
         if (course == 'CoursCollectifOndemand') {
@@ -906,6 +1110,8 @@ exports.setStatus = async function (req, res, next) {
                                     })
                                 }
                                 else {
+                                    console.log("[coach.js - line 1086]", Coach_id, user_Id, status, booking_date, course, booking_id)
+                                    await setCancelStatusAvaiablity(Coach_id, user_Id, booking_date, course, booking_id);
                                     var mailTemplate = await mail_template.getMailTemplate(appConfig.MailTemplate.BookingCancel);
                                     const mailOption = require('../../_mailer/mailOptions');
                                     let _mailOption = new mailOption();
@@ -946,7 +1152,7 @@ exports.getTime_slot = async function (req, res, next) {
     const Start_Date = req.query.Start_Date;
     const Course = req.query.Course;
     if (Coach_ID != "" && Start_Date != "" && Course != "") {
-
+        console.log(req.query)
         var _output = new output();
         var query = "call getdaybyavaiablity('" + Start_Date + "','" + Course + "'," + Coach_ID + ")";
         await db_library
@@ -984,7 +1190,7 @@ exports.getTime_slot = async function (req, res, next) {
 
 exports.setpayment = async function (req, res, next) {
     var _output = new output();
-    //console.log(req.body)
+    console.log(req.body)
     const status = req.body.status;
     const booking_id = req.body.booking_id;
     const amount = req.body.amount;
@@ -998,6 +1204,17 @@ exports.setpayment = async function (req, res, next) {
             .execute(update_qry).then(async (value) => {
                 //console.log("line - 886", value)
                 if (value.affectedRows > 0) {
+                    const setStatusBookingSlotData = await setStatusBookingSlotDbs(booking_id, status);
+
+                    const getBookingSlotData = await getStatusBookingSlotData(booking_id);
+                    console.log("[coach.js - line 1064", getBookingSlotData)
+                    if (getBookingSlotData.length > 0) {
+                        for (let i = 0; i < getBookingSlotData.length; i++) {
+                            await setStatusAvaiablity(getBookingSlotData[i]);                            
+                        }
+                    }
+
+                    console.log("[coach.js - line 1064", setStatusBookingSlotData)
                     await db_library.execute("SELECT u.*, b.* FROM `users` u INNER JOIN `booking_dbs` b on u.id = b.user_Id where b.`booking_id`=" + booking_id + "").then(async (val) => {
                         if (val.length > 0) {
                             //console.log("line - 890", val)
