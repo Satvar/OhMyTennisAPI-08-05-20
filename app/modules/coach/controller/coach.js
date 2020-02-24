@@ -566,7 +566,7 @@ exports.getCoachByPostalcode = async function (req, res, next) {
         }
     }
     var query =
-        "SELECT DISTINCT c.Coach_Fname, c.Coach_ID,c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1 AND u.postalCode = '" + code + "'";
+        "SELECT DISTINCT c.Coach_Fname, c.Coach_ID, c.InstagramURL, c.Coach_Image, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1 AND u.postalCode = '" + code + "'";
     await db_library
         .execute(query)
         .then(async value => {
