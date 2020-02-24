@@ -823,6 +823,7 @@ exports.coachReservation = async function (req, res, next) {
             }
             var query = "call proc_ins_booking_dbs(" + P_CoachId + ",'" + P_CourseId + "','" + P_Date + "','" + P_Hour + "'," + P_UserId + "," + amt + ",'" + P_Remarks + "','" + P_TotalAmt + "','" + P_RemaingTenStatus + "')";
             await db_library.execute(query).then(async (val) => {
+                console.log("[coach.js - line 826]", val)
                 if (val) {
                     _output.data = {};
                     _output.isSuccess = true;
