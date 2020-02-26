@@ -744,7 +744,7 @@ exports.getUserReservation = async function(req, res, next) {
 
   if (User_ID != "") {
     var Qry =
-      `select booking_Id,BookingTime,Coach_ID,amount,bookingCourse, d.CourseName,(select DATE_FORMAT(bookingDate, '%Y-%m-%d')) as bookingDate,discount_club,paymentStatus,payment_Id,status,user_Id, u.firstName, u.lastName, u.email,s.Remarks from booking_dbs s
+      `select booking_Id,BookingTime,Coach_ID,amount,bookingCourse, d.CourseName,(select DATE_FORMAT(bookingDate, '%Y-%m-%d')) as bookingDate,discount_club,paymentStatus,payment_Id,status,user_Id, u.firstName, u.lastName, u.email,s.Remarks, s.remaingSlotStatus from booking_dbs s
         inner join course_dbs d on s.bookingCourse = d.Course_Shotname
         inner join users u on s.Coach_ID = u.id where user_Id = ` + User_ID;
     await db_library

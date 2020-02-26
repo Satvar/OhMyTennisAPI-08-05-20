@@ -987,7 +987,7 @@ exports.getReservations = async function (req, res, next) {
         }
     }
     if (Coach_id != "") {
-        var Qry = `select booking_Id,BookingTime,Coach_ID,amount,bookingCourse, d.CourseName,(select DATE_FORMAT(bookingDate, '%Y-%m-%d')) as bookingDate,discount_club,paymentStatus,payment_Id,status,user_Id, u.firstName, u.lastName,s.Remarks from booking_dbs s
+        var Qry = `select booking_Id,BookingTime,Coach_ID,amount,bookingCourse, d.CourseName,(select DATE_FORMAT(bookingDate, '%Y-%m-%d')) as bookingDate,discount_club,paymentStatus,payment_Id,status,user_Id, u.firstName, u.lastName,s.Remarks, s.remaingSlotStatus from booking_dbs s
         inner join course_dbs d on s.bookingCourse = d.Course_Shotname
         inner join users u on s.user_Id = u.id where Coach_Id = ` + Coach_id;
         await db_library.execute(Qry).then(async (val) => {            
