@@ -220,6 +220,7 @@ exports.find_your_coach = async function (req, res, next) {
             }
 
         }).catch(err => {
+            console.log("[coach.js - line - 223]", err)
             _output.data = err.message;
             _output.isSuccess = false;
             _output.message = "L'entraîneur a échoué";
