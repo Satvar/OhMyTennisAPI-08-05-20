@@ -1107,10 +1107,10 @@ async function getSlotDetailsByBookingId(booking_id) {
 }
 
 
-async function updateSlotDetailsByBookingId(Coach_id, user_Id, booking_date, course, booking_time) {
+async function updateSlotDetailsByBookingId(Coach_id, user_Id, booking_date, course, booking_time, status) {
     try {
         const Query =
-            "UPDATE `avaiablity` SET `Status`= 'Y' WHERE `CoachId`= '" +
+            "UPDATE `avaiablity` SET `Status`= '" + status +"' WHERE `CoachId`= '" +
             Coach_id +
             "' AND `UserId`= '" +
             user_Id +
@@ -1129,14 +1129,20 @@ async function updateSlotDetailsByBookingId(Coach_id, user_Id, booking_date, cou
     }
 }
 
-async function setCancelStatusAvaiablity(Coach_id, user_Id, booking_date, course, booking_id) {
+async function setCancelStatusAvaiablity(Coach_id, user_Id, booking_date, course, booking_id, types) {
     try {
-        const getSlotBookingId = await getSlotDetailsByBookingId(booking_id);
-        console.log(getSlotBookingId);
-        for (let i = 0; i < getSlotBookingId.length; i++) {
-            //const element = array[i];
-            await updateSlotDetailsByBookingId(Coach_id, user_Id, formatDate(getSlotBookingId[i].booking_date), course, getSlotBookingId[i].booking_time);
-        }
+        if (course == 'CoursIndividuel') {
+            const getSlotBookingId = await getSlotDetailsByBookingId(booking_id);
+            console.log(getSlotBookingId);
+            for (let i = 0; i < getSlotBookingId.length; i++) {
+                //const element = array[i];
+                if (types == 'Approve') {
+                    await updateSlotDetailsByBookingId(Coach_id, user_Id, formatDate(getSlotBookingId[i].booking_date), course, getSlotBookingId[i].booking_time, 'A');
+                } else {
+                    await updateSlotDetailsByBookingId(Coach_id, user_Id, formatDate(getSlotBookingId[i].booking_date), course, getSlotBookingId[i].booking_time, 'Y');
+                }
+            }
+        }        
         return true;
         
     } catch (error) {
@@ -1189,6 +1195,7 @@ exports.setStatus = async function (req, res, next) {
                             for (var i = 0; i < val.length; i++) {
                                 //console.log('test',val[i].booking_id)
                                 if (status != 'C' && status != 'S') {
+                                    await setCancelStatusAvaiablity(Coach_id, user_Id, booking_date, course, booking_id, 'Approve');
                                     console.log('coach.js - line 766',discount);
                                     var discountAmount = (discount != "" ? discount : amount);
                                     console.log('coach.js - line 768', discountAmount);
@@ -1228,7 +1235,7 @@ exports.setStatus = async function (req, res, next) {
                                 }
                                 else {
                                     console.log("[coach.js - line 1086]", Coach_id, user_Id, status, booking_date, course, booking_id)
-                                    await setCancelStatusAvaiablity(Coach_id, user_Id, booking_date, course, booking_id);
+                                    await setCancelStatusAvaiablity(Coach_id, user_Id, booking_date, course, booking_id, 'Cancel');
                                     var mailTemplate = await mail_template.getMailTemplate(appConfig.MailTemplate.BookingCancel);
                                     const mailOption = require('../../_mailer/mailOptions');
                                     let _mailOption = new mailOption();

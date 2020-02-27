@@ -169,6 +169,8 @@ exports.updateProfile = async function(req, res, next) {
   const {
     Coach_Fname,
     Coach_Lname,
+    Coach_Emplacement,
+    Coach_Ville,
     Coach_Email,
     Coach_Phone,
     InstagramURL,
@@ -210,19 +212,23 @@ exports.updateProfile = async function(req, res, next) {
     Coach_Bank_City != "" &&
     Coach_Rayon != "" &&
     Coach_Image != "" &&
-    Coach_Resume != ""
+    Coach_Resume != "" &&
+    Coach_Emplacement != "" &&
+    Coach_Ville != ""
   ) {
     // var query = "INSERT INTO `users`(`firstName`, `lastName`, `email`, `gender`, `password`, `mobile`, `postalCode`, `cityId`, `roleId`, `isActive`)" +
     //     " VALUES ('" + firstName + "','" + lastName + "','" + email + "','" + gender + "','" + encry_pass + "','" + mobile + "','" + postalCode + "'," + cityId + "," + roleId + ",1);";
 
     var coach_query =
-      "UPDATE `coaches_dbs` SET `Coach_Fname` =?, `Coach_Lname`=?, `Coach_Phone`=?, `InstagramURL`=?, `TwitterURL`=?, `FacebookURL`=?,`Coach_Description`=?,`Coach_transport`=?,`Coach_Price`=?,`Coach_PriceX10`=?,`Coach_Services`=?," +
+      "UPDATE `coaches_dbs` SET `Coach_Fname` =?, `Coach_Lname`=?, `Coach_Emplacement`=?,`Coach_Ville`=?, `Coach_Phone`=?, `InstagramURL`=?, `TwitterURL`=?, `FacebookURL`=?,`Coach_Description`=?,`Coach_transport`=?,`Coach_Price`=?,`Coach_PriceX10`=?,`Coach_Services`=?," +
       "`Coach_payment_type`=?,`Coach_City`=?,`Coach_Bank_Name`=?,`Branch_Code`=?,`Coach_Bank_ACCNum`=?,`Coach_Bank_City`=?,`Coach_Image`=?,`Coach_Resume`=?,`Coach_Rayon`=?,`ResumeName`=? WHERE `Coach_Email`=?;";
 
     await db_library
       .parameterexecute(coach_query, [
         Coach_Fname,
         Coach_Lname,
+        Coach_Emplacement,
+        Coach_Ville,
         Coach_Phone,
         InstagramURL,
         TwitterURL,
@@ -980,7 +986,7 @@ exports.cancelReservations = async function(req, res, next) {
                 for (var j = 0; j < getSlotBookingId.length; j++) {
                   //const element = array[i];
                   await updateSlotDetailsByBookingIds(
-                    Coach_id,
+                    getSlotBookingId[j].coach_id,
                     val[0].id,
                     formatDate(getSlotBookingId[j].booking_date),
                     course,
