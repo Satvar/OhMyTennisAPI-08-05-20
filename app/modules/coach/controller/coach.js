@@ -567,7 +567,7 @@ exports.getCoachByPostalcode = async function (req, res, next) {
         }
     }
     var query =
-        "SELECT DISTINCT c.Coach_Fname, c.Coach_ID, c.InstagramURL, c.Coach_Image, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1 AND u.postalCode = '" + code + "'";
+        "SELECT DISTINCT c.Coach_Fname, c.Coach_ID, c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1 AND u.postalCode = '" + code + "'";
     await db_library
         .execute(query)
         .then(async value => {
@@ -1284,6 +1284,7 @@ exports.getTime_slot = async function (req, res, next) {
             .execute(query).then((value) => {
                 if (value.length > 0) {
                     var result = value;
+                    console.log("[coach.js - line 1287]", result[0])
                     var obj = {
                         availabilty: result[0]
                     }
@@ -1291,6 +1292,7 @@ exports.getTime_slot = async function (req, res, next) {
                     _output.isSuccess = true;
                     _output.message = "Intervalle de temps réussi";
                 } else {
+                    var result = value;
                     var obj = {
                         availabilty: result
                     }
@@ -1380,6 +1382,7 @@ exports.getDemandAvailability = async function (req, res, next) {
     const slot = req.query.slot;
     const date = req.query.date;
 
+    //console.log("[coach.js - line 1385]", req.query)
     if (idss != "" && slot != "" && date != "") {
         // call GetDayByAvaiablityForDemand('" + Start_Date + "','" + Course + "'," + Coach_ID + ")
         var query = "select s.* from booking_dbs bk inner join users s on bk.user_Id = s.id" +
@@ -1390,6 +1393,7 @@ exports.getDemandAvailability = async function (req, res, next) {
                 var obj = {
                     availabilty: value
                 }
+                //console.log("[coach.js - line 1395]", obj)
                 _output.data = obj;
                 _output.isSuccess = true;
                 _output.message = "CourseCollectiveDemand Slot Obtenez avec succès";
@@ -1397,11 +1401,13 @@ exports.getDemandAvailability = async function (req, res, next) {
                 var obj = {
                     availabilty: []
                 }
+                //console.log("[coach.js - line 1403]", obj)
                 _output.data = obj;
                 _output.isSuccess = true;
                 _output.message = "Aucun enregistrement trouvé";
             }
         }).catch((err) => {
+            //console.log("[coach.js - line 1409]", err)
             _output.data = err.message;
             _output.isSuccess = false;
             _output.message = "Échec de l'emplacement CourseCollectiveDemand";
