@@ -329,7 +329,7 @@ exports.find_your_coach = async function (req, res, next) {
 // }
 
 exports.searchByCoach = async function (req, res, next) {
-    //console.log("coach.js > searchbycoach > ", req.query)
+    console.log("coach.js > searchbycoach > 332", req.query)
     const ville = req.query.ville;
     const date = req.query.date;
     const rayon = req.query.rayon;
@@ -368,10 +368,12 @@ exports.searchByCoach = async function (req, res, next) {
         }
         if (date != "" && date != 'null') {
             //const date = date.trim();
-            where += " AND a.Date = '" + date + "' GROUP BY a.Date"
+            const dateData = moment(date).format('YYYY-MM-DD');
+            where += " AND a.Date = '" + dateData + "' GROUP BY a.Date"
         }
 
-        var query = "SELECT DISTINCT (c.Coach_ID), c.Coach_Fname, c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1" + where;
+        console.log(where)
+        var query = "SELECT DISTINCT (c.Coach_ID), c.Coach_Fname, c.InstagramURL, c.Coach_Image,c.Coach_Resume,c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1" + where;
         console.log('Either Rayon or Ville is Empty');
     }// End of rayon=='null' || rayon=='0'
     else {
@@ -381,6 +383,7 @@ exports.searchByCoach = async function (req, res, next) {
         }
         if (date != "" && date != 'null') {
             //const date = date.trim();
+            console.log('date 384', new Date(date, 'YYYY-mm-dd'))
             where += " AND avaiablity.Date = '" + date + "' GROUP BY avaiablity.Date"
         }
         var query_internal = "SELECT Code_postal,coordonnees_gps FROM cities WHERE `Code_postal`=" + ville;
@@ -397,11 +400,11 @@ exports.searchByCoach = async function (req, res, next) {
                     const postal_codes_list = await calculateLocationRadius(longitude, latitude, Code_postal, rayon);
                     console.log(postal_codes_list);
                     if (postal_codes_list.length > 0) {
-                        query = "SELECT DISTINCT(coaches_dbs.Coach_ID),coaches_dbs.Coach_Fname,coaches_dbs.Coach_Lname,coaches_dbs.InstagramURL,coaches_dbs.TwitterURL,coaches_dbs.FacebookURL,coaches_dbs.Coach_Phone, coaches_dbs.Coach_Email,coaches_dbs.Coach_Price, coaches_dbs.Coach_PriceX10, coaches_dbs.Coach_Description,coaches_dbs.Coach_Services,users.id FROM users JOIN coaches_dbs ON users.email = coaches_dbs.Coach_Email LEFT JOIN avaiablity ON users.id=avaiablity.CoachId WHERE users.postalCode IN (" + postal_codes_list + ") AND users.roleId='2' AND users.isActive='1'" + where;
+                        query = "SELECT DISTINCT(coaches_dbs.Coach_ID),coaches_dbs.Coach_Fname,coaches_dbs.Coach_Lname,coaches_dbs.Coach_Image,coaches_dbs.Coach_Resume,coaches_dbs.InstagramURL,coaches_dbs.TwitterURL,coaches_dbs.FacebookURL,coaches_dbs.Coach_Phone, coaches_dbs.Coach_Email,coaches_dbs.Coach_Price, coaches_dbs.Coach_PriceX10, coaches_dbs.Coach_Description,coaches_dbs.Coach_Services,users.id FROM users JOIN coaches_dbs ON users.email = coaches_dbs.Coach_Email LEFT JOIN avaiablity ON users.id=avaiablity.CoachId WHERE users.postalCode IN (" + postal_codes_list + ") AND users.roleId='2' AND users.isActive='1'" + where;
                     }
                     else {
-                        console.log("If the Post Codes Are Not Found for the Rayon");
-                        query = "SELECT DISTINCT(coaches_dbs.Coach_ID),coaches_dbs.Coach_Fname,coaches_dbs.Coach_Lname,coaches_dbs.InstagramURL,coaches_dbs.TwitterURL,coaches_dbs.FacebookURL,coaches_dbs.Coach_Phone, coaches_dbs.Coach_Email,coaches_dbs.Coach_Price, coaches_dbs.Coach_PriceX10, coaches_dbs.Coach_Description,coaches_dbs.Coach_Services,users.id FROM users JOIN coaches_dbs ON users.email = coaches_dbs.Coach_Email LEFT JOIN avaiablity ON users.id=avaiablity.CoachId WHERE users.postalCode IN ('') AND users.roleId='2' AND users.isActive='1'" + where;
+                        //console.log("If the Post Codes Are Not Found for the Rayon");
+                        query = "SELECT DISTINCT(coaches_dbs.Coach_ID),coaches_dbs.Coach_Fname,coaches_dbs.Coach_Lname,coaches_dbs.Coach_Image,coaches_dbs.Coach_Resume,coaches_dbs.InstagramURL,coaches_dbs.TwitterURL,coaches_dbs.FacebookURL,coaches_dbs.Coach_Phone, coaches_dbs.Coach_Email,coaches_dbs.Coach_Price, coaches_dbs.Coach_PriceX10, coaches_dbs.Coach_Description,coaches_dbs.Coach_Services,users.id FROM users JOIN coaches_dbs ON users.email = coaches_dbs.Coach_Email LEFT JOIN avaiablity ON users.id=avaiablity.CoachId WHERE users.postalCode IN ('') AND users.roleId='2' AND users.isActive='1'" + where;
                     }// End of Postal_codes.length <0
                     //return;
                 }// End of results.length > 0
@@ -447,16 +450,6 @@ exports.searchByCoach = async function (req, res, next) {
                 //console.log(result);
                 for (var i = 0; i < value.length; i++) {
                     result[i].Coach_Services = value[i].Coach_Services.split(",");
-
-                    // var encoded = value[i].Coach_Image.replace(/^data:image\/\w+;base64,/, "");
-                    // if (encoded != "") {
-                    //   var bytes = base64.decode(encoded);
-                    //   result[i].Coach_Image = utf8.decode(bytes);
-                    // } else {
-                    //   result[i].Coach_Image = "";
-                    // }
-
-                    //console.log(text);
                 }
                 var res = {
                     coach_list: result
@@ -646,7 +639,7 @@ exports.getcoachdetailbyid = async function (req, res, next) {
     var _output = new output();
 
     var query =
-        "SELECT DISTINCT c.Coach_Fname, c.Coach_ID, c.InstagramURL, c.Coach_Image, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1 AND c.Coach_ID = '" + id + "'";
+        "SELECT DISTINCT c.Coach_Fname, c.Coach_ID, c.InstagramURL, c.Coach_Image,c.Coach_transport, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1 AND c.Coach_ID = '" + id + "'";
     
     if (id != "") {
         await db_library
