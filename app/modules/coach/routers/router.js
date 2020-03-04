@@ -52,4 +52,28 @@ router.get(
   coachController.get_avail_ten_is_or_not
 );
 
+//Get stage by coach id
+router.get(
+  "/coach/getstagebycoachid/:coachId",
+  coachController.getstagebycoachid
+);
+
+//Get team building by coach id
+router.get(
+  "/coach/getteambuildingbycoachid/:coachId",
+  coachController.getteambuildingbycoachid
+);
+
+//Get animations by coach id
+router.get(
+  "/coach/getanimationsbycoachid/:coachId",
+  coachController.getanimationsbycoachid
+);
+
+//Get tournament by coach id
+router.get(
+  "/coach/gettournamentbycoachid/:coachId",
+  coachController.gettournamentbycoachid
+);
+
 module.exports = router;

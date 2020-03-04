@@ -69,7 +69,45 @@ exports.insertIndividualCourse = async function (req, res, next) {
 exports.getIndividualCourse = async function (req, res, next) {
     var _output = new output();
     const id = req.query.coachId;
+console.log(id)
+    if (id != "") {
+        //var query = "select * from individualcourses where Coach_Id = " + id;
+        var query = "select ind.*,ci.coordonnees_gps from `individualcourses` ind INNER JOIN `cities` ci on ci.Code_postal = ind.Postalcode where Coach_Id = " + id;
+        await db_library
+            .execute(query).then(async (value) => {
+                console.log(value)
+                var result = value;
+                if (value.length > 0) {
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Le cours individuel réussit";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Cours individuel introuvable";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "La leçon individuelle a échoué";
+            })
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "La leçon individuelle a échoué";
+    }
+    res.send(_output);
+}
 
+exports.getIndividualCourses = async function (req, res, next) {
+    var _output = new output();
+    const id = req.params.coachId;
     if (id != "") {
         //var query = "select * from individualcourses where Coach_Id = " + id;
         var query = "select ind.*,ci.coordonnees_gps from `individualcourses` ind INNER JOIN `cities` ci on ci.Code_postal = ind.Postalcode where Coach_Id = " + id;

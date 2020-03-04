@@ -10,6 +10,12 @@ router.post(
   courseController.insertIndividualCourse
 );
 router.get("/course/getindividualcourse", courseController.getIndividualCourse);
+
+router.get(
+  "/course/getindividualcourses/:coachId",
+  courseController.getIndividualCourses
+);
+
 router.post(
   "/course/setcousecollectivedemanad",
   courseController.setcouseCollectiveDemanad

@@ -672,6 +672,178 @@ exports.getcoachdetailbyid = async function (req, res, next) {
     res.send(_output);
 }
 
+
+exports.getstagebycoachid = async function (req, res, next) {    
+    var _output = new output();
+    const id = req.params.coachId
+
+    var query =
+        "SELECT c.Coach_ID, u.Id as userId, cs.* FROM coaches_dbs c inner join users u on c.Coach_Email = u.email inner join course_stage cs on u.id = cs.Coach_Id WHERE u.roleId = 2 AND u.isActive = 1 AND c.Coach_ID = '" + id + "' ORDER BY id DESC";
+
+    if (id != "") {
+        await db_library
+            .execute(query).then((value) => {                
+                if (value.length > 0) {
+                    var count = value.length;
+                    var record = value.splice(0, 2);
+                    var obj = {
+                        stage_list: record,
+                        count
+                    }
+                    var result = obj;
+                    _output.data = result;
+                    _output.isSuccess = true;
+                    _output.message = "L'entraîneur réussit";
+                } else {
+                    _output.data = {
+                        stage_list: [],
+                        count: 0
+                    };
+                    _output.isSuccess = true;
+                    _output.message = "Aucun entraîneur trouvé";
+                }
+
+            }).catch(err => {
+                _output.data = err.message;
+                _output.isSuccess = false;
+                _output.message = "L'entraîneur a échoué";
+            });
+    } else {
+        _output.data = lang.required_field;
+        _output.isSuccess = false;
+        _output.message = "L'entraîneur a échoué";
+    }
+    res.send(_output);
+}
+
+exports.getteambuildingbycoachid = async function (req, res, next) {
+    var _output = new output();
+    const id = req.params.coachId
+
+    var query =
+        "SELECT c.Coach_ID, u.Id as userId, tb.* FROM coaches_dbs c inner join users u on c.Coach_Email = u.email inner join team_building tb on u.id = tb.Coach_Id WHERE u.roleId = 2 AND u.isActive = 1 AND c.Coach_ID = '" + id + "' ORDER BY id DESC";
+
+    if (id != "") {
+        await db_library
+            .execute(query).then((value) => {
+                if (value.length > 0) {
+                    var count = value.length;
+                    var record = value.splice(0, 2);
+                    var obj = {
+                        teambuilding_list: record,
+                        count
+                    }
+                    var result = obj;
+                    _output.data = result;
+                    _output.isSuccess = true;
+                    _output.message = "L'entraîneur réussit";
+                } else {
+                    _output.data = {
+                        teambuilding_list: [],
+                        count: 0
+                    };
+                    _output.isSuccess = true;
+                    _output.message = "Aucun entraîneur trouvé";
+                }
+
+            }).catch(err => {
+                _output.data = err.message;
+                _output.isSuccess = false;
+                _output.message = "L'entraîneur a échoué";
+            });
+    } else {
+        _output.data = lang.required_field;
+        _output.isSuccess = false;
+        _output.message = "L'entraîneur a échoué";
+    }
+    res.send(_output);
+}
+
+exports.getanimationsbycoachid = async function (req, res, next) {
+    var _output = new output();
+    const id = req.params.coachId
+
+    var query =
+        "SELECT c.Coach_ID, u.Id as userId, a.* FROM coaches_dbs c inner join users u on c.Coach_Email = u.email inner join animations a on u.id = a.Coach_Id WHERE u.roleId = 2 AND u.isActive = 1 AND c.Coach_ID = '" + id + "' ORDER BY id DESC";
+
+    if (id != "") {
+        await db_library
+            .execute(query).then((value) => {
+                if (value.length > 0) {
+                    var count = value.length;
+                    var record = value.splice(0, 2);
+                    var obj = {
+                        animations_list: record,
+                        count
+                    }
+                    var result = obj;
+                    _output.data = result;
+                    _output.isSuccess = true;
+                    _output.message = "L'entraîneur réussit";
+                } else {
+                    _output.data = {
+                        animations_list: [],
+                        count: 0
+                    };
+                    _output.isSuccess = true;
+                    _output.message = "Aucun entraîneur trouvé";
+                }
+
+            }).catch(err => {
+                _output.data = err.message;
+                _output.isSuccess = false;
+                _output.message = "L'entraîneur a échoué";
+            });
+    } else {
+        _output.data = lang.required_field;
+        _output.isSuccess = false;
+        _output.message = "L'entraîneur a échoué";
+    }
+    res.send(_output);
+}
+
+exports.gettournamentbycoachid = async function (req, res, next) {
+    var _output = new output();
+    const id = req.params.coachId
+
+    var query =
+        "SELECT c.Coach_ID, u.Id as userId, t.* FROM coaches_dbs c inner join users u on c.Coach_Email = u.email inner join tournament t on u.id = t.Coach_Id WHERE u.roleId = 2 AND u.isActive = 1 AND c.Coach_ID = '" + id + "' ORDER BY id DESC";
+    if (id != "") {
+        await db_library
+            .execute(query).then((value) => {
+                if (value.length > 0) {
+                    var count = value.length;
+                    var record = value.splice(0, 2);
+                    var obj = {
+                        tournament_list: record,
+                        count
+                    }
+                    var result = obj;
+                    _output.data = result;
+                    _output.isSuccess = true;
+                    _output.message = "L'entraîneur réussit";
+                } else {
+                    _output.data = {
+                        tournament_list: [],
+                        count: 0
+                    };
+                    _output.isSuccess = true;
+                    _output.message = "Aucun entraîneur trouvé";
+                }
+
+            }).catch(err => {
+                _output.data = err.message;
+                _output.isSuccess = false;
+                _output.message = "L'entraîneur a échoué";
+            });
+    } else {
+        _output.data = lang.required_field;
+        _output.isSuccess = false;
+        _output.message = "L'entraîneur a échoué";
+    }
+    res.send(_output);
+}
+
 exports.getallcoaches = async function (req, res, next) {
     var _output = new output();
     var query = "SELECT `Coach_ID`, `Coach_Fname`, `Coach_Lname`, `Coach_Email`, `Coach_Phone`, `Coach_transport`, `Coach_City`, `Coach_Image`, `Coach_Status`, `Coach_Description`, `Coach_Experience`, `User_type` FROM `coaches_dbs` LIMIT 10";
