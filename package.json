@@ -23,7 +23,7 @@
     "nodemailer": "^4.6.8",
     "nodemailer-smtp-transport": "^2.7.4",
     "nodemon": "^1.18.3",
-    "npm": "^6.4.0",
+    "npm": "^6.13.4",
     "passport": "^0.4.0",
     "passport-facebook": "^3.0.0",
     "passport-instagram": "^1.0.0",
