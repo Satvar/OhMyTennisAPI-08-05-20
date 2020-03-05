@@ -11,6 +11,8 @@ const coachdetails = require("../app/modules/coachdetails/routers/router");
 const calender = require("../app/modules/calender/routers/router");
 const home = require("../app/modules/home/routers/router");
 
+const common = require("../app/modules/common/routers/router");
+
 router.use("/", user);
 router.use("/", coach);
 router.use("/", cities);
@@ -19,4 +21,5 @@ router.use("/", calender);
 router.use("/", coachdetails);
 router.use("/", admin);
 router.use("/", home);
+router.use("/", common);
 module.exports = router;

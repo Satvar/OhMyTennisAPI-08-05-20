@@ -69,13 +69,13 @@ exports.insertIndividualCourse = async function (req, res, next) {
 exports.getIndividualCourse = async function (req, res, next) {
     var _output = new output();
     const id = req.query.coachId;
-console.log(id)
+//console.log(id)
     if (id != "") {
         //var query = "select * from individualcourses where Coach_Id = " + id;
         var query = "select ind.*,ci.coordonnees_gps from `individualcourses` ind INNER JOIN `cities` ci on ci.Code_postal = ind.Postalcode where Coach_Id = " + id;
         await db_library
             .execute(query).then(async (value) => {
-                console.log(value)
+                //console.log(value)
                 var result = value;
                 if (value.length > 0) {
                     var obj = {
