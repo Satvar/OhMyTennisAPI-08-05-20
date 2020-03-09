@@ -476,6 +476,8 @@ exports.search_for_event_top_3 = async function(req, res, next) {
 exports.getall_course = async function(req, res, next) {
   var _output = new output();
   const P_course = req.query.P_course;
+
+  //console.log(formatDate(new Date()));
   var query;
   if (P_course == "Stage") {
     query =
@@ -494,7 +496,7 @@ exports.getall_course = async function(req, res, next) {
     query = "SELECT * FROM `team_building`;";
   }
 
-  // console.log("query", query);
+  //console.log("query", query);
 
   await db_library
     .execute(query)
@@ -503,6 +505,65 @@ exports.getall_course = async function(req, res, next) {
         var obj = {
           event_list: value
         };
+        console.log(obj);
+        _output.data = obj;
+        _output.isSuccess = true;
+        _output.message = "Événement réussi";
+      } else {
+        var obj = {
+          event_list: []
+        };
+        _output.data = obj;
+        _output.isSuccess = true;
+        _output.message = "Aucun événement trouvé";
+      }
+    })
+    .catch(err => {
+      _output.data = err.message;
+      _output.isSuccess = false;
+      _output.message = "L'événement a échoué";
+    });
+  res.send(_output);
+};
+
+exports.getAllCourses = async function(req, res, next) {
+  var _output = new output();
+  const P_course = req.query.P_course;
+  const coach_id = req.query.coach_id;
+
+  //console.log(req.query);
+  var query;
+  if (P_course == "Stage" && coach_id != "") {
+    query =
+      "SELECT c.Coach_ID, u.Id as userId, cs.* FROM coaches_dbs c inner join `users` u on c.Coach_Email = u.email inner join course_stage cs on u.id = cs.Coach_Id WHERE cs.from_date >= '" +
+      formatDate(new Date()) +
+      "' AND c.Coach_ID = '" +
+      coach_id +
+      "'";
+  } else if (P_course == "Tournament" && coach_id != "") {
+    query =
+      "SELECT c.Coach_ID, u.Id as userId, t.* FROM coaches_dbs c inner join `users` u on c.Coach_Email = u.email inner join tournament t on u.id = t.Coach_Id WHERE t.from_date >= '" +
+      formatDate(new Date()) +
+      "' AND c.Coach_ID = '" +
+      coach_id +
+      "'";
+  } else if (P_course == "Animation") {
+    query =
+      "SELECT id,Description,Location,Postalcode,Eventdetails,Price,filename,Plan,Coach_Id,Photo FROM `animations`;";
+  } else {
+    query = "SELECT * FROM `team_building`;";
+  }
+
+  //console.log("query", query);
+
+  await db_library
+    .execute(query)
+    .then(value => {
+      if (value.length > 0) {
+        var obj = {
+          event_list: value
+        };
+        //console.log(obj);
         _output.data = obj;
         _output.isSuccess = true;
         _output.message = "Événement réussi";

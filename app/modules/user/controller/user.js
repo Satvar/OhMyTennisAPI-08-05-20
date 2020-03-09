@@ -166,11 +166,12 @@ exports.registerUser = async function(req, res, next) {
 
 exports.updateProfile = async function(req, res, next) {
   var _output = new output();
+
   const {
     Coach_Fname,
     Coach_Lname,
-    // Coach_Emplacement,
-    // Coach_Ville,
+    Coach_Emplacement,
+    Coach_Ville,
     Coach_Email,
     Coach_Phone,
     InstagramURL,
@@ -193,77 +194,76 @@ exports.updateProfile = async function(req, res, next) {
     ResumeName
   } = req.body;
 
-  if (
-    Coach_Fname != "" &&
-    InstagramURL != "" &&
-    Coach_City != "" &&
-    TwitterURL != "" &&
-    FacebookURL != "" &&
-    Coach_Lname != "" &&
-    Coach_Email != "" &&
-    Coach_Phone != "" &&
-    Coach_Description != "" &&
-    Coach_Price != "" &&
-    Coach_PriceX10 != "" &&
-    Coach_Services != "" &&
-    Coach_Bank_Name != "" &&
-    Branch_Code != "" &&
-    Coach_Bank_ACCNum != "" &&
-    Coach_Bank_City != "" &&
-    Coach_Rayon != "" &&
-    Coach_Image != "" &&
-    Coach_Resume != ""
-  ) {
-    // var query = "INSERT INTO `users`(`firstName`, `lastName`, `email`, `gender`, `password`, `mobile`, `postalCode`, `cityId`, `roleId`, `isActive`)" +
-    //     " VALUES ('" + firstName + "','" + lastName + "','" + email + "','" + gender + "','" + encry_pass + "','" + mobile + "','" + postalCode + "'," + cityId + "," + roleId + ",1);";
+  // if (
+  //   Coach_Fname != "" &&
+  //   Coach_City != "" &&
+  //   Coach_Lname != "" &&
+  //   Coach_Email != "" &&
+  //   Coach_Phone != "" &&
+  //   Coach_Description != "" &&
+  //   Coach_Price != "" &&
+  //   Coach_PriceX10 != "" &&
+  //   Coach_Services != "" &&
+  //   Coach_Bank_Name != "" &&
+  //   Branch_Code != "" &&
+  //   Coach_Bank_ACCNum != "" &&
+  //   Coach_Bank_City != "" &&
+  //   Coach_Rayon != "" &&
+  //   Coach_Image != "" &&
+  //   Coach_Resume != ""
+  // ) {
+  // var query = "INSERT INTO `users`(`firstName`, `lastName`, `email`, `gender`, `password`, `mobile`, `postalCode`, `cityId`, `roleId`, `isActive`)" +
+  //     " VALUES ('" + firstName + "','" + lastName + "','" + email + "','" + gender + "','" + encry_pass + "','" + mobile + "','" + postalCode + "'," + cityId + "," + roleId + ",1);";
 
-    var coach_query =
-      "UPDATE `coaches_dbs` SET `Coach_Fname` =?, `Coach_Lname`=?, `Coach_Phone`=?, `InstagramURL`=?, `TwitterURL`=?, `FacebookURL`=?,`Coach_Description`=?,`Coach_transport`=?,`Coach_Price`=?,`Coach_PriceX10`=?,`Coach_Services`=?," +
-      "`Coach_payment_type`=?,`Coach_City`=?,`Coach_Bank_Name`=?,`Branch_Code`=?,`Coach_Bank_ACCNum`=?,`Coach_Bank_City`=?,`Coach_Image`=?,`Coach_Resume`=?,`Coach_Rayon`=?,`ResumeName`=? WHERE `Coach_Email`=?;";
+  var coach_query =
+    "UPDATE `coaches_dbs` SET `Coach_Fname` =?, `Coach_Lname`=?, `Coach_Emplacement`=?, `Coach_Ville`=?, `Coach_Phone`=?, `InstagramURL`=?, `TwitterURL`=?, `FacebookURL`=?,`Coach_Description`=?,`Coach_transport`=?,`Coach_Price`=?,`Coach_PriceX10`=?,`Coach_Services`=?," +
+    "`Coach_payment_type`=?,`Coach_City`=?,`Coach_Bank_Name`=?,`Branch_Code`=?,`Coach_Bank_ACCNum`=?,`Coach_Bank_City`=?,`Coach_Image`=?,`Coach_Resume`=?,`Coach_Rayon`=?,`ResumeName`=? WHERE `Coach_Email`=?;";
 
-    await db_library
-      .parameterexecute(coach_query, [
-        Coach_Fname,
-        Coach_Lname,
-        Coach_Phone,
-        InstagramURL,
-        TwitterURL,
-        FacebookURL,
-        Coach_Description,
-        Coach_transport,
-        Coach_Price,
-        Coach_PriceX10,
-        Coach_Services,
-        Coach_payment_type,
-        Coach_City,
-        Coach_Bank_Name,
-        Branch_Code,
-        Coach_Bank_ACCNum,
-        Coach_Bank_City,
-        Coach_Image,
-        Coach_Resume,
-        Coach_Rayon,
-        ResumeName,
-        Coach_Email
-      ])
-      .then(value => {
-        console.log("value", value);
-        _output.data = {};
-        _output.isSuccess = true;
-        _output.message = "Mise à jour du profil réussie";
-      })
-      .catch(err => {
-        console.log("err", err.message);
-        _output.data = {};
-        _output.isSuccess = false;
-        _output.message = "Échec de la mise à jour du profil";
-      });
-  } else {
-    console.log("err");
-    _output.data = lang.required_field;
-    _output.isSuccess = false;
-    _output.message = "Échec de la mise à jour du profil";
-  }
+  await db_library
+    .parameterexecute(coach_query, [
+      Coach_Fname,
+      Coach_Lname,
+      Coach_Emplacement,
+      Coach_Ville,
+      Coach_Phone,
+      InstagramURL,
+      TwitterURL,
+      FacebookURL,
+      Coach_Description,
+      Coach_transport,
+      Coach_Price,
+      Coach_PriceX10,
+      Coach_Services,
+      Coach_payment_type,
+      Coach_City,
+      Coach_Bank_Name,
+      Branch_Code,
+      Coach_Bank_ACCNum,
+      Coach_Bank_City,
+      Coach_Image,
+      Coach_Resume,
+      Coach_Rayon,
+      ResumeName,
+      Coach_Email
+    ])
+    .then(value => {
+      //console.log("value", value);
+      _output.data = {};
+      _output.isSuccess = true;
+      _output.message = "Mise à jour du profil réussie";
+    })
+    .catch(err => {
+      //console.log("err", err.message);
+      _output.data = {};
+      _output.isSuccess = false;
+      _output.message = "Échec de la mise à jour du profil";
+    });
+  // } else {
+  //   console.log("err");
+  //   _output.data = lang.required_field;
+  //   _output.isSuccess = false;
+  //   _output.message = "Échec de la mise à jour du profil";
+  // }
   res.send(_output);
 };
 
