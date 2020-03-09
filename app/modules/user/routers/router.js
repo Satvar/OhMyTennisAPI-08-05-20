@@ -13,6 +13,8 @@ router.get("/", userController.welcome);
 router.get("/users", userController.index);
 router.post("/user/register/user", userController.registerUser);
 router.post("/coach/updateprofile", userController.updateProfile);
+router.post("/coach/updateProfileTab2", userController.updateProfileTab2);
+router.post("/coach/updateProfileTab3", userController.updateProfileTab3);
 router.post("/user/updateprofile", userController.updateUserProfile);
 router.post("/user/login", userController.login);
 router.post("/user/getuserbyid", userController.getuserbyid);
