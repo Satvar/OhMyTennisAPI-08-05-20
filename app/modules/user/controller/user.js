@@ -639,18 +639,21 @@ exports.updateUserProfile = async function(req, res, next) {
     lastName,
     email,
     mobile,
+    postalCode,
+    ville,
     User_Location,
     User_Level,
-    User_Team,
+    // User_Team,
     address,
     User_Image
   } = req.body;
-
   if (
     firstName != "" &&
     lastName != "" &&
     email != "" &&
     mobile != "" &&
+    postalCode != "" &&
+    ville != "" &&
     User_Location != "" &&
     User_Level != "" &&
     address != "" &&
@@ -658,7 +661,7 @@ exports.updateUserProfile = async function(req, res, next) {
   ) {
     var user_query =
       "UPDATE `users` SET `firstName` = ?, `lastName`=?, `email`=?, `mobile`=?," +
-      " `User_Location`=?, `User_Level`=?,`User_Team`=?,`address`=?,`User_Image`=? WHERE `email`=?;";
+      " `User_Location`=?, `User_Level`=?, `postalCode`=?, `cityId`=?, `address`=?,`User_Image`=? WHERE `email`=?;";
 
     await db_library
       .parameterexecute(user_query, [
@@ -668,7 +671,8 @@ exports.updateUserProfile = async function(req, res, next) {
         mobile,
         User_Location,
         User_Level,
-        User_Team,
+        postalCode,
+        ville,
         address,
         User_Image,
         email
