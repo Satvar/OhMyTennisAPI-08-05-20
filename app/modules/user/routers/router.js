@@ -66,4 +66,7 @@ router.post(
   userController.getallusercoursecount
 );
 
+// User account delete by email id
+router.post("/user/accountdeletebyemail", userController.accountdeletebyemail);
+
 module.exports = router;

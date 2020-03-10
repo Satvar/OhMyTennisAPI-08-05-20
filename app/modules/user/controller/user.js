@@ -864,7 +864,7 @@ async function updateSlotDetailsByBookingIds(
   booking_time
 ) {
   try {
-    console.log(Coach_id, user_Id, booking_date, course, booking_time);
+    //console.log(Coach_id, user_Id, booking_date, course, booking_time);
     const Query =
       "UPDATE `avaiablity` SET `Status`= 'Y' WHERE `CoachId`= '" +
       Coach_id +
@@ -1047,7 +1047,7 @@ exports.cancelReservations = async function(req, res, next) {
                   booking_id
                 );
                 var dateArr = [];
-                console.log("[user.js - line 951]", getSlotBookingId);
+                //console.log("[user.js - line 951]", getSlotBookingId);
                 //if (getSlotBookingId.length > 0) {
                 for (var j = 0; j < getSlotBookingId.length; j++) {
                   //const element = array[i];
@@ -1351,5 +1351,32 @@ exports.getallusercoursecount = async function(req, res, next) {
   _output.data = obj;
   _output.isSuccess = true;
   _output.message = "Get Successfull";
+  res.send(_output);
+};
+
+exports.accountdeletebyemail = async function(req, res, next) {
+  var _output = new output();
+  const { email } = req.body;
+  if (email != "") {
+    var user_query =
+      "UPDATE `users` SET `isActive` = 0, `updatedAt` =? WHERE `email`=?;";
+
+    await db_library
+      .parameterexecute(user_query, [new Date(), email])
+      .then(value => {
+        _output.data = {};
+        _output.isSuccess = true;
+        _output.message = "";
+      })
+      .catch(err => {
+        _output.data = {};
+        _output.isSuccess = false;
+        _output.message = "Échec de la mise à jour du profil";
+      });
+  } else {
+    _output.data = lang.required_field;
+    _output.isSuccess = false;
+    _output.message = "Échec de la mise à jour du profil";
+  }
   res.send(_output);
 };

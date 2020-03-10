@@ -17,7 +17,7 @@ exports.insertIndividualCourse = async function (req, res, next) {
         Plan
     } = req.body;
 
-    if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Price_min != "" && Price_max != "" && Technical_provided != "" && Video != "" && Mode_of_Transport != "" && Plan != "") {
+    if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Price_min != "" && Price_max != "" && Mode_of_Transport != "" && Plan != "") {
         var insert_query = "INSERT INTO `individualcourses` (`Coach_Id`, `Mode_of_Transport`, `Description`, `Price_min`, `Price_max`," +
             " `Technical_provided`, `Video`, `Plan`, `createdAt`, `updatedAt`,`Postalcode`,`Location`) VALUES " +
             "(?,?,?,?,?,?,?,?,Now(),Now(),?,?);";
@@ -267,7 +267,7 @@ exports.setCourseCollectiveClub = async function (req, res, next) {
     } = req.body;
     // const Coach_Id = req.body.Coach_Id;
 
-    if (Coach_Id != "" && Description != "" && Photo != "" && Technical_Provided != "" && Postalcode != "" && Video != "" && Mode_of_Transport != "" && Plan != "" && Club_Name != "" && Place != "") {
+    if (Coach_Id != "" && Description != "" && Photo != "" && Postalcode != "" && Mode_of_Transport != "" && Plan != "" && Club_Name != "" && Place != "") {
 
         var insert_query = "INSERT INTO `couse_collective_if_club` (`Coach_Id`, `Mode_of_Transport`, `Description`, `Photo`," +
             " `Technical_Provided`, `Video`, `Plan`, `createdAt`,Club_Name,Place,Postalcode) VALUES " +

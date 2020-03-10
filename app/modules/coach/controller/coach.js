@@ -329,7 +329,7 @@ exports.find_your_coach = async function (req, res, next) {
 // }
 
 exports.searchByCoach = async function (req, res, next) {
-    console.log("coach.js > searchbycoach > 332", req.query)
+    //console.log("coach.js > searchbycoach > 332", req.query)
     const ville = req.query.ville;
     const date = req.query.date;
     const rayon = req.query.rayon;
@@ -951,7 +951,7 @@ exports.getAvailability = async function (req, res, next) {
 
 async function bookedFun(arr, remaingSlotStatus, totalAmt) {
     try {
-        console.log("[coach.js - line - 788]", arr);
+        //console.log("[coach.js - line - 788]", arr);
         const { P_CoachId, P_UserId, P_Date, P_CourseId, P_Hour, P_Remarks } = arr;
         const Query = "Insert into `booking_dbs` (`Coach_ID`,`user_Id`,`payment_Id`,`status`,`bookingDate`,`bookingCourse`,`amount`,`BookingTime`,`Remarks`,`remaingSlotStatus`) values ('" + P_CoachId + "','" + P_UserId + "','0','R','" + P_Date + "','" + P_CourseId + "','" + totalAmt + "','" + P_Hour + "','" + P_Remarks + "','" + remaingSlotStatus + "')";
         
@@ -967,7 +967,7 @@ async function bookedFun(arr, remaingSlotStatus, totalAmt) {
 
 async function bookedSlotFun(bookArray, bookingID) {
     try {
-        console.log("[coach.js - line - 805]", bookArray);
+        //console.log("[coach.js - line - 805]", bookArray);
         const {
                     P_CoachId,
                     P_CourseId,
@@ -1013,7 +1013,7 @@ exports.coachReservationFun = async function (req, res, next) {
     const {
         bookArray
     } = req.body;
-    console.log("[coach.js - line 850]", req.body)
+    //console.log("[coach.js - line 850]", req.body)
     var coach_details;
     if (bookArray.length > 0) {
         await db_library.execute("SELECT * FROM `users` where `id` = " + bookArray[0].P_CoachId).then(async (val) => {
@@ -1030,7 +1030,7 @@ exports.coachReservationFun = async function (req, res, next) {
         var P_TotalAmt = req.body.totalAmt;
         var P_RemaingTenStatus = req.body.remaingStatus;
         const lastInsertId = await bookedFun(bookArray[0],P_RemaingTenStatus, P_TotalAmt);
-        console.log("[coach.js - line - 867]",lastInsertId);
+        //console.log("[coach.js - line - 867]",lastInsertId);
         var dateArr = []
         for (var i = 0; i < bookArray.length; i++) {
             await bookedSlotFun(bookArray[i], lastInsertId);
@@ -1041,7 +1041,7 @@ exports.coachReservationFun = async function (req, res, next) {
         }
 
         var dateString = dateArr.join();
-        console.log("[coach.js - line - 878]", dateArr)
+        //console.log("[coach.js - line - 878]", dateArr)
         // if (_output.message == "Booking Successfully Inserted") {
             var mailTemplate = await mail_template.getMailTemplate(appConfig.MailTemplate.CoachAcceoptance);
             const mailOption = require('../../_mailer/mailOptions');
@@ -1052,7 +1052,7 @@ exports.coachReservationFun = async function (req, res, next) {
             var _mailer = require('../../_mailer/mailer');
             _mailer.sendMail(_mailOption);
         // }
-        console.log("[coach.js - line - 889]")
+        //console.log("[coach.js - line - 889]")
         _output.data = {};
         _output.isSuccess = true;
         _output.message = "Réservation réussie";
@@ -1070,7 +1070,7 @@ exports.coachReservation = async function (req, res, next) {
     const {
         bookArray        
     } = req.body;
-    console.log("[coach.js - line 735]", req.body)
+    //console.log("[coach.js - line 735]", req.body)
     var coach_details;
     if (bookArray.length > 0) {
         await db_library.execute("SELECT * FROM `users` where `id` = " + bookArray[0].P_CoachId).then(async (val) => {
@@ -1104,7 +1104,7 @@ exports.coachReservation = async function (req, res, next) {
             }
             var query = "call proc_ins_booking_dbs(" + P_CoachId + ",'" + P_CourseId + "','" + P_Date + "','" + P_Hour + "'," + P_UserId + "," + amt + ",'" + P_Remarks + "','" + P_TotalAmt + "','" + P_RemaingTenStatus + "')";
             await db_library.execute(query).then(async (val) => {
-                console.log("[coach.js - line 826]", val)
+                //console.log("[coach.js - line 826]", val)
                 if (val) {
                     _output.data = {};
                     _output.isSuccess = true;
@@ -1299,7 +1299,7 @@ async function setCancelStatusAvaiablity(Coach_id, user_Id, booking_date, course
     try {
         if (course == 'CoursIndividuel') {
             const getSlotBookingId = await getSlotDetailsByBookingId(booking_id);
-            console.log(getSlotBookingId);
+            //console.log(getSlotBookingId);
             for (let i = 0; i < getSlotBookingId.length; i++) {
                 //const element = array[i];
                 if (types == 'Approve') {
@@ -1362,9 +1362,9 @@ exports.setStatus = async function (req, res, next) {
                                 //console.log('test',val[i].booking_id)
                                 if (status != 'C' && status != 'S') {
                                     await setCancelStatusAvaiablity(Coach_id, user_Id, booking_date, course, booking_id, 'Approve');
-                                    console.log('coach.js - line 766',discount);
+                                    //console.log('coach.js - line 766',discount);
                                     var discountAmount = (discount != "" ? discount : amount);
-                                    console.log('coach.js - line 768', discountAmount);
+                                    //console.log('coach.js - line 768', discountAmount);
                                     var mailTemplate = await mail_template.getMailTemplate(appConfig.MailTemplate.BookingSuccess);
                                     const mailOption = require('../../_mailer/mailOptions');
                                     let _mailOption = new mailOption();
@@ -1376,7 +1376,7 @@ exports.setStatus = async function (req, res, next) {
                                     _output.data = {};
                                     _output.isSuccess = true;
                                     _output.message = "Mise à jour du statut réussie";
-                                    console.log('[coach.js - line 780]',_output);
+                                    //console.log('[coach.js - line 780]',_output);
                                 } else if (status == 'S') {
                                     var query = "INSERT INTO `balance`(`User_Id`, `Coach_Id`, `Course`, `BalanceAmt`) VALUES ("+user_Id+","+Coach_id+",'"+course+"',"+amount+")";
                                     await db_library.execute(query).then(async (update) => {
@@ -1400,7 +1400,7 @@ exports.setStatus = async function (req, res, next) {
                                     })
                                 }
                                 else {
-                                    console.log("[coach.js - line 1086]", Coach_id, user_Id, status, booking_date, course, booking_id)
+                                    //console.log("[coach.js - line 1086]", Coach_id, user_Id, status, booking_date, course, booking_id)
                                     await setCancelStatusAvaiablity(Coach_id, user_Id, booking_date, course, booking_id, 'Cancel');
                                     var mailTemplate = await mail_template.getMailTemplate(appConfig.MailTemplate.BookingCancel);
                                     const mailOption = require('../../_mailer/mailOptions');
@@ -1442,14 +1442,14 @@ exports.getTime_slot = async function (req, res, next) {
     const Start_Date = req.query.Start_Date;
     const Course = req.query.Course;
     if (Coach_ID != "" && Start_Date != "" && Course != "") {
-        console.log(req.query)
+        //console.log(req.query)
         var _output = new output();
         var query = "call getdaybyavaiablity('" + Start_Date + "','" + Course + "'," + Coach_ID + ")";
         await db_library
             .execute(query).then((value) => {
                 if (value.length > 0) {
                     var result = value;
-                    console.log("[coach.js - line 1287]", result[0])
+                    //console.log("[coach.js - line 1287]", result[0])
                     var obj = {
                         availabilty: result[0]
                     }
@@ -1482,7 +1482,7 @@ exports.getTime_slot = async function (req, res, next) {
 
 exports.setpayment = async function (req, res, next) {
     var _output = new output();
-    console.log(req.body)
+    //console.log(req.body)
     const status = req.body.status;
     const booking_id = req.body.booking_id;
     const amount = req.body.amount;
@@ -1499,14 +1499,14 @@ exports.setpayment = async function (req, res, next) {
                     const setStatusBookingSlotData = await setStatusBookingSlotDbs(booking_id, status);
 
                     const getBookingSlotData = await getStatusBookingSlotData(booking_id);
-                    console.log("[coach.js - line 1064", getBookingSlotData)
+                    //console.log("[coach.js - line 1064", getBookingSlotData)
                     if (getBookingSlotData.length > 0) {
                         for (let i = 0; i < getBookingSlotData.length; i++) {
                             await setStatusAvaiablity(getBookingSlotData[i]);                            
                         }
                     }
 
-                    console.log("[coach.js - line 1064", setStatusBookingSlotData)
+                    //console.log("[coach.js - line 1064", setStatusBookingSlotData)
                     await db_library.execute("SELECT u.*, b.* FROM `users` u INNER JOIN `booking_dbs` b on u.id = b.user_Id where b.`booking_id`=" + booking_id + "").then(async (val) => {
                         if (val.length > 0) {
                             //console.log("line - 890", val)
@@ -1894,16 +1894,16 @@ exports.getDemandPrice = async function (req, res, next) {
 
 exports.geolocationByPostalCode = async function (req, res, next) {
     var _output = new output();
-    console.log('Req Params : ' + req.params.id);
+    //console.log('Req Params : ' + req.params.id);
     const postalCode = req.params.id;
-    console.log(postalCode);
+    //console.log(postalCode);
     //return;
     if (postalCode != "") {
         var query = "SELECT * FROM cities WHERE Code_postal=" + postalCode;
         await db_library
             .execute(query)
             .then(async (value) => {
-                console.log(value);
+                //console.log(value);
                 //return;
                 if (value.length > 0) {
                     var obj = {
