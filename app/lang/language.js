@@ -9,7 +9,7 @@ exports.franchContent = {
   booking_request: "Demande de réservation",
   registration_successful: "inscription réussi",
   forgotten_password: "mot de passe oublié",
-  booking_approved: "Réservation approuvée",
+  booking_approved: "Réservation confirmée",
   payment_successful: "Paiement réussi",
   booking_reshedule: "Reshedule de réservation",
   booking_cancelled: "Réservation annulée",

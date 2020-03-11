@@ -176,7 +176,6 @@ exports.updateProfile = async function(req, res, next) {
     FacebookURL,
     TwitterURL,
     Coach_Description,
-    Coach_Emplacement,
     Coach_City,
     Coach_Ville,
     Coach_Image
@@ -188,7 +187,6 @@ exports.updateProfile = async function(req, res, next) {
     Coach_Email != "" &&
     Coach_Phone != "" &&
     Coach_Description != "" &&
-    Coach_Emplacement != "" &&
     Coach_City != "" &&
     Coach_Ville != "" &&
     Coach_Image != ""
@@ -197,7 +195,7 @@ exports.updateProfile = async function(req, res, next) {
     //     " VALUES ('" + firstName + "','" + lastName + "','" + email + "','" + gender + "','" + encry_pass + "','" + mobile + "','" + postalCode + "'," + cityId + "," + roleId + ",1);";
 
     var coach_query =
-      "UPDATE `coaches_dbs` SET `Coach_Fname` =?, `Coach_Lname`=?,`Coach_Phone`=?, `InstagramURL`=?,  `FacebookURL`=?,`TwitterURL`=?,`Coach_Description`=?,`Coach_Emplacement`=?, `Coach_City`=?,`Coach_Ville`=?, `Coach_Image`=? WHERE `Coach_Email`=?;";
+      "UPDATE `coaches_dbs` SET `Coach_Fname` =?, `Coach_Lname`=?,`Coach_Phone`=?, `InstagramURL`=?,  `FacebookURL`=?,`TwitterURL`=?,`Coach_Description`=?,`Coach_City`=?,`Coach_Ville`=?, `Coach_Image`=? WHERE `Coach_Email`=?;";
 
     await db_library
       .parameterexecute(coach_query, [
@@ -208,7 +206,6 @@ exports.updateProfile = async function(req, res, next) {
         FacebookURL,
         TwitterURL,
         Coach_Description,
-        Coach_Emplacement,
         Coach_City,
         Coach_Ville,
         Coach_Image,
@@ -221,7 +218,7 @@ exports.updateProfile = async function(req, res, next) {
         _output.message = "Mise à jour du profil réussie";
       })
       .catch(err => {
-        //console.log("err", err.message);
+        console.log("err", err);
         _output.data = {};
         _output.isSuccess = false;
         _output.message = "Échec de la mise à jour du profil";
