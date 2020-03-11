@@ -1070,7 +1070,7 @@ exports.cancelReservations = async function(req, res, next) {
                     let _mailOption = new mailOption();
                     _mailOption.to = val[i].Coach_Email;
                     _mailOption.subject =
-                      "Reservation Cancelled by " +
+                      "Réservation annulée par " +
                       val[i].firstName +
                       " " +
                       val[i].lastName;
@@ -1213,7 +1213,7 @@ exports.cancelReservation = async function(req, res, next) {
                     let _mailOption = new mailOption();
                     _mailOption.to = val[i].Coach_Email;
                     _mailOption.subject =
-                      "Reservation Cancelled by " +
+                      "Réservation annulée par " +
                       val[i].firstName +
                       " " +
                       val[i].lastName;

@@ -874,13 +874,16 @@ exports.getcoachbyid = async function (req, res, next) {
             .execute("SELECT * FROM `coaches_dbs` WHERE Coach_Email='" + coach_email + "'").then((value) => {
                 if (value.length > 0) {
                     //console.log("coach.js-454-", value)
-                    var obj = {
-                        coach_list: value
-                    }
-                    var result = obj;
-                    _output.data = result;
-                    _output.isSuccess = true;
-                    _output.message = "L'entraîneur réussit";
+                    setTimeout(() => {
+                        var obj = {
+                            coach_list: value
+                        }
+                        var result = obj;
+                        _output.data = result;
+                        _output.isSuccess = true;
+                        _output.message = "L'entraîneur réussit";
+                    }, 200);
+                    
                 } else {
                     _output.data = {};
                     _output.isSuccess = true;
