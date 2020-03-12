@@ -537,11 +537,28 @@ exports.userVerification = async function(req, res, next) {
   res.send(_output);
 };
 
+async function setChangePassword(email, encry_pass) {
+  try {
+    var query =
+      "UPDATE `coaches_dbs` SET Coach_Password = '" +
+      encry_pass +
+      "' WHERE Coach_Email = '" +
+      email +
+      "'; ";
+    return await db_library.execute(query).then(async data => {
+      return data;
+    });
+  } catch (error) {
+    return error;
+  }
+}
+
 exports.setNewPassword = async function(req, res, next) {
   var _output = new output();
   const email = req.body.email;
   const password = req.body.password;
-
+  const role_id = req.body.role;
+  console.log(role_id);
   if (email != "" && password != "") {
     var encry_pass = await bcrypt.hash(password, 10);
 
@@ -554,8 +571,11 @@ exports.setNewPassword = async function(req, res, next) {
 
     await db_library
       .execute(query)
-      .then(value => {
+      .then(async value => {
         var result = value;
+        if (role_id == 2) {
+          await setChangePassword(email, encry_pass);
+        }
         _output.data = result;
         _output.isSuccess = true;
         _output.message = "Mot de passe mis à jour avec succès";
