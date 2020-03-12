@@ -6,6 +6,7 @@ const router = express.Router();
 const coachController = require("../controller/coach");
 
 router.post("/coach/getcoachbyid", coachController.getcoachbyid);
+router.post("/coach/get_coach_by_id", coachController.get_coach_by_id);
 router.get("/coach/getallcoaches", coachController.getallcoaches);
 router.post("/coach/insertavailabilty", coachController.insertAvailability);
 router.get("/coach/getavailabilty", coachController.getAvailability);

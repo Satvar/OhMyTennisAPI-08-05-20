@@ -903,6 +903,45 @@ exports.getcoachbyid = async function (req, res, next) {
     res.send(_output);
 }
 
+exports.get_coach_by_id = async function (req, res, next) {
+    const coach_email = req.body.Coach_Email;
+    //console.log("coach.js-447-", coach_email)
+    var _output = new output();
+
+    if (coach_email != "") {
+        await db_library
+            .execute("SELECT * FROM `coaches_dbs` WHERE Coach_Email='" + coach_email + "'").then((value) => {
+                if (value.length > 0) {
+                    //console.log("coach.js-454-", value)
+                    //setTimeout(() => {
+                        var obj = {
+                            coach_list: value
+                        }
+                        var result = obj;
+                        _output.data = result;
+                        _output.isSuccess = true;
+                        _output.message = "L'entraîneur réussit";
+                   // }, 200);
+
+                } else {
+                    _output.data = {};
+                    _output.isSuccess = true;
+                    _output.message = "Aucun entraîneur trouvé";
+                }
+
+            }).catch(err => {
+                _output.data = err.message;
+                _output.isSuccess = false;
+                _output.message = "Les entraîneurs ont échoué";
+            });
+    } else {
+        _output.data = lang.required_field;
+        _output.isSuccess = false;
+        _output.message = "L'entraîneur a échoué";
+    }
+    res.send(_output);
+}
+
 function formatDate(date) {
     var monthNames = [
         "January", "February", "March",
