@@ -473,6 +473,15 @@ exports.search_for_event_top_3 = async function(req, res, next) {
   res.send(_output);
 };
 
+function formatDateToString(date) {
+  var dd = (date.getDate() < 10 ? "0" : "") + date.getDate();
+
+  var MM = (date.getMonth() + 1 < 10 ? "0" : "") + (date.getMonth() + 1);
+
+  var YY = date.getFullYear();
+
+  return YY + "-" + MM + "-" + dd;
+}
 exports.getall_course = async function(req, res, next) {
   var _output = new output();
   const P_course = req.query.P_course;
@@ -480,9 +489,20 @@ exports.getall_course = async function(req, res, next) {
   //console.log(formatDate(new Date()));
   var query;
   if (P_course == "Stage") {
+    var currentMonth = new Date().getMonth() + 1;
+    var currentYear = new Date().getFullYear();
+    //console.log(currentMonth, currentYear);
+    // query =
+    //   "SELECT * FROM `course_stage` where from_date >= '" +
+    //   formatDate(new Date()) +
+    //   "';";
     query =
       "SELECT * FROM `course_stage` where from_date >= '" +
       formatDate(new Date()) +
+      "' AND MONTH(to_date) >= '" +
+      currentMonth +
+      "' AND YEAR(to_date) >= '" +
+      currentYear +
       "';";
   } else if (P_course == "Tournament") {
     query =
@@ -502,10 +522,90 @@ exports.getall_course = async function(req, res, next) {
     .execute(query)
     .then(value => {
       if (value.length > 0) {
-        var obj = {
-          event_list: value
-        };
-        console.log(obj);
+        if (P_course == "Stage") {
+          var resultObj = [];
+          let objects = {};
+          for (let i = 0; i < value.length; i++) {
+            const resultCurrentMonth =
+              new Date(value[i].to_date).getMonth() + 1;
+            const resultCurrentYear = new Date(value[i].to_date).getFullYear();
+            if (
+              resultCurrentMonth == currentMonth &&
+              resultCurrentYear == currentYear
+            ) {
+              const currentDate = formatDateToString(new Date());
+              const resultCurrentDate = formatDateToString(
+                new Date(value[i].to_date)
+              );
+              //console.log(currentDate, resultCurrentDate);
+              if (resultCurrentDate > currentDate) {
+                objects = {
+                  id: value[i].id,
+                  Eventname: value[i].Eventname,
+                  from_date: value[i].from_date,
+                  to_date: value[i].to_date,
+                  Description: value[i].Description,
+                  Location: value[i].Location,
+                  Postalcode: value[i].Postalcode,
+                  Mode_of_transport: value[i].Mode_of_transport,
+                  Eventdetails: value[i].Eventdetails,
+                  Photo: value[i].Photo,
+                  filename: value[i].filename,
+                  Price: value[i].Price,
+                  Plan: value[i].Plan,
+                  Coach_Id: value[i].Coach_Id,
+                  isReserveButton: true
+                };
+              } else {
+                objects = {
+                  id: value[i].id,
+                  Eventname: value[i].Eventname,
+                  from_date: value[i].from_date,
+                  to_date: value[i].to_date,
+                  Description: value[i].Description,
+                  Location: value[i].Location,
+                  Postalcode: value[i].Postalcode,
+                  Mode_of_transport: value[i].Mode_of_transport,
+                  Eventdetails: value[i].Eventdetails,
+                  Photo: value[i].Photo,
+                  filename: value[i].filename,
+                  Price: value[i].Price,
+                  Plan: value[i].Plan,
+                  Coach_Id: value[i].Coach_Id,
+                  isReserveButton: false
+                };
+              }
+            } else {
+              objects = {
+                id: value[i].id,
+                Eventname: value[i].Eventname,
+                from_date: value[i].from_date,
+                to_date: value[i].to_date,
+                Description: value[i].Description,
+                Location: value[i].Location,
+                Postalcode: value[i].Postalcode,
+                Mode_of_transport: value[i].Mode_of_transport,
+                Eventdetails: value[i].Eventdetails,
+                Photo: value[i].Photo,
+                filename: value[i].filename,
+                Price: value[i].Price,
+                Plan: value[i].Plan,
+                Coach_Id: value[i].Coach_Id,
+                isReserveButton: true
+              };
+            }
+            resultObj.push(objects);
+          }
+          var obj = {
+            event_list: resultObj
+          };
+        } else {
+          var obj = {
+            event_list: value
+          };
+        }
+
+        //console.log(obj);
         _output.data = obj;
         _output.isSuccess = true;
         _output.message = "Événement réussi";
