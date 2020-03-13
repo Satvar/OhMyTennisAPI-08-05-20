@@ -37,6 +37,7 @@ exports.index = async function(req, res, next) {
 
 exports.registerUser = async function(req, res, next) {
   var _output = new output();
+
   const {
     firstName,
     lastName,
@@ -140,6 +141,7 @@ exports.registerUser = async function(req, res, next) {
             var _mailer = require("../../_mailer/mailer");
             _mailer.sendMail(_mailOption);
           } catch (error) {
+            console.log(error);
             _output.data = error;
             _output.isSuccess = false;
             _output.message = "L'enregistrement a échoué";
@@ -151,6 +153,7 @@ exports.registerUser = async function(req, res, next) {
         }
       })
       .catch(err => {
+        console.log(err);
         _output.data = err.message;
         _output.isSuccess = false;
         _output.message = "L'enregistrement a échoué";

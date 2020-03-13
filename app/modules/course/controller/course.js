@@ -561,6 +561,7 @@ exports.getStageCourse = async function (req, res, next) {
             .execute(query).then(async (value) => {
                 var result = value;
                 if (value.length > 0) {
+                    //console.log(value);
                     var obj = {
                         course: result
                     }
