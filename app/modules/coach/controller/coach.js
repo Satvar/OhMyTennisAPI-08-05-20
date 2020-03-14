@@ -373,7 +373,7 @@ exports.searchByCoach = async function (req, res, next) {
         }
 
         console.log(where)
-        var query = "SELECT DISTINCT (c.Coach_ID), c.Coach_Fname, c.InstagramURL, c.Coach_Image,c.Coach_Resume,c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1" + where;
+        var query = "SELECT DISTINCT (c.Coach_ID), c.Coach_Fname, c.InstagramURL, c.Coach_Resume,c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1" + where;
         console.log('Either Rayon or Ville is Empty');
     }// End of rayon=='null' || rayon=='0'
     else {
@@ -400,11 +400,11 @@ exports.searchByCoach = async function (req, res, next) {
                     const postal_codes_list = await calculateLocationRadius(longitude, latitude, Code_postal, rayon);
                     console.log(postal_codes_list);
                     if (postal_codes_list.length > 0) {
-                        query = "SELECT DISTINCT(coaches_dbs.Coach_ID),coaches_dbs.Coach_Fname,coaches_dbs.Coach_Lname,coaches_dbs.Coach_Image,coaches_dbs.Coach_Resume,coaches_dbs.InstagramURL,coaches_dbs.TwitterURL,coaches_dbs.FacebookURL,coaches_dbs.Coach_Phone, coaches_dbs.Coach_Email,coaches_dbs.Coach_Price, coaches_dbs.Coach_PriceX10, coaches_dbs.Coach_Description,coaches_dbs.Coach_Services,users.id FROM users JOIN coaches_dbs ON users.email = coaches_dbs.Coach_Email LEFT JOIN avaiablity ON users.id=avaiablity.CoachId WHERE users.postalCode IN (" + postal_codes_list + ") AND users.roleId='2' AND users.isActive='1'" + where;
+                        query = "SELECT DISTINCT(coaches_dbs.Coach_ID),coaches_dbs.Coach_Fname,coaches_dbs.Coach_Lname,coaches_dbs.Coach_Resume,coaches_dbs.InstagramURL,coaches_dbs.TwitterURL,coaches_dbs.FacebookURL,coaches_dbs.Coach_Phone, coaches_dbs.Coach_Email,coaches_dbs.Coach_Price, coaches_dbs.Coach_PriceX10, coaches_dbs.Coach_Description,coaches_dbs.Coach_Services,users.id FROM users JOIN coaches_dbs ON users.email = coaches_dbs.Coach_Email LEFT JOIN avaiablity ON users.id=avaiablity.CoachId WHERE users.postalCode IN (" + postal_codes_list + ") AND users.roleId='2' AND users.isActive='1'" + where;
                     }
                     else {
                         //console.log("If the Post Codes Are Not Found for the Rayon");
-                        query = "SELECT DISTINCT(coaches_dbs.Coach_ID),coaches_dbs.Coach_Fname,coaches_dbs.Coach_Lname,coaches_dbs.Coach_Image,coaches_dbs.Coach_Resume,coaches_dbs.InstagramURL,coaches_dbs.TwitterURL,coaches_dbs.FacebookURL,coaches_dbs.Coach_Phone, coaches_dbs.Coach_Email,coaches_dbs.Coach_Price, coaches_dbs.Coach_PriceX10, coaches_dbs.Coach_Description,coaches_dbs.Coach_Services,users.id FROM users JOIN coaches_dbs ON users.email = coaches_dbs.Coach_Email LEFT JOIN avaiablity ON users.id=avaiablity.CoachId WHERE users.postalCode IN ('') AND users.roleId='2' AND users.isActive='1'" + where;
+                        query = "SELECT DISTINCT(coaches_dbs.Coach_ID),coaches_dbs.Coach_Fname,coaches_dbs.Coach_Lname,coaches_dbs.Coach_Resume,coaches_dbs.InstagramURL,coaches_dbs.TwitterURL,coaches_dbs.FacebookURL,coaches_dbs.Coach_Phone, coaches_dbs.Coach_Email,coaches_dbs.Coach_Price, coaches_dbs.Coach_PriceX10, coaches_dbs.Coach_Description,coaches_dbs.Coach_Services,users.id FROM users JOIN coaches_dbs ON users.email = coaches_dbs.Coach_Email LEFT JOIN avaiablity ON users.id=avaiablity.CoachId WHERE users.postalCode IN ('') AND users.roleId='2' AND users.isActive='1'" + where;
                     }// End of Postal_codes.length <0
                     //return;
                 }// End of results.length > 0
