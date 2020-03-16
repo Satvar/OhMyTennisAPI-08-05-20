@@ -1543,6 +1543,60 @@ exports.getcourse = async function (req, res, next) {
     res.send(_output);
 }
 
+async function getIsIndividual(coach_id) {
+    try {
+        const Query =
+            "select id from `individualcourses` where Coach_Id = " + coach_id;
+        return await db_library.execute(Query).then(async data => {
+            return data.length;
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+async function getIsOnDemand(coach_id) {
+    try {
+        const Query =
+            "select `Group_Id` from `course_collective_if_demand` where Coach_Id = " + coach_id;
+        return await db_library.execute(Query).then(async data => {
+            return data.length;
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+async function getIsClub(coach_id) {
+    try {
+        const Query =
+            "select `Course_Id` from `couse_collective_if_club` where Coach_Id = " + coach_id;
+        return await db_library.execute(Query).then(async data => {
+            return data.length;
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+exports.courseIsIndivIsOnDemandIsClub = async function (req, res, next) {
+    var _output = new output();
+    var obj = {}
+    const id = req.query.coachId;
+    var indivCount = await getIsIndividual(id);
+    var onDemandCount = await getIsOnDemand(id);
+    var clubCount = await getIsClub(id);
+    obj = {
+        indivCount: indivCount,
+        onDemandCount: onDemandCount,
+        clubCount: clubCount
+    }
+    _output.data = obj;
+    _output.isSuccess = true;
+    _output.message = "Le cours est introuvable";
+    res.send(_output);
+}
+
 function formatDate(date) {
     var formate_date = moment(date).format('YYYY-MM-DD');
     return formate_date;

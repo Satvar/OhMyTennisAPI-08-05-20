@@ -88,4 +88,9 @@ router.get("/course/getcourseyear", courseController.getYear);
 
 router.get("/course/getcourse", courseController.getcourse);
 
+router.get(
+  "/course/courseIsIndivIsOnDemandIsClub",
+  courseController.courseIsIndivIsOnDemandIsClub
+);
+
 module.exports = router;
