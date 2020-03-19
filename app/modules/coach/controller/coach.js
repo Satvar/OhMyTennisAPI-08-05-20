@@ -368,7 +368,8 @@ exports.searchByCoach = async function (req, res, next) {
         }
         if (date != "" && date != 'null') {
             //const date = date.trim();
-            const dateData = moment(date).format('YYYY-MM-DD');
+            //const dateData = moment(date).format('YYYY-MM-DD');
+            const dateData = formatDateToString(new Date(date));
             where += " AND a.Date = '" + dateData + "' GROUP BY a.Date"
         }
 
