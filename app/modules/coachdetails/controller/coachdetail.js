@@ -508,6 +508,10 @@ exports.getall_course = async function(req, res, next) {
     query =
       "SELECT * FROM `tournament` where from_date >= '" +
       formatDate(new Date()) +
+      "' AND MONTH(to_date) >= '" +
+      currentMonth +
+      "' AND YEAR(to_date) >= '" +
+      currentYear +
       "';";
   } else if (P_course == "Animation") {
     query =
@@ -542,8 +546,8 @@ exports.getall_course = async function(req, res, next) {
                 objects = {
                   id: value[i].id,
                   Eventname: value[i].Eventname,
-                  from_date: value[i].from_date,
-                  to_date: value[i].to_date,
+                  from_date: value[i].from_date != "" ? value[i].from_date : "",
+                  to_date: value[i].to_date != "" ? value[i].to_date : "",
                   Description: value[i].Description,
                   Location: value[i].Location,
                   Postalcode: value[i].Postalcode,
@@ -560,8 +564,8 @@ exports.getall_course = async function(req, res, next) {
                 objects = {
                   id: value[i].id,
                   Eventname: value[i].Eventname,
-                  from_date: value[i].from_date,
-                  to_date: value[i].to_date,
+                  from_date: value[i].from_date != "" ? value[i].from_date : "",
+                  to_date: value[i].to_date != "" ? value[i].to_date : "",
                   Description: value[i].Description,
                   Location: value[i].Location,
                   Postalcode: value[i].Postalcode,
@@ -579,8 +583,8 @@ exports.getall_course = async function(req, res, next) {
               objects = {
                 id: value[i].id,
                 Eventname: value[i].Eventname,
-                from_date: value[i].from_date,
-                to_date: value[i].to_date,
+                from_date: value[i].from_date != "" ? value[i].from_date : "",
+                to_date: value[i].to_date != "" ? value[i].to_date : "",
                 Description: value[i].Description,
                 Location: value[i].Location,
                 Postalcode: value[i].Postalcode,

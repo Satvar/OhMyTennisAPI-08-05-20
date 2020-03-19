@@ -93,4 +93,6 @@ router.get(
   courseController.courseIsIndivIsOnDemandIsClub
 );
 
+// router.get("/course/searchByEventList", courseController.searchByEventList);
+
 module.exports = router;

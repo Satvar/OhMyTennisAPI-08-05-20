@@ -33,6 +33,8 @@ router.get(
 );
 router.get("/coach/searchByCoach", coachController.searchByCoach);
 
+router.get("/coach/searchByEvent", coachController.searchByEvent);
+
 router.get("/coach/getcoachbycode/:code", coachController.getCoachByPostalcode);
 // Get coach detail by id
 router.post("/coach/getcoachdetailbyid", coachController.getcoachdetailbyid);
