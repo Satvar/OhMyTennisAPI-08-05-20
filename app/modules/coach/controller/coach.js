@@ -370,6 +370,7 @@ exports.searchByCoach = async function (req, res, next) {
             //const date = date.trim();
             //const dateData = moment(date).format('YYYY-MM-DD');
             const dateData = formatDateToString(new Date(date));
+            console.log("coach.js - line 373",dateData)
             where += " AND a.Date = '" + dateData + "' GROUP BY a.Date"
         }
 
