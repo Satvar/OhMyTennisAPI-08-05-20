@@ -377,7 +377,7 @@ exports.searchByCoach = async function (req, res, next) {
         //console.log(where)
         var query = "SELECT DISTINCT (c.Coach_ID), c.Coach_Fname, c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1" + where;
 
-        //console.log(query);
+        console.log(query);
         //console.log('Either Rayon or Ville is Empty');
     }// End of rayon=='null' || rayon=='0'
     else {
