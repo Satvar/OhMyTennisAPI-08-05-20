@@ -380,7 +380,7 @@ exports.find_your_coach = async function(req, res, next) {
 //     res.send(_output);
 // }
 
-exports.searchByCoachList = async function(req, res, next) {
+exports.searchByCoach = async function(req, res, next) {
   //console.log("coach.js > searchbycoach > 332", req.query)
   const ville = req.query.ville;
   const date = req.query.date;
@@ -545,14 +545,14 @@ exports.searchByCoachList = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.searchByCoach = async function(req, res, next) {
+exports.searchByCoachList = async function(req, res, next) {
   const ville = req.query.ville;
   const date = req.query.date;
   const rayon = req.query.rayon;
   const course = req.query.course;
   var _output = new output();
 
-  console.log("coach.js - line 495 - ville", ville, "course", course);
+  console.log("coach.js - line 555 - ville", ville, "course", course);
 
   var where = "";
   var query;
