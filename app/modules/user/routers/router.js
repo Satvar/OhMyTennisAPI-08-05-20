@@ -12,6 +12,7 @@ const userController = require("../controller/user");
 router.get("/", userController.welcome);
 router.get("/users", userController.index);
 router.post("/user/register/user", userController.registerUser);
+router.post("/user/register/user_set_table", userController.user_set_table);
 router.post("/coach/updateprofile", userController.updateProfile);
 router.post("/coach/updateProfileTab2", userController.updateProfileTab2);
 router.post("/coach/updateProfileTab3", userController.updateProfileTab3);

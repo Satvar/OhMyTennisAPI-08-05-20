@@ -50,6 +50,8 @@ router.get(
   coachController.get_remaining_slot
 );
 
+router.get("/coach/setCoachTable", coachController.setCoachTable);
+
 router.get(
   "/coach/get_avail_ten_is_or_not/:coach_id/:date",
   coachController.get_avail_ten_is_or_not
