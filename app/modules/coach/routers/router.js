@@ -79,4 +79,6 @@ router.get(
   coachController.gettournamentbycoachid
 );
 
+router.get("/coach/searchByCoachList", coachController.searchByCoachList);
+
 module.exports = router;

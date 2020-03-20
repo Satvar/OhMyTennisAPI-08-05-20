@@ -377,7 +377,7 @@ exports.searchByCoach = async function (req, res, next) {
         //console.log(where)
         var query = "SELECT DISTINCT (c.Coach_ID), c.Coach_Fname, c.InstagramURL, c.TwitterURL,c.FacebookURL, c.Coach_Phone, c.Coach_Lname, c.Coach_Email, c.Coach_Price, c.Coach_PriceX10, c.Coach_Description, c.Coach_Services, u.Id FROM coaches_dbs c inner join users u on c.Coach_Email = u.email left join avaiablity a on u.id = a.CoachId WHERE u.roleId = 2 AND u.isActive = 1" + where;
 
-        console.log(query);
+        //console.log(query);
         //console.log('Either Rayon or Ville is Empty');
     }// End of rayon=='null' || rayon=='0'
     else {
@@ -482,6 +482,36 @@ exports.searchByCoach = async function (req, res, next) {
     //     _output.isSuccess = false;
     //     _output.message = "Coach Get Failed";
     // }
+    res.send(_output);
+}
+
+
+exports.searchByCoachList = async function (req, res, next) {
+    const ville = req.query.ville;
+    const date = req.query.date;
+    const rayon = req.query.rayon;
+    const course = req.query.course;
+    var _output = new output();
+    console.log('coach.js - line 495 - ville', ville,'course',course);
+    var where = "";
+    var query;
+    
+    if (course == "CoursIndividuel") {
+        query = "SELECT `Coach_Id` FROM `individualcourses` WHERE Postalcode = " + ville;
+    } else if (course == "CoursCollectifOndemand") {
+        query = "SELECT `Coach_Id` FROM `course_collective_if_demand` WHERE Postalcode = " + ville;
+    } else if (course == "CoursCollectifClub") {
+        query = "SELECT `Coach_Id` FROM `couse_collective_if_club` WHERE Postalcode = " + ville;
+    }
+    
+    // await db_library
+    //     .execute(query)
+    //     .then(value => {
+    //         console.log(value)
+    //         _output.data = value;
+    //         _output.isSuccess = true;
+    //         _output.message = "Événement réussi";
+    //     })
     res.send(_output);
 }
 
