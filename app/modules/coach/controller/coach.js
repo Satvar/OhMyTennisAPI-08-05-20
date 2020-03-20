@@ -730,43 +730,65 @@ exports.searchByEvent = async function(req, res, next) {
     } else {
       query = "SELECT * FROM `team_building`" + where;
     }
-  } else {
-    var query_internal =
-      "SELECT Code_postal,coordonnees_gps FROM cities WHERE `Code_postal`=" +
-      ville;
-    await db_library.execute(query_internal).then(async results => {
-      if (results.length > 0) {
-        let Code_postal = results[0].Code_postal;
-        let coordonnees_gps = results[0].coordonnees_gps;
-        let lat_long = coordonnees_gps.split(",");
-        let longitude = lat_long[0];
-        let latitude = lat_long[1];
-      }
-      console.log(longitude, latitude);
-    });
-  }
-
-  //console.log(query)
-  await db_library
-    .execute(query)
-    .then(value => {
-      if (value.length > 0) {
-        if (course == "Stage") {
-          var resultObj = [];
-          let objects = {};
-          for (let i = 0; i < value.length; i++) {
-            const resultCurrentMonth =
-              new Date(value[i].to_date).getMonth() + 1;
-            const resultCurrentYear = new Date(value[i].to_date).getFullYear();
-            if (
-              resultCurrentMonth == currentMonth &&
-              resultCurrentYear == currentYear
-            ) {
-              const currentDate = formatDateToString(new Date());
-              const resultCurrentDate = formatDateToString(
-                new Date(value[i].to_date)
-              );
-              if (resultCurrentDate > currentDate) {
+    await db_library
+      .execute(query)
+      .then(value => {
+        if (value.length > 0) {
+          if (course == "Stage") {
+            var resultObj = [];
+            let objects = {};
+            for (let i = 0; i < value.length; i++) {
+              const resultCurrentMonth =
+                new Date(value[i].to_date).getMonth() + 1;
+              const resultCurrentYear = new Date(
+                value[i].to_date
+              ).getFullYear();
+              if (
+                resultCurrentMonth == currentMonth &&
+                resultCurrentYear == currentYear
+              ) {
+                const currentDate = formatDateToString(new Date());
+                const resultCurrentDate = formatDateToString(
+                  new Date(value[i].to_date)
+                );
+                if (resultCurrentDate > currentDate) {
+                  objects = {
+                    id: value[i].id,
+                    Eventname: value[i].Eventname,
+                    from_date: value[i].from_date,
+                    to_date: value[i].to_date,
+                    Description: value[i].Description,
+                    Location: value[i].Location,
+                    Postalcode: value[i].Postalcode,
+                    Mode_of_transport: value[i].Mode_of_transport,
+                    Eventdetails: value[i].Eventdetails,
+                    Photo: value[i].Photo,
+                    filename: value[i].filename,
+                    Price: value[i].Price,
+                    Plan: value[i].Plan,
+                    Coach_Id: value[i].Coach_Id,
+                    isReserveButton: true
+                  };
+                } else {
+                  objects = {
+                    id: value[i].id,
+                    Eventname: value[i].Eventname,
+                    from_date: value[i].from_date,
+                    to_date: value[i].to_date,
+                    Description: value[i].Description,
+                    Location: value[i].Location,
+                    Postalcode: value[i].Postalcode,
+                    Mode_of_transport: value[i].Mode_of_transport,
+                    Eventdetails: value[i].Eventdetails,
+                    Photo: value[i].Photo,
+                    filename: value[i].filename,
+                    Price: value[i].Price,
+                    Plan: value[i].Plan,
+                    Coach_Id: value[i].Coach_Id,
+                    isReserveButton: false
+                  };
+                }
+              } else {
                 objects = {
                   id: value[i].id,
                   Eventname: value[i].Eventname,
@@ -784,71 +806,42 @@ exports.searchByEvent = async function(req, res, next) {
                   Coach_Id: value[i].Coach_Id,
                   isReserveButton: true
                 };
-              } else {
-                objects = {
-                  id: value[i].id,
-                  Eventname: value[i].Eventname,
-                  from_date: value[i].from_date,
-                  to_date: value[i].to_date,
-                  Description: value[i].Description,
-                  Location: value[i].Location,
-                  Postalcode: value[i].Postalcode,
-                  Mode_of_transport: value[i].Mode_of_transport,
-                  Eventdetails: value[i].Eventdetails,
-                  Photo: value[i].Photo,
-                  filename: value[i].filename,
-                  Price: value[i].Price,
-                  Plan: value[i].Plan,
-                  Coach_Id: value[i].Coach_Id,
-                  isReserveButton: false
-                };
               }
-            } else {
-              objects = {
-                id: value[i].id,
-                Eventname: value[i].Eventname,
-                from_date: value[i].from_date,
-                to_date: value[i].to_date,
-                Description: value[i].Description,
-                Location: value[i].Location,
-                Postalcode: value[i].Postalcode,
-                Mode_of_transport: value[i].Mode_of_transport,
-                Eventdetails: value[i].Eventdetails,
-                Photo: value[i].Photo,
-                filename: value[i].filename,
-                Price: value[i].Price,
-                Plan: value[i].Plan,
-                Coach_Id: value[i].Coach_Id,
-                isReserveButton: true
-              };
+              resultObj.push(objects);
             }
-            resultObj.push(objects);
+            var obj = {
+              event_list: resultObj
+            };
+          } else {
+            var obj = {
+              event_list: value
+            };
           }
-          var obj = {
-            event_list: resultObj
-          };
+          _output.data = obj;
+          _output.isSuccess = true;
+          _output.message = "Événement réussi";
         } else {
           var obj = {
-            event_list: value
+            event_list: []
           };
+          _output.data = obj;
+          _output.isSuccess = true;
+          _output.message = "Aucun événement trouvé";
         }
-        _output.data = obj;
-        _output.isSuccess = true;
-        _output.message = "Événement réussi";
-      } else {
-        var obj = {
-          event_list: []
-        };
-        _output.data = obj;
-        _output.isSuccess = true;
-        _output.message = "Aucun événement trouvé";
-      }
-    })
-    .catch(err => {
-      _output.data = err.message;
-      _output.isSuccess = false;
-      _output.message = "L'événement a échoué";
-    });
+      })
+      .catch(err => {
+        _output.data = err.message;
+        _output.isSuccess = false;
+        _output.message = "L'événement a échoué";
+      });
+  } else {
+    var obj = {
+      event_list: []
+    };
+    _output.data = obj;
+    _output.isSuccess = true;
+    _output.message = "Aucun événement trouvé";
+  }
   res.send(_output);
 };
 
