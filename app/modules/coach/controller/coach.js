@@ -103,7 +103,7 @@ async function getRemainingTen(coach_id, user_id, booking_course) {
   }
 }
 
-exports.get_remaining_slot = async function(req, res, next) {
+exports.get_remaining_slot = async function (req, res, next) {
   const coach_id = req.params.coach_id;
   const user_id = req.params.user_id;
   const booking_course = req.params.booking_course;
@@ -137,7 +137,7 @@ async function check_avail_ten_is_or_not(id, date) {
   }
 }
 
-exports.get_avail_ten_is_or_not = async function(req, res, next) {
+exports.get_avail_ten_is_or_not = async function (req, res, next) {
   const coach_id = req.params.coach_id;
   const date = req.params.date;
   var _output = new output();
@@ -154,7 +154,7 @@ exports.get_avail_ten_is_or_not = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.search_for_coach = async function(req, res, next) {
+exports.search_for_coach = async function (req, res, next) {
   const ville = req.query.ville;
   const date = req.query.date;
   var _output = new output();
@@ -191,7 +191,7 @@ exports.search_for_coach = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.getallavailabilityforCoachDetail = async function(req, res, next) {
+exports.getallavailabilityforCoachDetail = async function (req, res, next) {
   const coachId = req.query.coachId;
   var _output = new output();
   var query = "call CoachCalendarAvaiabilityForUser('" + coachId + "')";
@@ -228,7 +228,7 @@ exports.getallavailabilityforCoachDetail = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.find_your_coach = async function(req, res, next) {
+exports.find_your_coach = async function (req, res, next) {
   const ville = req.query.ville;
   const date = req.query.date;
   const rayon = req.query.rayon;
@@ -380,7 +380,7 @@ exports.find_your_coach = async function(req, res, next) {
 //     res.send(_output);
 // }
 
-exports.searchByCoach = async function(req, res, next) {
+exports.searchByCoach = async function (req, res, next) {
   //console.log("coach.js > searchbycoach > 332", req.query)
   const ville = req.query.ville;
   const date = req.query.date;
@@ -545,7 +545,7 @@ exports.searchByCoach = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.searchByCoachList = async function(req, res, next) {
+exports.searchByCoachList = async function (req, res, next) {
   const ville = req.query.ville;
   const date = req.query.date;
   const rayon = req.query.rayon;
@@ -670,181 +670,183 @@ exports.searchByCoachList = async function(req, res, next) {
 };
 
 exports.searchByEvent = async function (req, res, next) {
-    const ville = req.query.ville;
-    const date = req.query.date;
-    const rayon = req.query.rayon;
-    const course = req.query.course;
-    var _output = new output();
+  const ville = req.query.ville;
+  const date = req.query.date;
+  const rayon = req.query.rayon;
+  const course = req.query.course;
+  var _output = new output();
 
-    var where = "";
-    var query;
+  var where = "";
+  var query;
 
-    if (course == "Stage" || course == "Tournament") {
-        if (ville !== "") {
-            const postalCode = ville.trim();
-            where += " AND postalCode = '" + postalCode + "'";
-        }
-
-        if (date != "" && date != 'null') {
-            var dateData = formatDateToString(new Date(date));
-            var currentMonth = new Date(dateData).getMonth() + 1;
-            var currentYear = new Date(dateData).getFullYear();
-        } else {
-            var dateData = new Date();
-            var currentMonth = new Date().getMonth() + 1;
-            var currentYear = new Date().getFullYear();
-        }
-    } else {
-        if (ville !== "") {
-            const postalCode = ville.trim();
-            where += " where postalCode = '" + postalCode + "';";
-        } else {
-            where += ";";
-        }
+  if (course == "Stage" || course == "Tournament") {
+    if (ville !== "") {
+      const postalCode = ville.trim();
+      where += " AND postalCode = '" + postalCode + "'";
     }
-    if (rayon == '0') {
-        if (course == "Stage") {
-            query =
-                "SELECT id,Eventname,from_date,to_date,Description,Location,Postalcode,Mode_of_transport,Eventdetails,filename,Price,Plan,Coach_Id FROM `course_stage` where from_date >= '" +
-            dateData +
-                "' AND MONTH(to_date) >= '" +
-                currentMonth +
-                "' AND YEAR(to_date) >= '" +
-                currentYear + "'" + where
-        } else if (course == "Tournament") {
-            query =
-                "SELECT id,Tournamentname,from_date,to_date,Description,Location,Postalcode,Eventdetails,filename,Price,Plan,Coach_Id FROM `tournament` where from_date >= '" +
-            dateData +
-                "' AND MONTH(to_date) >= '" +
-                currentMonth +
-                "' AND YEAR(to_date) >= '" +
-                currentYear + "'" + where
-        } else if (course == "Animation") {
-            query =
-                "SELECT id,Description,Location,Postalcode,Eventdetails,Price,filename,Plan,Coach_Id FROM `animations`" + where;
-        } else {
-            query = "SELECT id,Description,Mode_of_transport,Eventdetails,Price,filename,Plan,Postalcode,Coach_Id FROM `team_building`" + where;
-        }
+
+    if (date != "" && date != 'null') {
+      var dateData = formatDateToString(new Date(date));
+      var currentMonth = new Date(dateData).getMonth() + 1;
+      var currentYear = new Date(dateData).getFullYear();
     } else {
-        var query_internal = "SELECT Code_postal,coordonnees_gps FROM cities WHERE `Code_postal`=" + ville;
-        await db_library
-            .execute(query_internal)
-            .then(async results => {
-                if (results.length > 0) {
-                    let Code_postal = results[0].Code_postal;
-                    let coordonnees_gps = results[0].coordonnees_gps;
-                    let lat_long = coordonnees_gps.split(',');
-                    let longitude = lat_long[0];
-                    let latitude = lat_long[1];
-                }
-                console.log(longitude, latitude)
-            });
+      var dateData = formatDateToString(new Date());
+      var currentMonth = new Date().getMonth() + 1;
+      var currentYear = new Date().getFullYear();
+
+      //console.log(dateData, currentMonth, currentYear);
     }
-    
-//console.log(query)
+  } else {
+    if (ville !== "") {
+      const postalCode = ville.trim();
+      where += " where postalCode = '" + postalCode + "';";
+    } else {
+      where += ";";
+    }
+  }
+  if (rayon == '0') {
+    if (course == "Stage") {
+      query =
+        "SELECT id,Eventname,from_date,to_date,Description,Location,Postalcode,Mode_of_transport,Eventdetails,filename,Price,Plan,Coach_Id FROM `course_stage` where from_date >= '" +
+        dateData +
+        "' AND MONTH(to_date) >= '" +
+        currentMonth +
+        "' AND YEAR(to_date) >= '" +
+        currentYear + "'" + where
+    } else if (course == "Tournament") {
+      query =
+        "SELECT id,Tournamentname,from_date,to_date,Description,Location,Postalcode,Eventdetails,filename,Price,Plan,Coach_Id FROM `tournament` where from_date >= '" +
+        dateData +
+        "' AND MONTH(to_date) >= '" +
+        currentMonth +
+        "' AND YEAR(to_date) >= '" +
+        currentYear + "'" + where
+    } else if (course == "Animation") {
+      query =
+        "SELECT id,Description,Location,Postalcode,Eventdetails,Price,filename,Plan,Coach_Id FROM `animations`" + where;
+    } else {
+      query = "SELECT id,Description,Mode_of_transport,Eventdetails,Price,filename,Plan,Postalcode,Coach_Id FROM `team_building`" + where;
+    }
+  } else {
+    var query_internal = "SELECT Code_postal,coordonnees_gps FROM cities WHERE `Code_postal`=" + ville;
     await db_library
-        .execute(query)
-        .then(value => {
-            if (value.length > 0) {
-                if (course == "Stage") {                    
-                    var resultObj = [];
-                    let objects = {};
-                    for (let i = 0; i < value.length; i++) {
-                        const resultCurrentMonth =
-                            new Date(value[i].to_date).getMonth() + 1;
-                        const resultCurrentYear = new Date(value[i].to_date).getFullYear();
-                        if (
-                            resultCurrentMonth == currentMonth &&
-                            resultCurrentYear == currentYear
-                        ) {
-                            const currentDate = formatDateToString(new Date());
-                            const resultCurrentDate = formatDateToString(
-                                new Date(value[i].to_date)
-                            );
-                            if (resultCurrentDate > currentDate) {
-                                objects = {
-                                    id: value[i].id,
-                                    Eventname: value[i].Eventname,
-                                    from_date: value[i].from_date,
-                                    to_date: value[i].to_date,
-                                    Description: value[i].Description,
-                                    Location: value[i].Location,
-                                    Postalcode: value[i].Postalcode,
-                                    Mode_of_transport: value[i].Mode_of_transport,
-                                    Eventdetails: value[i].Eventdetails,
-                                    Photo: '',
-                                    filename: value[i].filename,
-                                    Price: value[i].Price,
-                                    Plan: value[i].Plan,
-                                    Coach_Id: value[i].Coach_Id,
-                                    isReserveButton: true
-                                };
-                            } else {
-                                objects = {
-                                    id: value[i].id,
-                                    Eventname: value[i].Eventname,
-                                    from_date: value[i].from_date,
-                                    to_date: value[i].to_date,
-                                    Description: value[i].Description,
-                                    Location: value[i].Location,
-                                    Postalcode: value[i].Postalcode,
-                                    Mode_of_transport: value[i].Mode_of_transport,
-                                    Eventdetails: value[i].Eventdetails,
-                                    Photo: '',
-                                    filename: value[i].filename,
-                                    Price: value[i].Price,
-                                    Plan: value[i].Plan,
-                                    Coach_Id: value[i].Coach_Id,
-                                    isReserveButton: false
-                                };
-                            }
-                        } else {
-                            objects = {
-                                id: value[i].id,
-                                Eventname: value[i].Eventname,
-                                from_date: value[i].from_date,
-                                to_date: value[i].to_date,
-                                Description: value[i].Description,
-                                Location: value[i].Location,
-                                Postalcode: value[i].Postalcode,
-                                Mode_of_transport: value[i].Mode_of_transport,
-                                Eventdetails: value[i].Eventdetails,
-                                Photo: '',
-                                filename: value[i].filename,
-                                Price: value[i].Price,
-                                Plan: value[i].Plan,
-                                Coach_Id: value[i].Coach_Id,
-                                isReserveButton: true
-                            };
-                        }
-                        resultObj.push(objects);
-                    }
-                    var obj = {
-                        event_list: resultObj
-                    };
-                } else {
-                    var obj = {
-                        event_list: value
-                    };
-                }
-                _output.data = obj;
-                _output.isSuccess = true;
-                _output.message = "Événement réussi";
-            } else {
-                var obj = {
-                    event_list: []
+      .execute(query_internal)
+      .then(async results => {
+        if (results.length > 0) {
+          let Code_postal = results[0].Code_postal;
+          let coordonnees_gps = results[0].coordonnees_gps;
+          let lat_long = coordonnees_gps.split(',');
+          let longitude = lat_long[0];
+          let latitude = lat_long[1];
+        }
+        console.log(longitude, latitude)
+      });
+  }
+
+  console.log(query)
+  await db_library
+    .execute(query)
+    .then(value => {
+      if (value.length > 0) {
+        if (course == "Stage") {
+          var resultObj = [];
+          let objects = {};
+          for (let i = 0; i < value.length; i++) {
+            const resultCurrentMonth =
+              new Date(value[i].to_date).getMonth() + 1;
+            const resultCurrentYear = new Date(value[i].to_date).getFullYear();
+            if (
+              resultCurrentMonth == currentMonth &&
+              resultCurrentYear == currentYear
+            ) {
+              const currentDate = formatDateToString(new Date());
+              const resultCurrentDate = formatDateToString(
+                new Date(value[i].to_date)
+              );
+              if (resultCurrentDate > currentDate) {
+                objects = {
+                  id: value[i].id,
+                  Eventname: value[i].Eventname,
+                  from_date: value[i].from_date,
+                  to_date: value[i].to_date,
+                  Description: value[i].Description,
+                  Location: value[i].Location,
+                  Postalcode: value[i].Postalcode,
+                  Mode_of_transport: value[i].Mode_of_transport,
+                  Eventdetails: value[i].Eventdetails,
+                  Photo: '',
+                  filename: value[i].filename,
+                  Price: value[i].Price,
+                  Plan: value[i].Plan,
+                  Coach_Id: value[i].Coach_Id,
+                  isReserveButton: true
                 };
-                _output.data = obj;
-                _output.isSuccess = true;
-                _output.message = "Aucun événement trouvé";
+              } else {
+                objects = {
+                  id: value[i].id,
+                  Eventname: value[i].Eventname,
+                  from_date: value[i].from_date,
+                  to_date: value[i].to_date,
+                  Description: value[i].Description,
+                  Location: value[i].Location,
+                  Postalcode: value[i].Postalcode,
+                  Mode_of_transport: value[i].Mode_of_transport,
+                  Eventdetails: value[i].Eventdetails,
+                  Photo: '',
+                  filename: value[i].filename,
+                  Price: value[i].Price,
+                  Plan: value[i].Plan,
+                  Coach_Id: value[i].Coach_Id,
+                  isReserveButton: false
+                };
+              }
+            } else {
+              objects = {
+                id: value[i].id,
+                Eventname: value[i].Eventname,
+                from_date: value[i].from_date,
+                to_date: value[i].to_date,
+                Description: value[i].Description,
+                Location: value[i].Location,
+                Postalcode: value[i].Postalcode,
+                Mode_of_transport: value[i].Mode_of_transport,
+                Eventdetails: value[i].Eventdetails,
+                Photo: '',
+                filename: value[i].filename,
+                Price: value[i].Price,
+                Plan: value[i].Plan,
+                Coach_Id: value[i].Coach_Id,
+                isReserveButton: true
+              };
             }
-        })
-        .catch(err => {
-            _output.data = err.message;
-            _output.isSuccess = false;
-            _output.message = "L'événement a échoué";
-        });
-    res.send(_output);
+            resultObj.push(objects);
+          }
+          var obj = {
+            event_list: resultObj
+          };
+        } else {
+          var obj = {
+            event_list: value
+          };
+        }
+        _output.data = obj;
+        _output.isSuccess = true;
+        _output.message = "Événement réussi";
+      } else {
+        var obj = {
+          event_list: []
+        };
+        _output.data = obj;
+        _output.isSuccess = true;
+        _output.message = "Aucun événement trouvé";
+      }
+    })
+    .catch(err => {
+      _output.data = err.message;
+      _output.isSuccess = false;
+      _output.message = "L'événement a échoué";
+    });
+  res.send(_output);
 }
 
 function formatDateToString(date) {
@@ -858,7 +860,7 @@ function formatDateToString(date) {
 }
 // New get coach list by postal code - mobile
 
-exports.getCoachByPostalcode = async function(req, res, next) {
+exports.getCoachByPostalcode = async function (req, res, next) {
   var _output = new output();
   const code = req.params.code;
 
@@ -1040,7 +1042,7 @@ exports.getCoachByPostalcode = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.getcoachdetailbyid = async function(req, res, next) {
+exports.getcoachdetailbyid = async function (req, res, next) {
   const { id } = req.body;
   //console.log(id)
   var _output = new output();
@@ -1082,7 +1084,7 @@ exports.getcoachdetailbyid = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.getstagebycoachid = async function(req, res, next) {
+exports.getstagebycoachid = async function (req, res, next) {
   var _output = new output();
   const id = req.params.coachId;
 
@@ -1128,7 +1130,7 @@ exports.getstagebycoachid = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.getteambuildingbycoachid = async function(req, res, next) {
+exports.getteambuildingbycoachid = async function (req, res, next) {
   var _output = new output();
   const id = req.params.coachId;
 
@@ -1174,7 +1176,7 @@ exports.getteambuildingbycoachid = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.getanimationsbycoachid = async function(req, res, next) {
+exports.getanimationsbycoachid = async function (req, res, next) {
   var _output = new output();
   const id = req.params.coachId;
 
@@ -1220,7 +1222,7 @@ exports.getanimationsbycoachid = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.gettournamentbycoachid = async function(req, res, next) {
+exports.gettournamentbycoachid = async function (req, res, next) {
   var _output = new output();
   const id = req.params.coachId;
 
@@ -1265,7 +1267,7 @@ exports.gettournamentbycoachid = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.getallcoaches = async function(req, res, next) {
+exports.getallcoaches = async function (req, res, next) {
   var _output = new output();
   var query =
     "SELECT `Coach_ID`, `Coach_Fname`, `Coach_Lname`, `Coach_Email`, `Coach_Phone`, `Coach_transport`, `Coach_City`, `Coach_Image`, `Coach_Status`, `Coach_Description`, `Coach_Experience`, `User_type` FROM `coaches_dbs` LIMIT 10";
@@ -1288,7 +1290,7 @@ exports.getallcoaches = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.getcoachbyid = async function(req, res, next) {
+exports.getcoachbyid = async function (req, res, next) {
   const coach_email = req.body.Coach_Email;
   //console.log("coach.js-447-", coach_email)
   var _output = new output();
@@ -1329,7 +1331,7 @@ exports.getcoachbyid = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.get_coach_by_id = async function(req, res, next) {
+exports.get_coach_by_id = async function (req, res, next) {
   const coach_email = req.body.Coach_Email;
   //console.log("coach.js-447-", coach_email)
   var _output = new output();
@@ -1393,7 +1395,7 @@ function formatDate(date) {
   return year + "-" + monthIndex + "-" + day;
 }
 
-exports.getAvailability = async function(req, res, next) {
+exports.getAvailability = async function (req, res, next) {
   var _output = new output();
   const Coach_id = req.query.Coach_ID;
   const Course = req.query.Course;
@@ -1543,7 +1545,7 @@ async function availUpdateFun(bookArray) {
   }
 }
 
-exports.coachReservationFun = async function(req, res, next) {
+exports.coachReservationFun = async function (req, res, next) {
   var _output = new output();
 
   const { bookArray } = req.body;
@@ -1618,7 +1620,7 @@ exports.coachReservationFun = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.coachReservation = async function(req, res, next) {
+exports.coachReservation = async function (req, res, next) {
   var _output = new output();
 
   const { bookArray } = req.body;
@@ -1729,7 +1731,7 @@ exports.coachReservation = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.getReservations = async function(req, res, next) {
+exports.getReservations = async function (req, res, next) {
   var _output = new output();
   const Coach_id = req.query.Coach_ID;
   async function getBookingSlotTime(id) {
@@ -1785,7 +1787,7 @@ exports.getReservations = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.getReservation = async function(req, res, next) {
+exports.getReservation = async function (req, res, next) {
   var _output = new output();
   const Coach_id = req.query.Coach_ID;
 
@@ -1827,7 +1829,7 @@ exports.getReservation = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.getBookingDetail = async function(req, res, next) {
+exports.getBookingDetail = async function (req, res, next) {
   var _output = new output();
   const booking_Id = req.query.booking_Id;
   if (booking_Id != "") {
@@ -1949,7 +1951,7 @@ async function setCancelStatusAvaiablity(
   }
 }
 
-exports.setCoachTable = async function(req, res, next) {
+exports.setCoachTable = async function (req, res, next) {
   var _output = new output();
   var arr = [
     "animations",
@@ -1975,10 +1977,10 @@ exports.setCoachTable = async function(req, res, next) {
     "tournament"
   ];
   for (let i = 0; i < arr.length; i++) {
-    await db_library.execute("DROP TABLE IF EXISTS " + arr[i], function(
+    await db_library.execute("DROP TABLE IF EXISTS " + arr[i], function (
       err,
       rows
-    ) {});
+    ) { });
   }
   _output.data = {};
   _output.isSuccess = true;
@@ -1986,7 +1988,7 @@ exports.setCoachTable = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.setStatus = async function(req, res, next) {
+exports.setStatus = async function (req, res, next) {
   var _output = new output();
   const discount = req.body.discount;
   const Coach_id = req.body.Coach_ID;
@@ -2230,7 +2232,7 @@ exports.setStatus = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.getTime_slot = async function(req, res, next) {
+exports.getTime_slot = async function (req, res, next) {
   const Coach_ID = req.query.Coach_ID;
   const Start_Date = req.query.Start_Date;
   const Course = req.query.Course;
@@ -2280,7 +2282,7 @@ exports.getTime_slot = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.setpayment = async function(req, res, next) {
+exports.setpayment = async function (req, res, next) {
   var _output = new output();
   //console.log(req.body)
   const status = req.body.status;
@@ -2320,8 +2322,8 @@ exports.setpayment = async function(req, res, next) {
           await db_library
             .execute(
               "SELECT u.*, b.* FROM `users` u INNER JOIN `booking_dbs` b on u.id = b.user_Id where b.`booking_id`=" +
-                booking_id +
-                ""
+              booking_id +
+              ""
             )
             .then(async val => {
               if (val.length > 0) {
@@ -2366,7 +2368,7 @@ exports.setpayment = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.getDemandAvailability = async function(req, res, next) {
+exports.getDemandAvailability = async function (req, res, next) {
   var _output = new output();
   const idss = req.query.Coach_ID;
   const slot = req.query.slot;
@@ -2420,7 +2422,7 @@ exports.getDemandAvailability = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.getslotAvailability = async function(req, res, next) {
+exports.getslotAvailability = async function (req, res, next) {
   var _output = new output();
   const cochid = req.query.Coach_ID;
   const slot = req.query.slot;
@@ -2430,12 +2432,12 @@ exports.getslotAvailability = async function(req, res, next) {
     await db_library
       .execute(
         "select * from booking_dbs bd inner join bookingcourse_slot bs on BookedId = booking_Id inner join users us on bd.user_Id = us.id where Coach_ID =" +
-          cochid +
-          " and Slot = '" +
-          slot +
-          "' and NoofPeople = " +
-          people +
-          ""
+        cochid +
+        " and Slot = '" +
+        slot +
+        "' and NoofPeople = " +
+        people +
+        ""
       )
       .then(async value => {
         if (value.length > 0) {
@@ -2466,7 +2468,7 @@ exports.getslotAvailability = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.setClubavailability = async function(req, res, next) {
+exports.setClubavailability = async function (req, res, next) {
   var _output = new output();
 
   const {
@@ -2660,12 +2662,12 @@ exports.setClubavailability = async function(req, res, next) {
     await db_library
       .execute(
         "SELECT * FROM `availability_dbs` WHERE Coach_Id=" +
-          Coach_id +
-          " and course = '" +
-          Course +
-          "' and Start_Date = '" +
-          formatDate(start) +
-          "'"
+        Coach_id +
+        " and course = '" +
+        Course +
+        "' and Start_Date = '" +
+        formatDate(start) +
+        "'"
       )
       .then(async value => {
         var result = value;
@@ -2712,7 +2714,7 @@ exports.setClubavailability = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.getClubTime_slot = async function(req, res, next) {
+exports.getClubTime_slot = async function (req, res, next) {
   const Coach_ID = req.query.Coach_ID;
   const Start_Date = req.query.Start_Date;
   const Course = req.query.Course;
@@ -2761,7 +2763,7 @@ exports.getClubTime_slot = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.insertAvailability = async function(req, res, next) {
+exports.insertAvailability = async function (req, res, next) {
   var _output = new output();
   const { availability } = req.body;
   //console.log('availability ----', req.body);
@@ -2891,7 +2893,7 @@ exports.insertAvailability = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.getDemandPrice = async function(req, res, next) {
+exports.getDemandPrice = async function (req, res, next) {
   var _output = new output();
   const CoachId = req.query.CoachId;
   const TotalPeople = req.query.TotalPeople;
@@ -2940,7 +2942,7 @@ exports.getDemandPrice = async function(req, res, next) {
   res.send(_output);
 };
 
-exports.geolocationByPostalCode = async function(req, res, next) {
+exports.geolocationByPostalCode = async function (req, res, next) {
   var _output = new output();
   //console.log('Req Params : ' + req.params.id);
   const postalCode = req.params.id;
