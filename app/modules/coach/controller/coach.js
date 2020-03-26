@@ -707,7 +707,7 @@ exports.searchByEvent = async function (req, res, next) {
   if (rayon == '0') {
     if (course == "Stage") {
       query =
-        "SELECT id,Eventname,from_date,to_date,Description,Location,Postalcode,Mode_of_transport,Eventdetails,Photo,filename,Price,Plan,Coach_Id FROM `course_stage` where from_date >= '" +
+        "SELECT id,Eventname,from_date,to_date,Description,Location,Postalcode,Mode_of_transport,Eventdetails,filename,Price,Plan,Coach_Id FROM `course_stage` where from_date >= '" +
         dateData +
         "' AND MONTH(to_date) >= '" +
         currentMonth +
@@ -715,7 +715,7 @@ exports.searchByEvent = async function (req, res, next) {
         currentYear + "'" + where
     } else if (course == "Tournament") {
       query =
-        "SELECT id,Tournamentname,from_date,to_date,Description,Location,Postalcode,Eventdetails,filename,Price,Plan,Photo,Coach_Id FROM `tournament` where from_date >= '" +
+        "SELECT id,Tournamentname,from_date,to_date,Description,Location,Postalcode,Eventdetails,filename,Price,Plan,Coach_Id FROM `tournament` where from_date >= '" +
         dateData +
         "' AND MONTH(to_date) >= '" +
         currentMonth +
@@ -723,9 +723,9 @@ exports.searchByEvent = async function (req, res, next) {
         currentYear + "'" + where
     } else if (course == "Animation") {
       query =
-        "SELECT id,Description,Location,Postalcode,Eventdetails,Price,filename,Photo,Plan,Coach_Id FROM `animations`" + where;
+        "SELECT id,Description,Location,Postalcode,Eventdetails,Price,filename,Plan,Coach_Id FROM `animations`" + where;
     } else {
-      query = "SELECT id,Description,Mode_of_transport,Eventdetails,Price,filename,Plan,Postalcode,Photo,Coach_Id FROM `team_building`" + where;
+      query = "SELECT id,Description,Mode_of_transport,Eventdetails,Price,filename,Plan,Postalcode,Coach_Id FROM `team_building`" + where;
     }
   } else {
     var query_internal = "SELECT Code_postal,coordonnees_gps FROM cities WHERE `Code_postal`=" + ville;
@@ -774,7 +774,7 @@ exports.searchByEvent = async function (req, res, next) {
                   Postalcode: value[i].Postalcode,
                   Mode_of_transport: value[i].Mode_of_transport,
                   Eventdetails: value[i].Eventdetails,
-                  Photo: value[i].Photo,
+                  Photo: '',
                   filename: value[i].filename,
                   Price: value[i].Price,
                   Plan: value[i].Plan,
@@ -792,7 +792,7 @@ exports.searchByEvent = async function (req, res, next) {
                   Postalcode: value[i].Postalcode,
                   Mode_of_transport: value[i].Mode_of_transport,
                   Eventdetails: value[i].Eventdetails,
-                  Photo: value[i].Photo,
+                  Photo: '',
                   filename: value[i].filename,
                   Price: value[i].Price,
                   Plan: value[i].Plan,
@@ -811,7 +811,7 @@ exports.searchByEvent = async function (req, res, next) {
                 Postalcode: value[i].Postalcode,
                 Mode_of_transport: value[i].Mode_of_transport,
                 Eventdetails: value[i].Eventdetails,
-                Photo: value[i].Photo,
+                Photo: '',
                 filename: value[i].filename,
                 Price: value[i].Price,
                 Plan: value[i].Plan,
