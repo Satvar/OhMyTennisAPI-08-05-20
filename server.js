@@ -37,7 +37,7 @@ app.use(
   })
 );
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   try {
     if (typeof req.body == typeof "string") {
       req.body = JSON.parse(req.body);
@@ -55,24 +55,4 @@ app.use(
     saveUninitialized: true,
     cookie: {
       secure: false,
-      maxAge: 1200000
-    }
-  })
-);
 
-app.use(require("./middleware/custom"));
-app.use(require("./middleware/auth"));
-
-app.use(function(req, res, next) {
-  // Pass to next layer of middleware
-  jwtLib.authenticate(req, res, next);
-});
-
-require("./app")(app);
-
-const port = process.env.PORT || 4004;
-//app.listen(port, "192.168.1.32", function() {
-app.listen(port, function() {
-  console.log("Currently running in " + modeconfig.ENVMODE + " Mode");
-  console.log("OhMyTennis api listening on port " + port + "!");
-});
