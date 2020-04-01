@@ -1,0 +1,1603 @@
+const output = require("../../_models/output");
+const db_library = require("../../_helpers/db_library");
+const moment = require('moment');
+
+exports.insertIndividualCourse = async function (req, res, next) {
+    var _output = new output();
+    const {
+        Location,
+        Postalcode,
+        Coach_Id,
+        Description,
+        Price_min,
+        Price_max,
+        Technical_provided,
+        Video,
+        Mode_of_Transport,
+        Plan
+    } = req.body;
+
+    if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Price_min != "" && Price_max != "" && Mode_of_Transport != "" && Plan != "") {
+        var insert_query = "INSERT INTO `individualcourses` (`Coach_Id`, `Mode_of_Transport`, `Description`, `Price_min`, `Price_max`," +
+            " `Technical_provided`, `Video`, `Plan`, `createdAt`, `updatedAt`,`Postalcode`,`Location`) VALUES " +
+            "(?,?,?,?,?,?,?,?,Now(),Now(),?,?);";
+
+        var update_query = "Update `individualcourses` set `Mode_of_Transport`=?, `Description`=?, `Price_min`=?," +
+            "`Price_max`=?, `Technical_provided`=?, `Video` =?, `Plan` =?, `Location` =?, `Postalcode` =?,  `updatedAt` = NOW() where `Coach_Id` = ?";
+
+        await db_library
+            .execute("SELECT * FROM `individualcourses` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
+                if (value.length > 0) {
+                    await db_library
+                        .parameterexecute(update_query, [Mode_of_Transport, Description, Price_min, Price_max, Technical_provided, Video, Plan, Location, Postalcode, Coach_Id]).then((value) => {
+                            var result = value;
+                            _output.data = {};
+                            _output.isSuccess = true;
+                            _output.message = "Cours individuel mis à jour avec succès";
+
+                        }).catch(err => {
+                            _output.data = {};
+                            _output.isSuccess = false;
+                            _output.message = "La mise à jour du cours individuel a échoué";
+                        });
+                } else {
+                    await db_library
+                        .parameterexecute(insert_query, [Coach_Id, Mode_of_Transport, Description, Price_min, Price_max, Technical_provided, Video, Plan, Postalcode, Location]).then((value) => {
+                            var result = value;
+                            _output.data = {};
+                            _output.isSuccess = true;
+                            _output.message = "Cours individuel ajouté avec succès";
+                        }).catch(err => {
+                            _output.data = {};
+                            _output.isSuccess = false;
+                            _output.message = "Cours individuel ajouté avec succès";
+                        });
+                }
+            }).catch(err => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Erreur lors de l'insertion ou de la mise à jour d'un cours individuel";
+            });
+        res.send(_output);
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Cours individuel ajouté avec succès";
+    }
+}
+
+exports.getIndividualCourse = async function (req, res, next) {
+    var _output = new output();
+    const id = req.query.coachId;
+//console.log(id)
+    if (id != "") {
+        //var query = "select * from individualcourses where Coach_Id = " + id;
+        var query = "select ind.*,ci.coordonnees_gps from `individualcourses` ind INNER JOIN `cities` ci on ci.Code_postal = ind.Postalcode where Coach_Id = " + id;
+        await db_library
+            .execute(query).then(async (value) => {
+                //console.log(value)
+                var result = value;
+                if (value.length > 0) {
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Le cours individuel réussit";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Cours individuel introuvable";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "La leçon individuelle a échoué";
+            })
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "La leçon individuelle a échoué";
+    }
+    res.send(_output);
+}
+
+exports.getIndividualCourses = async function (req, res, next) {
+    var _output = new output();
+    const id = req.params.coachId;
+    if (id != "") {
+        //var query = "select * from individualcourses where Coach_Id = " + id;
+        var query = "select ind.*,ci.coordonnees_gps from `individualcourses` ind INNER JOIN `cities` ci on ci.Code_postal = ind.Postalcode where Coach_Id = " + id;
+        await db_library
+            .execute(query).then(async (value) => {
+                var result = value;
+                if (value.length > 0) {
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Le cours individuel réussit";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Cours individuel introuvable";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "La leçon individuelle a échoué";
+            })
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "La leçon individuelle a échoué";
+    }
+    res.send(_output);
+}
+
+exports.setcouseCollectiveDemanad = async function (req, res, next) {
+    var _output = new output();
+    const {
+        Coach_Id,
+        Min_People,
+        Max_People,
+        Description,
+        Location,
+        Postalcode,
+        Mode_of_transport,
+        Price_2pl_1hr,
+        Price_2pl_10hr,
+        Price_3pl_1hr,
+        Price_3pl_10hr,
+        Price_4pl_1hr,
+        Price_4pl_10hr,
+        Price_6pl_1hr,
+        Price_5pl_1hr,
+        Price_6pl_10hr,
+        Plan,
+        Price_Mon,
+        Price_Tue,
+        Price_Wed,
+        Price_Thr,
+        Price_Fri,
+        Price_Sat,
+        Price_Sun,
+    } = req.body;
+
+    var insert_query = "INSERT INTO `course_collective_if_demand`(`Coach_Id`,`Min_People`, `Max_People`, `Description`, `Location`, `Mode_of_transport`, `Price_2pl_1hr`, `Price_2pl_10hr`, `Price_3pl_1hr`, `Price_3pl_10hr`,`Price_4pl_1hr`,`Price_4pl_10hr`,`Price_5pl_1hr`,`Price_6pl_1hr`,`Price_6pl_10hr`, `Plan`, `createdAt`,Price_Mon,Price_Tue,Price_Wed,Price_Thr,Price_Fri,Price_Sat,Price_Sun,Postalcode) VALUES" +
+        "(?,?,?,?,?,?,?, " + 0 + ",?, " + 0 + ",?, " + 0 + ",?,?, " + 0 + ",?, NOW(),?,?,?,?,?,?,?,?);";
+
+    var update_query = "Update `course_collective_if_demand` set `Min_People`=?, `Max_People`=?, `Description`=?," +
+        "`Location`=?,`Postalcode`=?, `Mode_of_transport`=?, `Price_2pl_1hr` =?, `Price_2pl_10hr` =" + 0 + "," +
+        " `Price_3pl_1hr` =?, `Price_3pl_10hr` =" + 0 + ", `Price_4pl_1hr` =?, `Price_4pl_10hr` =" + 0 + ",`Price_5pl_1hr` =?, `Price_6pl_1hr` =?, `Price_6pl_10hr` =" + 0 + ", `Plan` =?, `createdAt` = NOW(), Price_Mon = ? , Price_Tue =?, Price_Wed =?, Price_Thr = ?, Price_Fri =?, Price_Sat =?, Price_Sun =?,Postalcode=? where `Coach_Id` = ?";
+
+    await db_library
+        .execute("SELECT * FROM `course_collective_if_demand` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
+            if (value.length > 0) {
+                await db_library
+                    .parameterexecute(update_query, [Min_People, Max_People, Description, Location, Postalcode, Mode_of_transport, Price_2pl_1hr, Price_3pl_1hr, Price_4pl_1hr, Price_5pl_1hr, Price_6pl_1hr, Plan, Price_Mon, Price_Tue, Price_Wed, Price_Thr, Price_Fri, Price_Sat, Price_Sun, Postalcode, Coach_Id]).then((value) => {
+                        var result = {};
+                        _output.data = result;
+                        _output.isSuccess = true;
+                        _output.message = "La demande collective de cours a été mise à jour avec succès";
+
+                    }).catch(err => {
+                        _output.data = err.message;
+                        _output.isSuccess = false;
+                        _output.message = "Échec de la demande de cours collectif mise à jour";
+                    });
+            } else {
+                await db_library
+                    .parameterexecute(insert_query, [Coach_Id, Min_People, Max_People, Description, Location, Mode_of_transport, Price_2pl_1hr, Price_3pl_1hr, Price_4pl_1hr, Price_5pl_1hr, Price_6pl_1hr, Plan, Price_Mon, Price_Tue, Price_Wed, Price_Thr, Price_Fri, Price_Sat, Price_Sun, Postalcode]).then((value) => {
+                        _output.data = {};
+                        _output.isSuccess = true;
+                        _output.message = "La demande collective de cours a été ajoutée avec succès";
+                    }).catch(err => {
+                        _output.data = err.message;
+                        _output.isSuccess = false;
+                        _output.message = "Échec de la demande collective de cours";
+                    });
+            }
+        }).catch(err => {
+            _output.data = err.message;
+            _output.isSuccess = false;
+            _output.message = "La demande collective de cours n'existe pas";
+        });
+    res.send(_output);
+}
+
+exports.getcouseCollectiveDemanad = async function (req, res, next) {
+    var _output = new output();
+    const Coach_Id = req.query.Coach_ID;
+
+    if (Coach_Id != "") {
+        await db_library
+            .execute("SELECT cd.*,ci.coordonnees_gps FROM `course_collective_if_demand` cd INNER JOIN `cities` ci on ci.Code_postal = cd.Postalcode WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
+                if (value.length > 0) {
+                    var result = value;
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Cours demande collective Obtenez avec succès";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Aucun Enregistrement Trouvé";
+                }
+
+            }).catch((err) => {
+                _output.data = err.message;
+                _output.isSuccess = false;
+                _output.message = "Échec de la demande collective de cours";
+            })
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Échec de la demande collective de cours";
+    }
+    res.send(_output);
+}
+
+exports.setCourseCollectiveClub = async function (req, res, next) {
+    var _output = new output();
+    const {
+        Coach_Id,
+        Description,
+        Photo,
+        Technical_Provided,
+        Video,
+        Mode_of_Transport,
+        Plan,
+        Club_Name,
+        Place,
+        Postalcode,
+        availablity
+    } = req.body;
+    // const Coach_Id = req.body.Coach_Id;
+
+    if (Coach_Id != "" && Description != "" && Photo != "" && Postalcode != "" && Mode_of_Transport != "" && Plan != "" && Club_Name != "" && Place != "") {
+
+        var insert_query = "INSERT INTO `couse_collective_if_club` (`Coach_Id`, `Mode_of_Transport`, `Description`, `Photo`," +
+            " `Technical_Provided`, `Video`, `Plan`, `createdAt`,Club_Name,Place,Postalcode) VALUES " +
+            "(?,?,?,?,?,?,?, NOW(),?,?,?);";
+
+        var update_query = "Update `couse_collective_if_club` set `Mode_of_Transport`=?, `Description`=?," +
+            "`Photo`=?, `Technical_Provided`=?, `Video` = ?, `Plan` =?,  `createdAt` = NOW(), `Club_Name` = ?, `Place` =?, `Postalcode` =? where `Coach_Id` = ?";
+
+        await db_library
+            .execute("SELECT * FROM `couse_collective_if_club` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
+                if (value.length > 0) {
+                    await db_library
+                        .parameterexecute(update_query, [Mode_of_Transport, Description, Photo, Technical_Provided, Video, Plan, Club_Name, Place, Postalcode, Coach_Id]).then(async (value) => {
+                            if (value.affectedRows > 0) {
+                                for (var i = 0; i < availablity.length; i++) {
+                                    const {
+                                        CoachId,
+                                        Weekday,
+                                        StartTime,
+                                        EndTime,
+                                        MaxCount,
+                                        Price,
+                                        Course,
+                                        Id,
+                                    } = availablity[i];
+                                    if (Id == "") {
+                                        var insert_availablity = "call inst_upd_clubavailablity(" + Coach_Id + ",'" + Weekday + "','" + StartTime + "','" + EndTime + "'," + MaxCount + "," + Price + ",'" + Course + "',0 )"
+                                    } else {
+                                        var insert_availablity = "call inst_upd_clubavailablity(" + Coach_Id + ",'" + Weekday + "','" + StartTime + "','" + EndTime + "'," + MaxCount + "," + Price + ",'" + Course + "'," + Id + ")"
+                                    }
+                                    await db_library
+                                        .execute(insert_availablity).then(async (res) => {
+                                            _output.data = {};
+                                            _output.isSuccess = true;
+                                            _output.message = "Le club collectif de cours a été mis à jour avec succès";
+                                        }).catch(err => {
+                                            _output.data = err.message;
+                                            _output.isSuccess = false;
+                                            _output.message = "Échec de la mise à jour du club collectif de cours";
+                                        })
+                                }
+                            }
+                        }).catch(err => {
+                            _output.data = err.message;
+                            _output.isSuccess = false;
+                            _output.message = "Échec de la mise à jour du club collectif de cours";
+                        });
+                } else {
+                    await db_library
+                        .parameterexecute(insert_query, [Coach_Id, Mode_of_Transport, Description, Photo, Technical_Provided, Video, Plan, Club_Name, Place, Postalcode]).then(async (value) => {
+                            if (value.affectedRows > 0) {
+                                for (var i = 0; i < availablity.length; i++) {
+                                    const {
+                                        CoachId,
+                                        Weekday,
+                                        StartTime,
+                                        EndTime,
+                                        MaxCount,
+                                        Price,
+                                        Course,
+                                        Id,
+                                    } = availablity[i];
+                                    if (Id == "") {
+                                        var insert_availablity = "call inst_upd_clubavailablity(" + Coach_Id + ",'" + Weekday + "','" + StartTime + "','" + EndTime + "'," + MaxCount + "," + Price + ",'" + Course + "',0 )"
+                                    } else {
+                                        var insert_availablity = "call inst_upd_clubavailablity(" + Coach_Id + ",'" + Weekday + "','" + StartTime + "','" + EndTime + "'," + MaxCount + "," + Price + ",'" + Course + "'," + Id + ")"
+                                    }
+                                    await db_library
+                                        .execute(insert_availablity).then(async (res) => {
+                                            _output.data = {};
+                                            _output.isSuccess = true;
+                                            _output.message = "Le club collectif de cours a été ajouté avec succès";
+                                        }).catch(err => {
+                                            _output.data = err.message;
+                                            _output.isSuccess = false;
+                                            _output.message = "Échec du club collectif de cours";
+                                        })
+                                }
+                            }
+                        }).catch(err => {
+                            _output.data = err.message;
+                            _output.isSuccess = false;
+                            _output.message = "Échec du club collectif de cours";
+                        });
+                }
+            }).catch(err => {
+                _output.data = err.message;
+                _output.isSuccess = false;
+                _output.message = "Le club collectif de cours n'existe pas";
+            });
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Bien sûr, la demande collective a échoué";
+    }
+    res.send(_output);
+}
+
+exports.deleteClubAvailablity = async function (req, res, next) {
+    var _output = new output();
+    const CoachId = req.body.CoachId;
+    const Id = req.body.Id;
+
+    if (CoachId != "" && Id != "") {
+        await db_library
+            .execute("DELETE FROM `courseclub_availablity` WHERE CoachId=" + CoachId + " AND Id = " + Id + "").then(async (value) => {
+                if (value.affectedRows > 0) {
+                    _output.data = {};
+                    _output.isSuccess = true;
+                    _output.message = "Suppression de la disponibilité du club réussie";
+                } else {
+                    _output.data = {};
+                    _output.isSuccess = true;
+                    _output.message = "Aucun Enregistrement Trouvé";
+                }
+
+            }).catch((err) => {
+                _output.data = err.message;
+                _output.isSuccess = false;
+                _output.message = "Échec de la suppression de la disponibilité du club";
+            })
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Échec de la suppression de la disponibilité du club";
+    }
+    res.send(_output);
+}
+
+exports.getCourseCollectiveClub = async function (req, res, next) {
+    var _output = new output();
+    const ids = req.query.coachId;
+
+    if (ids != "") {
+        await db_library
+            .execute("SELECT c.*,ci.coordonnees_gps FROM `couse_collective_if_club` c INNER JOIN `cities` ci on ci.Code_postal = c.Postalcode WHERE Coach_Id=" + ids + "").then(async (value) => {
+                await db_library.execute("SELECT * FROM `courseclub_availablity` WHERE CoachId = " + ids + "").then((res) => {
+                    if (value.length > 0 && res.length > 0) {
+                        var obj = {
+                            course: value,
+                            availablity: res
+                        }
+                        _output.data = obj;
+                        _output.isSuccess = true;
+                        _output.message = "Cours collectif club obtenir avec succès";
+                    } else if (value.length > 0 && res.length == 0) {
+                        var obj = {
+                            course: value,
+                            availablity: [{
+                                Id: "",
+                                CoachId: "",
+                                Weekday: "",
+                                MaxCount: "",
+                                StartTime: "",
+                                EndTime: "",
+                                Price: "",
+                                Course: ""
+                            }]
+                        }
+                        _output.data = obj;
+                        _output.isSuccess = true;
+                        _output.message = "Cours collectif club obtenir avec succès";
+                    } else {
+                        var obj = {
+                            course: [],
+                            availablity: []
+                        }
+                        _output.data = obj;
+                        _output.isSuccess = true;
+                        _output.message = "Aucun Enregistrement Trouvé";
+                    }
+                })
+            }).catch((err) => {
+                _output.data = err.message;
+                _output.isSuccess = false;
+                _output.message = "Cours collectif club échoué";
+            })
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Cours collectif club échoué";
+    }
+    res.send(_output);
+}
+
+exports.getYear = async function (req, res, next) {
+    var _output = new output();
+
+    await db_library
+        .execute("SELECT * FROM `courseclub_year`").then(async (value) => {
+            if (value.length > 0) {
+                var result = value;
+                var obj = {
+                    year: result
+                }
+                _output.data = obj;
+                _output.isSuccess = true;
+                _output.message = "L'année réussit";
+            } else {
+                var obj = {
+                    course: []
+                }
+                _output.data = obj;
+                _output.isSuccess = true;
+                _output.message = "Aucun Enregistrement Trouvé";
+            }
+        }).catch((err) => {
+            _output.data = err.message;
+            _output.isSuccess = false;
+            _output.message = "Year get Failed";
+        })
+    res.send(_output);
+}
+
+exports.setStageCourse = async function (req, res, next) {
+    var _output = new output();
+    const {
+        Location,
+        Postalcode,
+        Coach_Id,
+        Description,
+        Price,
+        Photo,
+        from_date,
+        to_date,
+        Eventname,
+        Eventdetails,
+        Mode_of_transport,
+        Plan,
+        filename
+    } = req.body;
+
+    if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Photo != "" && from_date != "" && Mode_of_transport != "" && Plan != "" && to_date != "" && Eventdetails != "" && Eventname != "") {
+        var insert_query = "INSERT INTO `course_stage` (`Coach_Id`, `Mode_of_transport`, `Description`, `Price`, `Photo`," +
+            " `from_date`, `Plan`,`filename`,`Postalcode`,`Location`,`to_date`,`Eventname`,`Eventdetails`) VALUES " +
+            "(?,?,?,?,?,?,?,?,?,?,?,?,?);";
+
+        var update_query = "Update `course_stage` set `Mode_of_transport`=?, `Description`=?, `filename`=?, `Price`=?," +
+            "`Photo`=?, `from_date`=?, `Plan` =?, `Location` =?, `to_date` =?, `Eventname` =?, `Eventdetails` =?, `Postalcode` =? where `Coach_Id` = ?";
+
+        await db_library
+            .execute("SELECT * FROM `course_stage` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
+                if (value.length > 0) {
+                    await db_library
+                        .parameterexecute(update_query, [Mode_of_transport, Description, filename, Price, Photo, from_date, Plan, Location, to_date, Eventname, Eventdetails, Postalcode, Coach_Id]).then((value) => {
+                            var result = value;
+                            _output.data = {};
+                            _output.isSuccess = true;
+                            _output.message = "Stage mis à jour avec succès";
+
+                        }).catch(err => {
+                            _output.data = {};
+                            _output.isSuccess = false;
+                            _output.message = "Échec de la mise à jour du cours par étapes";
+                        });
+                } else {
+                    await db_library
+                        .parameterexecute(insert_query, [Coach_Id, Mode_of_transport, Description, Price, Photo, from_date, Plan, filename, Postalcode, Location, to_date, Eventname, Eventdetails]).then((value) => {
+                            var result = value;
+                            _output.data = {};
+                            _output.isSuccess = true;
+                            _output.message = "Stage course added successfully";
+                        }).catch(err => {
+                            _output.data = {};
+                            _output.isSuccess = false;
+                            _output.message = "Stage course added Failed";
+                        });
+                }
+            }).catch(err => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Erreur lors de l'insertion ou de la mise à jour du cours par étapes";
+            });
+        
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Stage course added Failed";
+    }
+    res.send(_output);
+    //console.log(output)
+}
+
+exports.getStageCourse = async function (req, res, next) {
+    var _output = new output();
+    const id = req.query.coachId;
+
+    if (id != "") {
+        var query = "SELECT * FROM `course_stage` WHERE `Coach_Id` = " + id;
+        await db_library
+            .execute(query).then(async (value) => {
+                var result = value;
+                if (value.length > 0) {
+                    //console.log(value);
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Stage réussi";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Stage pas trouvé";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Le stage est échoué";
+            })
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Le stage est échoué";
+    }
+    res.send(_output);
+}
+
+exports.setTournamentCourse = async function (req, res, next) {
+    var _output = new output();
+    const {
+        Location,
+        Postalcode,
+        Coach_Id,
+        Description,
+        Price,
+        Photo,
+        from_date,
+        to_date,
+        Tournamentname,
+        Eventdetails,
+        Plan,
+        filename
+    } = req.body;
+    if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Photo != "" && from_date != "" 
+    && Plan != "" && to_date != "" && Eventdetails != "" && Tournamentname != "") {
+        var insert_query = "INSERT INTO `tournament` (`Coach_Id`, `Description`, `Price`, `Photo`," +
+            " `from_date`, `Plan`,`Postalcode`,`Location`,`to_date`,`Tournamentname`,`Eventdetails`,`filename`) VALUES " +
+            "(?,?,?,?,?,?,?,?,?,?,?,?);";
+
+        var update_query = "Update `tournament` set `filename`=?, `Description`=?, `Price`=?," +
+            "`Photo`=?, `from_date`=?, `Plan` =?, `Location` =?, `to_date` =?, `Tournamentname` =?, `Eventdetails` =?, `Postalcode` =? where `Coach_Id` = ?";
+            //console.log(update_query);
+        await db_library
+            .execute("SELECT * FROM `tournament` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
+                if (value.length > 0) {
+                    await db_library
+                        .parameterexecute(update_query, [filename, Description, "0", Photo, from_date, Plan, Location, to_date, Tournamentname, Eventdetails, Postalcode, Coach_Id]).then((value) => {
+                            var result = value;
+                            _output.data = {};
+                            _output.isSuccess = true;
+                            _output.message = "Le parcours du tournoi a été mis à jour avec succès";
+                        }).catch(err => {
+                            //console.log(err);
+                            _output.data = {};
+                            _output.isSuccess = false;
+                            _output.message = "Échec de la mise à jour du parcours du tournoi";
+                        });
+                } else {
+                    await db_library
+                        .parameterexecute(insert_query, [Coach_Id, Description, "0", Photo, from_date, Plan, Postalcode, Location, to_date, Tournamentname, Eventdetails, filename]).then((value) => {
+                            var result = value;
+                            _output.data = {};
+                            _output.isSuccess = true;
+                            _output.message = "Le tournoi a été ajouté avec succès";
+                        }).catch(err => {
+                            _output.data = {};
+                            _output.isSuccess = false;
+                            _output.message = "Le parcours du tournoi ajouté a échoué";
+                        });
+                }
+            }).catch(err => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Erreur lors de l'insertion ou de la mise à jour du parcours du tournoi";
+            });
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Le parcours du tournoi ajouté a échoué";
+    }
+    res.send(_output);
+}
+
+exports.getTournamentCourse = async function (req, res, next) {
+    var _output = new output();
+    const id = req.query.coachId;
+
+    if (id != "") {
+        var query = "select * from tournament where Coach_Id = " + id;
+        await db_library
+            .execute(query).then(async (value) => {
+                var result = value;
+                if (value.length > 0) {
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Le parcours du tournoi réussit";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Parcours du tournoi introuvable";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Le parcours du tournoi a échoué";
+            })
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Le parcours du tournoi a échoué";
+    }
+    res.send(_output);
+}
+
+
+// New Code Start
+
+exports.getStage = async function (req, res, next) {
+    var _output = new output();
+    const Coach_id = req.query.coachId;
+    const id = req.query.id;
+
+    if (id != "" && Coach_id != "") {
+        // var query = "select * from course_stage where Coach_Id = " + Coach_id + " AND id = " + id + "";
+        var query = "select users.*,course_stage.* from course_stage JOIN users ON  course_stage.Coach_Id = users.id where course_stage.Coach_Id = " + Coach_id + " AND course_stage.id = " + id + "";
+        await db_library
+            .execute(query).then(async (value) => {
+                var result = value;
+                if (value.length > 0) {
+//                    result[0].from_date = formatDate(new Date(result[0].from_date))
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Stage réussi";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Stage pas trouvé";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Le stage est échoué";
+            })
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Le stage est échoué";
+    }
+    res.send(_output);
+}
+
+exports.setStageCourseUpdate = async function (req, res, next) {
+    var _output = new output();
+    //console.log(req.body)
+    const {
+        id,
+        Location,
+        Postalcode,
+        Coach_Id,
+        Description,
+        Price,
+        Photo,
+        from_date,
+        to_date,
+        Eventname,
+        Eventdetails,
+        Mode_of_transport,
+        Plan,
+        filename
+    } = req.body;
+
+    if (id != "" && Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Price != "" && Photo != "" && from_date != "" && Mode_of_transport != "" && Plan != "" && to_date != "" && Eventdetails != "" && Eventname != "") {
+        // var insert_query = "INSERT INTO `course_stage` (`Coach_Id`, `Mode_of_transport`, `Description`, `Price`, `Photo`," +
+        //     " `from_date`, `Plan`,`filename`,`Postalcode`,`Location`,`to_date`,`Eventname`,`Eventdetails`) VALUES " +
+        //     "(?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        
+        var update_query = "Update `course_stage` set `Mode_of_transport`=?, `Description`=?, `filename`=?, `Price`=?, `Photo`=?, `from_date`=?, `Plan` =?, `Location` =?, `to_date` =?, `Eventname` =?, `Eventdetails` =?, `Postalcode` =? where `id`=?";
+        
+        // var insert_query = "INSERT INTO `course_stage` (`Coach_Id`, `Mode_of_transport`, `Description`, `Price`, `Photo`, `from_date`, `Plan`,`filename`,`Postalcode`,`Location`,`to_date`,`Eventname`,`Eventdetails`) VALUES ('" + Coach_Id + "','" + Mode_of_transport + "','" + Description + "','" + Price + "','" + Photo + "','" + from_date + "','" + Plan + "','" + filename + "','" + Postalcode + "','" + Location + "','" + to_date + "','" + Eventname + "','" + Eventdetails + "')"
+        
+        // await db_library
+        //     .execute("SELECT * FROM `course_stage` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
+            //         if (value.length > 0) {
+                //console.log('[course.js]', id)
+                await db_library
+                .parameterexecute(update_query, [Mode_of_transport, Description, filename, Price, Photo, formatDate(from_date), Plan, Location, formatDate(to_date), Eventname, Eventdetails, Postalcode, id]).then((value) => {
+                    var result = value;
+                _output.data = {};
+                _output.isSuccess = true;
+                    _output.message = "Stage mis à jour avec succès";
+
+            }).catch(err => {
+                _output.data = {};
+                _output.isSuccess = false;
+                _output.message = "Échec de la mise à jour du cours par étapes";
+            });
+        // } else {
+        // await db_library
+        //     .execute(insert_query).then((value) => {
+        //         var result = value;
+        //         _output.data = {};
+        //         _output.isSuccess = true;
+        //         _output.message = "Stage course added successfully";
+        //     }).catch(err => {
+        //         _output.data = {};
+        //         _output.isSuccess = false;
+        //         _output.message = "Stage course added Failed";
+        //     });
+        //     }
+        // }).catch(err => {
+        //     _output.data = "";
+        //     _output.isSuccess = false;
+        //     _output.message = "Error in Stage Course Insert or Update";
+        // });
+        res.send(_output);
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Échec de la mise à jour du cours par étapes";
+    }
+}
+
+exports.setStageCourseInsert = async function (req, res, next) {
+    var _output = new output();    
+    const {
+        Location,
+        Postalcode,
+        Coach_Id,
+        Description,
+        Price,
+        Photo,
+        from_date,
+        to_date,
+        Eventname,
+        Eventdetails,
+        Mode_of_transport,
+        Plan,
+        filename
+    } = req.body;
+
+    if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Price != "" && Photo != "" && from_date != "" && Mode_of_transport != "" && Plan != "" && to_date != "" && Eventdetails != "" && Eventname != "") {
+
+        // console.log(Location,
+        //     Postalcode,
+        //     Coach_Id,
+        //     Description,
+        //     Price,
+        //     from_date,
+        //     to_date,
+        //     Eventname,
+        //     Eventdetails,
+        //     Mode_of_transport,
+        //     Plan,
+        //     filename)
+//console.log("request--- ", req.body)
+        
+
+        // var update_query = "Update `course_stage` set `Mode_of_transport`=?, `Description`=?, `filename`=?, `Price`=?," +
+        //     "`Photo`=?, `from_date`=?, `Plan` =?, `Location` =?, `to_date` =?, `Eventname` =?, `Eventdetails` =?, `Postalcode` =? where `Coach_Id` = ?";
+
+        // var insert_query = "INSERT INTO `course_stage` (`Coach_Id`, `Mode_of_transport`, `Description`, `Price`, `Photo`, `from_date`, `Plan`,`filename`,`Postalcode`,`Location`,`to_date`,`Eventname`,`Eventdetails`) VALUES ('" + Coach_Id + "','" + Mode_of_transport + "','" + Description + "','" + Price + "','" + Photo + "','" + formatDate(from_date) + "','" + Plan + "','" + filename + "','" + Postalcode + "','" + Location + "','" + formatDate(to_date) + "','" + Eventname + "','" + Eventdetails + "')"
+
+        // await db_library
+        //     .execute("SELECT * FROM `course_stage` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
+        //         if (value.length > 0) {
+        //     await db_library
+        //         .parameterexecute(update_query, [Mode_of_transport, Description, filename, Price, Photo, formatDate(from_date), Plan, Location, formatDate(to_date), Eventname, Eventdetails, Postalcode, Coach_Id]).then((value) => {
+        //             var result = value;
+        //             _output.data = {};
+        //             _output.isSuccess = true;
+        //             _output.message = "Stage course updated successfully";
+
+        //         }).catch(err => {
+        //             _output.data = {};
+        //             _output.isSuccess = false;
+        //             _output.message = "Stage course update Failed";
+        //         });
+        // } else {
+
+        //[Coach_Id, Mode_of_transport, Description, Price, Photo, formatDate(from_date), Plan, filename, Postalcode, Location, formatDate(to_date), Eventname, Eventdetails]
+
+        var insert_query = "INSERT INTO `course_stage` (`Coach_Id`, `Mode_of_transport`, `Description`, `Price`, `Photo`,`from_date`, `Plan`,`filename`,`Postalcode`,`Location`,`to_date`,`Eventname`,`Eventdetails`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
+
+        await db_library
+            .parameterexecute(insert_query, [Coach_Id, Mode_of_transport, Description, Price, Photo, formatDate(from_date), Plan, filename, Postalcode, Location, formatDate(to_date), Eventname, Eventdetails]).then((value) => {
+                var result = value;
+                _output.data = {};
+                _output.isSuccess = true;
+                _output.message = "Le stage a été ajouté avec succès";
+            }).catch(err => {
+                //console.log(err)
+                _output.data = {};
+                _output.isSuccess = false;
+                _output.message = "Le stage ajouté a échoué";
+            });
+        //     }
+        // }).catch(err => {
+        //     _output.data = "";
+        //     _output.isSuccess = false;
+        //     _output.message = "Error in Stage Course Insert or Update";
+        // });
+        res.send(_output);
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Le stage ajouté a échoué";
+        res.send(_output);
+    }
+}
+
+exports.setTournamentCourseUpdate = async function (req, res, next) {
+    var _output = new output();
+    const {
+        id,
+        Location,
+        Postalcode,
+        Coach_Id,
+        Description,
+        Price,
+        Photo,
+        from_date,
+        to_date,
+        Tournamentname,
+        Eventdetails,
+        Plan,
+        filename
+    } = req.body;
+    if (id != "" && Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Photo != "" && from_date != "" && Plan != "" && to_date != "" && Eventdetails != "" && Tournamentname != "") {
+
+
+        var update_query = "Update `tournament` set `filename`=?, `Description`=?, `Price`=?," +
+            "`Photo`=?, `from_date`=?, `Plan` =?, `Location` =?, `to_date` =?, `Tournamentname` =?, `Eventdetails` =?, `Postalcode` =? where `Coach_Id` = ? AND `id`=?";
+        //console.log(update_query);
+        await db_library
+            .execute("SELECT * FROM `tournament` WHERE Coach_Id=" + Coach_Id + " AND id=" + id + "").then(async (value) => {
+                if (value.length > 0) {
+                    await db_library
+                        .parameterexecute(update_query, [filename, Description, Price, Photo, from_date, Plan, Location, to_date, Tournamentname, Eventdetails, Postalcode, Coach_Id, id]).then((value) => {
+                            var result = value;
+                            _output.data = {};
+                            _output.isSuccess = true;
+                            _output.message = "Le parcours du tournoi a été mis à jour avec succès";
+                        }).catch(err => {
+                            //console.log(err);
+                            _output.data = {};
+                            _output.isSuccess = false;
+                            _output.message = "Échec de la mise à jour du parcours du tournoi";
+                        });
+                }
+                // else {
+                //     await db_library
+                //         .parameterexecute(insert_query, [Coach_Id, Description, "0", Photo, from_date, Plan, Postalcode, Location, to_date, Tournamentname, Eventdetails, filename]).then((value) => {
+                //             var result = value;
+                //             _output.data = {};
+                //             _output.isSuccess = true;
+                //             _output.message = "Tournament course added successfully";
+                //         }).catch(err => {
+                //             _output.data = {};
+                //             _output.isSuccess = false;
+                //             _output.message = "Tournament course added Failed";
+                //         });
+                // }
+            }).catch(err => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Erreur lors de l'insertion ou de la mise à jour du parcours du tournoi";
+            });
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Échec de la mise à jour du parcours du tournoi";
+    }
+    res.send(_output);
+}
+
+
+exports.setTournamentCourseInsert = async function (req, res, next) {
+    var _output = new output();
+    const {
+        Location,
+        Postalcode,
+        Coach_Id,
+        Description,
+        Price,
+        Photo,
+        from_date,
+        to_date,
+        Tournamentname,
+        Eventdetails,
+        Plan,
+        filename
+    } = req.body;
+    if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Photo != "" && from_date != ""
+        && Plan != "" && to_date != "" && Eventdetails != "" && Tournamentname != "") {
+        
+        
+        // var insert_query = "INSERT INTO `course_stage` (`Coach_Id`, `Mode_of_transport`, `Description`, `Price`, `Photo`, `from_date`, `Plan`,`filename`,`Postalcode`,`Location`,`to_date`,`Eventname`,`Eventdetails`) VALUES " +
+        //     "(?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        // var insert_query = "INSERT INTO `tournament` (`Coach_Id`, `Description`, `Price`, `Photo`,`from_date`, `Plan`,`Postalcode`,`Location`,`to_date`,`Tournamentname`,`Eventdetails`,`filename`) VALUES ('" + Coach_Id + "','" + Description + "','" + Price + "','" + Photo + "','" + from_date + "','" + Plan + "','" + Postalcode + "','" + Location + "','" + to_date + "','" + Tournamentname + "','" + Eventdetails + "','" + filename + "')"
+        //console.log(insert_query)
+        
+        var insert_query = "INSERT INTO `tournament` (`Coach_Id`, `Description`, `Price`, `Photo`,`from_date`, `Plan`,`Postalcode`,`Location`,`to_date`,`Tournamentname`,`Eventdetails`,`filename`) VALUES " +
+            "(?,?,?,?,?,?,?,?,?,?,?,?);";
+        
+        await db_library
+            .parameterexecute(insert_query, [Coach_Id, Description, Price, Photo, from_date, Plan, Postalcode, Location, to_date, Tournamentname, Eventdetails, filename]).then((value) => {
+                var result = value;
+                _output.data = {};
+                _output.isSuccess = true;
+                _output.message = "Le tournoi a été ajouté avec succès";
+            }).catch(err => {
+                //console.log(err)
+                _output.data = {};
+                _output.isSuccess = false;
+                _output.message = "Tournament course added failed";
+            });
+
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Tournament course added failed";
+    }
+    res.send(_output);
+}
+
+
+exports.getTournament = async function (req, res, next) {
+    var _output = new output();
+    //console.log('query', req.query)
+    const Coach_id = req.query.coachId;
+    const id = req.query.id;
+
+    if (id != "" && Coach_id != "") {
+        var query = "select users.*,tournament.* from tournament JOIN users ON  tournament.Coach_Id = users.id where tournament.Coach_Id = " + Coach_id + " AND tournament.id = " + id + "";
+        await db_library
+            .execute(query).then(async (value) => {
+                var result = value;
+                if (value.length > 0) {
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Le parcours du tournoi réussit";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Parcours du tournoi introuvable";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Le parcours du tournoi a échoué";
+            })
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Le parcours du tournoi a échoué";
+    }
+    res.send(_output);
+}
+
+exports.setAnimationInsert = async function (req, res, next) {
+    var _output = new output();
+    const {
+        Location,
+        Postalcode,
+        Coach_Id,
+        Description,
+        Photo,
+        Eventdetails,
+        Plan,
+        Price,
+        filename
+    } = req.body;
+
+    
+    if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Photo != "" && Plan != "" && Eventdetails != "") {
+
+        // var insert_query = "INSERT INTO `animations` (`Coach_Id`, `Description`, `Photo`," +
+        //     "`Plan`,`Postalcode`,`Location`,`Eventdetails`,`filename`,`Price`) VALUES ('" + Coach_Id + "','" + Description + "','" + Photo + "','" + Plan + "','" + Postalcode + "','" + Location + "','" + Eventdetails + "','" + filename + "','" + Price + "')"
+
+        
+
+        // var update_query = "Update `animations` set `Description`=?, `filename`=?," +
+        //     "`Photo`=?, `Plan` =?, `Location` =?, `Eventdetails` =?, `Postalcode` =?, `Price` =? where `Coach_Id` =?";
+
+        // await db_library
+        //     .execute("SELECT * FROM `animations` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
+        //         if (value.length > 0) {
+        //             await db_library
+        //                 .parameterexecute(update_query, [Description, filename, Photo, Plan, Location, Eventdetails, Postalcode, Price, Coach_Id]).then((value) => {
+        //                     var result = value;
+        //                     _output.data = {};
+        //                     _output.isSuccess = true;
+        //                     _output.message = "Animation course updated successfully";
+
+        //                 }).catch(err => {
+        //                     _output.data = {};
+        //                     _output.isSuccess = false;
+        //                     _output.message = "Animation course update Failed";
+        //                 });
+        //         } else {
+        var insert_query = "INSERT INTO `animations` (`Coach_Id`, `Description`, `Photo`," +
+            "`Plan`,`Postalcode`,`Location`,`Eventdetails`,`filename`,`Price`) VALUES " +
+            "(?,?,?,?,?,?,?,?,?);";
+        
+        await db_library
+            .parameterexecute(insert_query, [Coach_Id, Description, Photo, Plan, Postalcode, Location, Eventdetails, filename, Price]).then((value) => {
+                var result = value;
+                _output.data = {};
+                _output.isSuccess = true;
+                _output.message = "Cours d'animation ajouté avec succès";
+            }).catch(err => {
+                _output.data = {};
+                _output.isSuccess = false;
+                _output.message = "Échec du cours d'animation ajouté";
+            });
+        //     }
+        // }).catch(err => {
+        //     _output.data = "";
+        //     _output.isSuccess = false;
+        //     _output.message = "Error in Animation Course Insert or Update";
+        // });
+        res.send(_output);
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Échec du cours d'animation ajouté";
+    }
+}
+
+
+exports.setAnimationUpdate = async function (req, res, next) {
+    var _output = new output();
+    const {
+        Location,
+        Postalcode,
+        Coach_Id,
+        Description,
+        Photo,
+        Eventdetails,
+        Plan,
+        Price,
+        filename,
+        id
+    } = req.body;
+    
+    if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Photo != "" && Plan != "" && Eventdetails != "") {
+
+        // var insert_query = "INSERT INTO `animations` (`Coach_Id`, `Description`, `Photo`," +
+        //     "`Plan`,`Postalcode`,`Location`,`Eventdetails`,`filename`,`Price`) VALUES " +
+        //     "(?,?,?,?,?,?,?,?,?);";
+
+        var update_query = "Update `animations` set `Description`=?, `filename`=?," +
+            "`Photo`=?, `Plan` =?, `Location` =?, `Eventdetails` =?, `Postalcode` =?, `Price` =? where `Coach_Id` =? AND `id`=?";
+
+        // await db_library
+        //     .execute("SELECT * FROM `animations` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
+        //         if (value.length > 0) {
+        await db_library
+            .parameterexecute(update_query, [Description, filename, Photo, Plan, Location, Eventdetails, Postalcode, Price, Coach_Id, id]).then((value) => {
+                var result = value;
+                _output.data = {};
+                _output.isSuccess = true;
+                _output.message = "Cours d'animation mis à jour avec succès";
+
+            }).catch(err => {
+                _output.data = {};
+                _output.isSuccess = false;
+                _output.message = "Échec de la mise à jour du cours d'animation";
+            });
+        //         } else {
+        // await db_library
+        //     .execute(insert_query).then((value) => {
+        //         var result = value;
+        //         _output.data = {};
+        //         _output.isSuccess = true;
+        //         _output.message = "Animation course added successfully";
+        //     }).catch(err => {
+        //         _output.data = {};
+        //         _output.isSuccess = false;
+        //         _output.message = "Animation course added Failed";
+        //     });
+        //     }
+        // }).catch(err => {
+        //     _output.data = "";
+        //     _output.isSuccess = false;
+        //     _output.message = "Error in Animation Course Insert or Update";
+        // });
+        res.send(_output);
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Échec du cours d'animation ajouté";
+    }
+}
+
+/**
+ * New Code End
+ */
+
+exports.setAnimationCourse = async function (req, res, next) {
+    var _output = new output();
+    const {
+        Location,
+        Postalcode,
+        Coach_Id,
+        Description,
+        Photo,
+        Eventdetails,
+        Plan,
+        Price,
+        filename
+    } = req.body;
+
+    if (Coach_Id != "" && Location != "" && Postalcode != "" && Description != "" && Photo != "" && Plan != "" && Eventdetails != "") {
+        var insert_query = "INSERT INTO `animations` (`Coach_Id`, `Description`, `Photo`," +
+            "`Plan`,`Postalcode`,`Location`,`Eventdetails`,`filename`,`Price`) VALUES " +
+            "(?,?,?,?,?,?,?,?,?);";
+
+        var update_query = "Update `animations` set `Description`=?, `filename`=?," +
+            "`Photo`=?, `Plan` =?, `Location` =?, `Eventdetails` =?, `Postalcode` =?, `Price` =? where `Coach_Id` =?";
+
+        await db_library
+            .execute("SELECT * FROM `animations` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
+                if (value.length > 0) {
+                    await db_library
+                        .parameterexecute(update_query, [Description, filename, Photo, Plan, Location, Eventdetails, Postalcode, "0", Coach_Id]).then((value) => {
+                            var result = value;
+                            _output.data = {};
+                            _output.isSuccess = true;
+                            _output.message = "Cours d'animation mis à jour avec succès";
+
+                        }).catch(err => {
+                            _output.data = {};
+                            _output.isSuccess = false;
+                            _output.message = "Échec de la mise à jour du cours d'animation";
+                        });
+                } else {
+                    await db_library
+                        .parameterexecute(insert_query, [Coach_Id, Description, Photo, Plan, Postalcode, Location, Eventdetails, filename, "0"]).then((value) => {
+                            var result = value;
+                            _output.data = {};
+                            _output.isSuccess = true;
+                            _output.message = "Cours d'animation ajouté avec succès";
+                        }).catch(err => {
+                            _output.data = {};
+                            _output.isSuccess = false;
+                            _output.message = "Échec du cours d'animation ajouté";
+                        });
+                }
+            }).catch(err => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Erreur lors de l'insertion ou de la mise à jour du cours d'animation";
+            });
+       
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Échec du cours d'animation ajouté";
+    }
+    res.send(_output);
+}
+
+exports.getAnimationCourseLeft = async function (req, res, next) {
+    var _output = new output();
+    const coachId = req.query.coachId;
+    //const id = req.query.id;
+
+    //if (id != "") {
+        var query = "select * from animations where `Coach_Id` = " + coachId;
+        await db_library
+            .execute(query).then(async (value) => {
+                var result = value;
+                if (value.length > 0) {
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Le cours d'animation réussit";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Cours d'animation introuvable";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Cours d'animation introuvable";
+            })
+    // } else {
+    //     _output.data = "Le champ obligatoire est manquant";
+    //     _output.isSuccess = false;
+    //     _output.message = "Animation course get Failed";
+    // }
+    res.send(_output);
+}
+
+exports.getAnimationCourse = async function (req, res, next) {
+    var _output = new output();
+    const coachId = req.query.coachId;
+    const id = req.query.id;
+
+    if (id != "") {
+        var query = "select * from animations where `Coach_Id` = " + coachId + " AND `id` = " + id;
+        await db_library
+            .execute(query).then(async (value) => {
+                var result = value;
+                if (value.length > 0) {
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Cours d'animation réussi";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Cours d'animation introuvable";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Cours d'animation introuvable";
+            })
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Cours d'animation introuvable";
+    }
+    res.send(_output);
+}
+
+exports.getAnimation = async function (req, res, next) {    
+    var _output = new output();
+    const Coach_id = req.query.coachId;
+    const id = req.query.animation_id;
+    //console.log(req.query)
+    if (id != "" && Coach_id != "") {
+        var query = "select animations.*,users.* from animations JOIN users ON  animations.Coach_Id = users.id where animations.Coach_Id = " + Coach_id + " AND animations.id = " + id + "";
+
+    // const id = req.query.coachId;
+
+    // if (id != "") {
+    //     var query = "select * from animations where Coach_Id = " + id;
+        await db_library
+            .execute(query).then(async (value) => {
+                var result = value;
+                if (value.length > 0) {
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Le cours d'animation réussit";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Cours d'animation introuvable";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Cours d'animation introuvable";
+            })
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Cours d'animation introuvable";
+    }
+    res.send(_output);
+}
+
+exports.setTeambuildingCourse = async function (req, res, next) {
+    var _output = new output();
+    //console.log(req.body)
+    const {
+        Coach_Id,
+        Description,
+        Photo,
+        Eventdetails,
+        Mode_of_transport,
+        Plan,
+        Price,
+        Postalcode,
+        filename
+    } = req.body;
+    
+    if (Coach_Id != "" && Description != "" && Mode_of_transport != "" && Plan != "" && Eventdetails != "") {
+        var insert_query = "INSERT INTO `team_building` (`Coach_Id`, `Mode_of_transport`, `Description`, `Photo`, `Postalcode`, `Plan`,`Eventdetails`,`filename`,`Price`) VALUES (?,?,?,?,?,?,?,?,?);";
+
+        var update_query = "Update `team_building` set `Mode_of_transport`=?, `Description`=?, `filename`=?,`Photo`=?, `Plan` =?, `Postalcode` =?, `Eventdetails` =?, `Price` =? where `Coach_Id` = ?";
+
+        await db_library
+            .execute("SELECT * FROM `team_building` WHERE Coach_Id=" + Coach_Id + "").then(async (value) => {
+                //console.log(value)
+                if (value.length > 0) {
+                    await db_library
+                        .parameterexecute(update_query, [Mode_of_transport, Description, filename, Photo, Plan, Postalcode, Eventdetails, "0", Coach_Id]).then((value) => {
+                            var result = value;
+                            _output.data = {};
+                            _output.isSuccess = true;
+                            _output.message = "Le cours de consolidation d'équipe mis à jour avec succès";
+
+                        }).catch(err => {
+                            //console.log(err.message)
+                            _output.data = {};
+                            _output.isSuccess = false;
+                            _output.message = "Échec de la mise à jour du cours Team Building";
+                        });
+                } else {
+                    await db_library
+                        .parameterexecute(insert_query, [Coach_Id, Mode_of_transport, Description, Photo, Plan, Postalcode, Eventdetails, filename, "0"]).then((value) => {
+                            var result = value;
+                            _output.data = {};
+                            _output.isSuccess = true;
+                            _output.message = "Le cours Team Building a été ajouté avec succès";
+                        }).catch(err => {
+                            _output.data = {};
+                            _output.isSuccess = false;
+                            _output.message = "Échec du cours de Team Building ajouté";
+                        });
+                }
+            }).catch(err => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Erreur lors de l'insertion ou de la mise à jour du cours Team Building";
+            });
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Échec du cours de Team Building ajouté";
+    }
+    res.send(_output);
+
+}
+
+exports.getTeambuildingCourse = async function (req, res, next) {
+    var _output = new output();
+    const id = req.query.coachId;
+
+    if (id != "") {
+        var query = "select * from team_building where Coach_Id = " + id;
+        await db_library
+            .execute(query).then(async (value) => {
+                var result = value;
+                if (value.length > 0) {
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Le cours Team Building réussit";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Team Building introuvable";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Échec du cours de Team Building ajouté";
+            })
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Échec du cours de Team Building ajouté";
+    }
+    res.send(_output);
+}
+
+exports.getteambuilding = async function (req, res, next) {
+    var _output = new output();
+    const Coach_id = req.query.coachId;
+    const id = req.query.id;
+
+    if (id != "" && Coach_id != "") {
+        var query = "select team_building.*,users.* from team_building JOIN users ON  team_building.Coach_Id = users.id where team_building.Coach_Id = " + Coach_id + " AND team_building.id = " + id + "";
+
+        await db_library
+            .execute(query).then(async (value) => {
+                var result = value;
+                if (value.length > 0) {
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Le cours Team Building réussit";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Team Building introuvable";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Échec du cours de Team Building ajouté";
+            })
+    } else {
+        _output.data = "Le champ obligatoire est manquant";
+        _output.isSuccess = false;
+        _output.message = "Échec du cours de Team Building ajouté";
+    }
+    res.send(_output);
+}
+
+exports.getcourse = async function (req, res, next) {
+    var _output = new output();
+
+    var query = "select * from course_dbs";
+
+        await db_library
+            .execute(query).then(async (value) => {
+                var result = value;
+                if (value.length > 0) {
+                    var obj = {
+                        course: result
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Le cours réussit";
+                } else {
+                    var obj = {
+                        course: []
+                    }
+                    _output.data = obj;
+                    _output.isSuccess = true;
+                    _output.message = "Le cours est introuvable";
+                }
+            }).catch((err) => {
+                _output.data = "";
+                _output.isSuccess = false;
+                _output.message = "Le cours n'a pas échoué";
+            })
+    res.send(_output);
+}
+
+async function getIsIndividual(coach_id) {
+    try {
+        const Query =
+            "select id from `individualcourses` where Coach_Id = " + coach_id;
+        return await db_library.execute(Query).then(async data => {
+            return data.length;
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+async function getIsOnDemand(coach_id) {
+    try {
+        const Query =
+            "select `Group_Id` from `course_collective_if_demand` where Coach_Id = " + coach_id;
+        return await db_library.execute(Query).then(async data => {
+            return data.length;
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+async function getIsClub(coach_id) {
+    try {
+        const Query =
+            "select `Course_Id` from `couse_collective_if_club` where Coach_Id = " + coach_id;
+        return await db_library.execute(Query).then(async data => {
+            return data.length;
+        });
+    } catch (error) {
+        return error;
+    }
+}
+
+exports.courseIsIndivIsOnDemandIsClub = async function (req, res, next) {
+    var _output = new output();
+    var obj = {}
+    const id = req.query.coachId;
+    var indivCount = await getIsIndividual(id);
+    var onDemandCount = await getIsOnDemand(id);
+    var clubCount = await getIsClub(id);
+    obj = {
+        indivCount: indivCount,
+        onDemandCount: onDemandCount,
+        clubCount: clubCount
+    }
+    _output.data = obj;
+    _output.isSuccess = true;
+    _output.message = "Le cours est introuvable";
+    res.send(_output);
+}
+
+function formatDate(date) {
+    var formate_date = moment(date).format('YYYY-MM-DD');
+    return formate_date;
+}
