@@ -12,7 +12,7 @@ module.exports = {
   user: user,
   password: password,
   database: database,
-  port: 3306,
+  port: 3006,
   connectionTimeout: 300000,
   requestTimeout: 300000,
   options: {

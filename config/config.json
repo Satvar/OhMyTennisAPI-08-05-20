@@ -1,6 +1,6 @@
 {
   "development": {
-    "username": "root",
+    "user": "root",
     "password": "",
     "database": "oh_my_tennis",
     "host": "localhost",
